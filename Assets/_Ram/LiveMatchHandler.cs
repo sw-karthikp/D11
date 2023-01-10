@@ -7,6 +7,7 @@ using UnityEngine;
 using Firebase;
 using Firebase.Database;
 using UnityEngine.UI;
+using D11;
 
 public class LiveMatchHandler : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class LiveMatchHandler : MonoBehaviour
     {
         //var task = FirebaseDatabase.DefaultInstance.GetReference("Matches").Child("Upcoming").GetValueAsync();
         var task = FirebaseDatabase.DefaultInstance.GetReference("Ram").Child("Live").GetValueAsync();
+        string teamAUrl = null;
+        string teamBUrl = null;
 
         yield return new WaitUntil(predicate: () => task.IsCompleted);
 
@@ -51,8 +54,21 @@ public class LiveMatchHandler : MonoBehaviour
 
                 matchData.TeamA = data1["TeamA"].ToString();
                 matchData.TeamB = data1["TeamB"].ToString();
+
+                foreach (var item3 in AdminController.Instance.teamList)
+                {
+                    if (item3.TeamName == data1["TeamA"].ToString())
+                    {
+                        matchData.TeamAURL = item3.LogoURL;
+                    }
+                    else if (item3.TeamName == data1["TeamB"].ToString())
+                    {
+                        matchData.TeamBURL = item3.LogoURL;
+                    }
+                }
+
                 matchData.Time = data1["Time"].ToString();
-                matchData.MatchId = data1["ID"].ToString();
+                matchData.ID = data1["ID"].ToString();
                 matchData.MatchType = data1["Type"].ToString();
                 matchData.HotGame = data1["HotGame"].ToString();
 
@@ -60,8 +76,8 @@ public class LiveMatchHandler : MonoBehaviour
             }
         }
 
-       // matches.Sort((p1, p2) => (DateTime.Parse(p1.Time)).CompareTo(DateTime.Parse(p2.Time)));
-
+          
+        
         CreateLiveMatchBoard();
     }
 
@@ -74,7 +90,7 @@ public class LiveMatchHandler : MonoBehaviour
             for (int i = 0; i < count; i++)
             {
                 GameObject gameObject = Instantiate(liveMatchCard, parentLiveMatch);
-                gameObject.GetComponent<LiveMatchController>().SetValueToLiveMatch(matches[i].Time, matches[i].MatchType, matches[i].TeamA, matches[i].TeamB);
+                gameObject.GetComponent<LiveMatchController>().SetValueToLiveMatch(matches[i].Time, matches[i].MatchType, matches[i].TeamA, matches[i].TeamB, matches[i].ID, matches[i].TeamAURL, matches[i].TeamBURL);
                 //gameObject.GetComponent<Transform>().Find("DateTxt").GetComponent<TMP_Text>().text = matches[i].Time;
                 ////gameObject.GetComponent<Transform>().Find("TimeTxt").GetComponent<TMP_Text>().text = matches[i].MatchDateTime;
                 //gameObject.GetComponent<Transform>().Find("T20Txt").GetComponent<TMP_Text>().text = matches[i].MatchType;
@@ -87,13 +103,23 @@ public class LiveMatchHandler : MonoBehaviour
 
     public void MoreLiveMatchesDetails()
     {
+        MorePageHandler.Instance.matchTitle.text = "Live Matches"; 
+
+        if(parentMoreLiveMatches.childCount > 0)
+        {
+            foreach(Transform item in parentMoreLiveMatches)
+            {
+                Destroy(item.gameObject);
+            }
+        }
+
         for (int i = 0; i < matches.Count; i++)
         {
             GameObject gameObject = Instantiate(moreLiveMatchCard, parentMoreLiveMatches);
 
             gameObject.GetComponent<Transform>().Find("SNo_TxtTmp").GetComponent<TMP_Text>().text = (i + 1).ToString();
             gameObject.GetComponent<Transform>().Find("date_Txt").GetComponent<TMP_Text>().text = matches[i].Time;
-            gameObject.GetComponent<Transform>().Find("MatchID_Txt").GetComponent<TMP_Text>().text = matches[i].MatchId;
+            gameObject.GetComponent<Transform>().Find("MatchID_Txt").GetComponent<TMP_Text>().text = matches[i].ID;
             gameObject.GetComponent<Transform>().Find("Team_Txt").GetComponent<TMP_Text>().text = matches[i].TeamA + " VS " + matches[i].TeamB;
             gameObject.GetComponent<Transform>().Find("Formats_Txt ").GetComponent<TMP_Text>().text = int.Parse(matches[i].MatchType) == 0 ? "T20" : "ODI";
 
@@ -106,9 +132,11 @@ public class LiveMatchHandler : MonoBehaviour
     {
         public string TeamA;
         public string TeamB;
-        public string MatchId;
+        public string ID;
         public string HotGame;
         public string Time;
         public string MatchType;
+        public string TeamAURL;
+        public string TeamBURL;
     }
 }

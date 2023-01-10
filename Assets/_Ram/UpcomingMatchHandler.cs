@@ -10,6 +10,7 @@ using TMPro;
 using System;
 using static UpcomingMatchHandler;
 using UnityEngine.UI;
+using D11;
 
 public class UpcomingMatchHandler : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class UpcomingMatchHandler : MonoBehaviour
     private int dataCount;
 
     [Header("Main Menu Card")]
+    [SerializeField] private GameObject createUpcomingToggle;
     [SerializeField] private GameObject upcomingToggle;
     [SerializeField] private Transform tranParent;
 
@@ -62,6 +64,18 @@ public class UpcomingMatchHandler : MonoBehaviour
 
                 matchData.TeamA = data1["TeamA"].ToString();
                 matchData.TeamB = data1["TeamB"].ToString();
+                
+                foreach (var item3 in AdminController.Instance.teamList)
+                {
+                    if (item3.TeamName == data1["TeamA"].ToString())
+                    {
+                        matchData.TeamAURL = item3.LogoURL;
+                    }
+                    else if (item3.TeamName == data1["TeamB"].ToString())
+                    {
+                        matchData.TeamBURL = item3.LogoURL;
+                    }
+                }
                 matchData.Time = data1["Time"].ToString();
                 matchData.MatchId = data1["ID"].ToString();
                 matchData.MatchType = data1["Type"].ToString();
@@ -71,34 +85,69 @@ public class UpcomingMatchHandler : MonoBehaviour
             }
         }
 
-        //matches.Sort((p1, p2) => (DateTime.Parse(p1.Time)).CompareTo(DateTime.Parse(p2.Time)));
+        string[] format = { "dd/MM/yyyy hh:mm:ss", "dd-MM-yyyy hh:mm:ss" };
+        matches.Sort((p1, p2) => (DateTime.Parse(CommonFunctions.Instance.ChangeDateFormat(p1.Time, format)).CompareTo(DateTime.Parse(CommonFunctions.Instance.ChangeDateFormat(p2.Time, format)))));
 
         CreateUpcomingMatchBoard();
     }
 
     private void CreateUpcomingMatchBoard()
     {
+        if (tranParent.childCount > 3) return;
+
         int count = (matches.Count > 3) ? 3 : matches.Count;
 
         if (matches.Count > 0)
         {
-            for (int i = 0; i < count ; i++)
+            if(matches.Count >= 3)
             {
-                GameObject gameObject = Instantiate(upcomingToggle, tranParent);
+                GameObject createToggle = Instantiate(createUpcomingToggle, tranParent);
+                createToggle.GetComponent<Button>().onClick.AddListener( delegate {  CreateMatchHandler.instance.ShowMe();  });
 
-                gameObject.GetComponent<Transform>().Find("DateTxt").GetComponent<TMP_Text>().text = matches[i].Time;
-                //gameObject.GetComponent<Transform>().Find("TimeTxt").GetComponent<TMP_Text>().text = matches[i].MatchDateTime;
-                gameObject.GetComponent<Transform>().Find("T20Txt").GetComponent<TMP_Text>().text = matches[i].MatchType;
-                gameObject.GetComponent<Transform>().Find("TeamImage1").GetComponentInChildren<TMP_Text>().text = matches[i].TeamA;
-                gameObject.GetComponent<Transform>().Find("TeamImage2").GetComponentInChildren<TMP_Text>().text = matches[i].TeamB;
-                gameObject.GetComponent<Transform>().Find("Live Toggle").GetComponent<Toggle>().isOn = matches[i].HotGame == "True" ? true : false;
+                for (int i = 0; i < 2; i++)
+                {
+                    GameObject gameObject = Instantiate(upcomingToggle, tranParent);
+                    gameObject.GetComponent<UpcomingMatchController>().SetUpcomingMatchData(matches[i].HotGame, matches[i].MatchId, matches[i].TeamA, matches[i].TeamB, matches[i].Time, matches[i].MatchType, matches[i].TeamAURL, matches[i].TeamBURL);
+                }
+            }
+            else
+            {   
+                for (int i = 0; i < (3 - matches.Count); i++)
+                {
+                    GameObject gameObject = Instantiate(createUpcomingToggle, tranParent);
+                }
+
+                int j = 0;
+                for (int i = tranParent.childCount; i < 3; i++)
+                {
+                    GameObject gameObject = Instantiate(upcomingToggle, tranParent);
+                    gameObject.GetComponent<UpcomingMatchController>().SetUpcomingMatchData(matches[j].HotGame, matches[j].MatchId, matches[j].TeamA, matches[j].TeamB, matches[j].Time, matches[j].MatchType, matches[j].TeamAURL, matches[j].TeamBURL);
+                    j++;
+                }
+            }
+        }
+        else
+        {
+            for(int i = 0; i < 3; i++)
+            {
+                GameObject gameObject = Instantiate(createUpcomingToggle, tranParent);
             }
         }
     }
 
     public void MoreUpcomingMatchesDetails()
     {
-        for(int i = 0; i < matches.Count; i++)
+        MorePageHandler.Instance.matchTitle.text = "Upcoming Matches";
+
+        if (parentMoreUpcoming.childCount > 0)
+        {
+            foreach (Transform item in parentMoreUpcoming)
+            {
+                Destroy(item.gameObject);
+            }
+        }
+
+        for (int i = 0; i < matches.Count; i++)
         {
             GameObject gameObject = Instantiate(moreUpcomingMatchCard, parentMoreUpcoming);
 
@@ -142,5 +191,7 @@ public class UpcomingMatchHandler : MonoBehaviour
         public string HotGame;
         public string Time;
         public string MatchType;
+        public string TeamAURL;
+        public string TeamBURL;
     }
 }

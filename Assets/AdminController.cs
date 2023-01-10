@@ -16,9 +16,11 @@ public class AdminController : MonoBehaviour
     public DatabaseReference database;
 
     [Header("----------------")]
-
-    public Dictionary<string, object> newPlayerTeamListKeyobj = new();
-
+    public List<TeamList> teamList = new List<TeamList>();
+    public Dictionary<string, UpcomingMatchData> upcomingMatchData = new Dictionary<string, UpcomingMatchData>();
+    public Dictionary<string, TeamPlayersListValue> newPlayerTeamListKeyobj = new();
+    //public Dictionary<string, TeamList> newTeamList = new();
+    public Dictionary<string,string> TeamFullName = new();
 
 
 
@@ -31,8 +33,10 @@ public class AdminController : MonoBehaviour
     private void Start()
     {
         SubscribePlayerDetails();
+        TeamFullName = new Dictionary<string, string>() { { "AUS", "Australia" }, { "IND", "India" },
+        { "PAK", "Pakistan" },{ "BAN", "Bangladesh" },{ "ENG", "England" },{ "NZ", "NewZealand" }
+        ,{ "SL", "Sri Lanka" }};
 
-        
         //FirebaseDatabase.DefaultInstance.GetReference("Ram/TeamPlayers").GetValueAsync().ContinueWithOnMainThread(task =>
         //{
         //    DataSnapshot snapshot = task.Result;
@@ -53,9 +57,12 @@ public class AdminController : MonoBehaviour
     public void SubscribePlayerDetails()
     {
 
-        FirebaseDatabase.DefaultInstance
+        FirebaseDatabase.DefaultInstance    
       .GetReference("Ram/TeamPlayers")
       .ValueChanged += HandleValueChanged;
+
+        FirebaseDatabase.DefaultInstance.GetReference("Ram/Team").ValueChanged += TeamHandleValueChanged;
+        FirebaseDatabase.DefaultInstance.GetReference("Ram/Upcoming").ValueChanged += UpcomingMatchValueChangeHandler;
     }
 
     public void UnSubscribePlayerDetails()
@@ -63,6 +70,9 @@ public class AdminController : MonoBehaviour
         FirebaseDatabase.DefaultInstance
       .GetReference("Ram/TeamPlayers")
       .ValueChanged -= HandleValueChanged;
+
+        FirebaseDatabase.DefaultInstance.GetReference("Ram/Team").ValueChanged -= TeamHandleValueChanged;
+        FirebaseDatabase.DefaultInstance.GetReference("Ram/Upcoming").ValueChanged -= UpcomingMatchValueChangeHandler;
     }
 
 
@@ -78,33 +88,69 @@ public class AdminController : MonoBehaviour
 
         DataSnapshot val = args.Snapshot;
 
+        //foreach (var item in val.Children)
+        //{
+        //    foreach (var item1 in val.Children)
+        //    {
+        //        newPlayerTeamListKeyobj.Add(item1.Key, item1.Value);
+        //    }
+        //}
+
         foreach (var item in val.Children)
         {
-            foreach (var item1 in val.Children)
-            {
-                newPlayerTeamListKeyobj.Add(item1.Key, item1.Value);
-            }
+            newPlayerTeamListKeyobj.Add(item.Key, JsonConvert.DeserializeObject<TeamPlayersListValue>(item.GetRawJsonValue()));
+        }
+    }
+
+    private void TeamHandleValueChanged(object sender, ValueChangedEventArgs args)
+    {
+        Debug.Log("************ TeamDetailsListner");
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message + "*************");
+            return;
         }
 
-        
+        DataSnapshot val = args.Snapshot;
 
+        string json = val.GetRawJsonValue();
 
+        teamList = (JsonConvert.DeserializeObject<List<TeamList>>(json));
+    }
 
+    /// <summary>
+    /// -->> Upcoming Match Detail OnValueChange Handler... 
+    /// </summary>
+    
+    private void UpcomingMatchValueChangeHandler(object sender, ValueChangedEventArgs args)
+    {
+        Debug.Log("************ Upcoming Match OnValueHandler");
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message + "*************");
+            return;
+        }
+
+        DataSnapshot val = args.Snapshot;
+
+        string json = val.GetRawJsonValue();
+
+        foreach(var item in val.Children)
+        {
+            upcomingMatchData.Add(item.Key, JsonConvert.DeserializeObject<UpcomingMatchData>(item.GetRawJsonValue()));
+        }
     }
 }
 
 
-
-    [Serializable]
+#region TeamPlayer
+[Serializable]
     public class TeamPlayersListValue
     {
-        public PlayersSubListValue Players;
+        public Dictionary<string,PlayersSubListValue> Players;
         public string TeamName;
 
     }
-
-
-
 
     [Serializable]
     public class PlayersSubListValue
@@ -114,6 +160,39 @@ public class AdminController : MonoBehaviour
         public string Name;
         public string Type;
         public string URL;
-    }
+}
+#endregion
 
+#region TeamList
+[Serializable]
+public class TeamList 
+{
+    public string LogoIndex;
+    public string LogoURL;
+    public PlayerDetail PlayerDetails = new();
+    public string TeamName;
+}
 
+[Serializable]
+public class PlayerDetail
+{
+    public string T20;
+    public string ODI;
+    public string Test;
+}
+
+#endregion
+
+#region Upcoming 
+
+[Serializable]
+public class UpcomingMatchData
+{
+    public string HotGame;
+    public string ID;
+    public string TeamA;    
+    public string TeamB;
+    public string Time;
+    public string Type;
+}
+#endregion

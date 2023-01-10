@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -767.2, y: -55.899994}
-  m_SizeDelta: {x: 120.6817, y: 50}
+  m_AnchoredPosition: {x: -585.37, y: -75.330414}
+  m_SizeDelta: {x: 410.26, y: 88.8608}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7438829179914938152
 CanvasRenderer:
@@ -93,14 +93,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 38.6
+  m_fontSize: 43.37
   m_fontSizeBase: 38
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 43.37
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -324,8 +324,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 41.9, y: 52.2}
-  m_SizeDelta: {x: 120.8699, y: 63.6808}
+  m_AnchoredPosition: {x: 323.6, y: 72.1}
+  m_SizeDelta: {x: 183.76, y: 81.7598}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &491373239371774092
 CanvasRenderer:
@@ -687,7 +687,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'ENGLAND '
+  m_text: AUSTRALIA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 346bd30494b29ad4d99a92374f5da36a, type: 2}
   m_sharedMaterial: {fileID: 4158817523102428909, guid: 346bd30494b29ad4d99a92374f5da36a, type: 2}
@@ -714,12 +714,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 20.45
+  m_fontSize: 25
   m_fontSizeBase: 30.15
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 25.26
+  m_fontSizeMax: 25
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

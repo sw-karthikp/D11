@@ -7,6 +7,8 @@ public class MyTeamPlayersPanel : UIHandler
 {
     public TMP_Text TeamA;
     public TMP_Text TeamB;
+    public TMP_Text playerCount;
+    public TMP_Text creditsLeft;
     public GameObject ChildPrefab;
     public Transform[] parent;
 
@@ -14,6 +16,10 @@ public class MyTeamPlayersPanel : UIHandler
     {
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
+        TeamA.text = GameController.Instance.CurrentTeamA;
+        TeamB.text = GameController.Instance.CurrentTeamB;
+        playerCount.text = MatchSelection.Instance.selectedplayerCount.text;
+        creditsLeft.text = MatchSelection.Instance.CreditsLeft.text;
 
     }
 

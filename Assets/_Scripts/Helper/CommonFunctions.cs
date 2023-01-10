@@ -17,7 +17,7 @@ namespace D11
             DateTime.TryParseExact(inputDate, specificFormats == null ? formats : specificFormats,
             System.Globalization.CultureInfo.InvariantCulture,
             System.Globalization.DateTimeStyles.None, out DateTime outputDate);
-            return outputDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            return outputDate.ToString("dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
         }
     }
 }

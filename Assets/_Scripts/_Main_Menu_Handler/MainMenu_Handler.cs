@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -10,24 +11,36 @@ public class MainMenu_Handler : UIHandler
     public TMP_Text _playerId;
     public GameObject matchprefabHotTable;
     public GameObject matchprefabComingMatch;
-    public Transform parentHotTable;
-    public Transform parentUpComingMatch;
+    public Transform[] parentHotTable;
+    public Transform[] parentUpComingMatch;
     public static MainMenu_Handler Instance;
-    public VerticalLayoutGroup verticle;
-
-
+    public VerticalLayoutGroup[] verticle;
+    public GameObject[] matchTypes;
+    public Toggle[] togs;
+    public Image[] img;
+    public GameObject[] hotGamesObj;
     private void Awake()
     {
         Instance = this;
+        togs[0].onValueChanged.AddListener(delegate { OnvalueChangeT20(); });
+        togs[1].onValueChanged.AddListener(delegate { OnvalueChangeODI(); });
+        togs[2].onValueChanged.AddListener(delegate { OnvalueChangeTEST(); });
+        togs[3].onValueChanged.AddListener(delegate { OnvalueChangeT10(); });
+
     }
 
-    private void OnEnable()
+    private void Start()
     {
+
         GameController.Instance.SubscribeMatchDetails();
-        GameController.Instance.SubscribePlayerDetails();
+        //GameController.Instance.SubscribePlayerDetails();
         GameController.Instance.SubscribeMatchPools();
-        GameController.Instance.SubscribePlayers();
+        //GameController.Instance.SubscribePlayers();
         rect.verticalNormalizedPosition = 1;
+
+
+
+
     }
 
     public override void ShowMe()
@@ -37,10 +50,6 @@ public class MainMenu_Handler : UIHandler
 
         _playerId.text = PlayerPrefs.GetString("userName");
         _playerName.text = PlayerPrefs.GetString("userId");
-     
-
-
-
     }
 
 
@@ -53,60 +62,194 @@ public class MainMenu_Handler : UIHandler
     {
         UIController.Instance.RemoveFromOpenPages(this);
         gameObject.SetActive(false);
-   
+
     }
     public override void OnBack()
     {
 
     }
 
-
-    public IEnumerator SetUpcomingMatchDetails()
+    public void OnvalueChangeT20()
     {
-        yield return new WaitForSeconds(0.01f);
-        Debug.Log("******************");
-
-        for (int i = 0; i < GameController.Instance.match.Upcoming.Count; i++)
+        if (togs[0].isOn)
         {
-            Debug.Log(GameController.Instance.match.Upcoming[i].HotGame);
-            if (GameController.Instance.match.Upcoming[i].HotGame)
+            foreach (var item in GameController.Instance.match.Values)
             {
-                bool canSkip = false;
-                foreach (Transform child in parentHotTable)
+                foreach (var item1 in item.Values)
                 {
-                    if (child.name.Contains(GameController.Instance.match.Upcoming[i].ID.ToString()))
+
+
+                    hotGamesObj[0].SetActive(false);
+                    if (item1.Type == 0)
                     {
-                        canSkip = true;
-                        break;
+                        if (item1.HotGame == true)
+                        {
+                            hotGamesObj[0].SetActive(true);
+                            break;
+
+                        }
                     }
-
-
                 }
-                if (canSkip) continue;
-                GameObject mPrefab = Instantiate(matchprefabHotTable, parentHotTable);
-                mPrefab.name = GameController.Instance.match.Upcoming[i].ID.ToString();
-                mPrefab.GetComponent<TeamHolderData>().SetDetails(GameController.Instance.match.Upcoming[i].TeamA, GameController.Instance.match.Upcoming[i].TeamB, GameController.Instance.match.Upcoming[i].ID);
-                yield return new WaitForSeconds(0f);
             }
-            else
+
+            img[0].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
+            matchTypes[0].SetActive(true);
+            SetUpcomingMatchDetails(0);
+        }
+        else
+        {
+            img[0].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
+            verticle[0].childControlWidth = false;
+            matchTypes[0].SetActive(false);
+
+        }
+
+    }
+    public void OnvalueChangeODI()
+    {
+        if (togs[1].isOn)
+        {
+
+            foreach (var item in GameController.Instance.match.Values)
             {
-                bool canSkip = false;
-                foreach (Transform child in parentUpComingMatch)
+                foreach (var item1 in item.Values)
                 {
-                    if (child.name.Contains(GameController.Instance.match.Upcoming[i].ID.ToString()))
+                    hotGamesObj[1].SetActive(false);
+                    if (item1.Type == 1)
                     {
-                        canSkip = true;
-                        break;
+
+                        if (item1.HotGame == true)
+                        {
+                            hotGamesObj[1].SetActive(true);
+
+                        }
                     }
                 }
-                if (canSkip) continue;
-                yield return new WaitForSeconds(0f);
-                GameObject mPrefab = Instantiate(matchprefabComingMatch, parentUpComingMatch);
-                mPrefab.name = GameController.Instance.match.Upcoming[i].ID.ToString();
-                mPrefab.GetComponent<TeamHolderData>().SetDetails(GameController.Instance.match.Upcoming[i].TeamA, GameController.Instance.match.Upcoming[i].TeamB, GameController.Instance.match.Upcoming[i].ID);
-                yield return new WaitForSeconds(0f);
+            }
+            matchTypes[1].SetActive(true);
+            img[1].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
+            SetUpcomingMatchDetails(1);
+        }
+        else
+        {
+            img[1].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
+            verticle[1].childControlWidth = false;
+            matchTypes[1].SetActive(false);
+
+        }
+    }
+    public void OnvalueChangeTEST()
+    {
+        if (togs[2].isOn)
+        {
+            foreach (var item in GameController.Instance.match.Values)
+            {
+                foreach (var item1 in item.Values)
+                {
+                    hotGamesObj[2].SetActive(false);
+                    if (item1.Type == 2)
+                    {
+
+                        if (item1.HotGame == true)
+                        {
+                            hotGamesObj[2].SetActive(true);
+
+                        }
+                    }
+                }
+            }
+            img[2].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
+            matchTypes[2].SetActive(true);
+            SetUpcomingMatchDetails(2);
+        }
+        else
+        {
+            img[2].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
+            verticle[2].childControlWidth = false;
+            matchTypes[2].SetActive(false);
+
+        }
+    }
+    public void OnvalueChangeT10()
+    {
+        if (togs[3].isOn)
+        {
+
+            foreach (var item in GameController.Instance.match.Values)
+            {
+                foreach (var item1 in item.Values)
+                {
+
+                    hotGamesObj[3].SetActive(false);
+                    if (item1.Type == 3)
+                    {
+
+                        if (item1.HotGame == true)
+                        {
+                            hotGamesObj[3].SetActive(true);
+                            break;
+
+                        }
+                    }
+                }
+            }
+            img[3].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
+            matchTypes[3].SetActive(true);
+            SetUpcomingMatchDetails(3);
+        }
+        else
+        {
+            img[3].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
+            verticle[3].childControlWidth = false;
+            matchTypes[3].SetActive(false);
+
+        }
+    }
+    public void SetUpcomingMatchDetails(int toggleindex)
+    {
+
+        foreach (Transform child in parentHotTable[toggleindex])
+        {
+           
+            child.gameObject.SetActive(false);
+        }
+        foreach (Transform child in parentUpComingMatch[toggleindex])
+        {
+            child.gameObject.SetActive(false);
+        }
+
+        foreach (var item in GameController.Instance.match.Values)
+        {
+
+            foreach (var item1 in item.Values)
+            {
+                Debug.Log(item1.HotGame + "********");
+                if (togs[toggleindex].isOn)
+                {
+                    if (item1.Type == toggleindex)
+                    {
+                        if (item1.HotGame)
+                        {
+               
+                           PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("HotGameHolder");
+                            mprefabObj.transform.SetParent(parentHotTable[toggleindex]);
+                            mprefabObj.gameObject.SetActive(true);
+                            string timeStringVal = item1.Time;
+                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID, timeStringVal);
+
+                        }
+                        else
+                        {
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("UpcomingGameHolder");
+                            mprefabObj.transform.SetParent(parentUpComingMatch[toggleindex]);
+                            mprefabObj.gameObject.SetActive(true);
+                            string timeString = item1.Time;
+                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID, timeString);
+                        }
+                    }
+                }
             }
         }
-        verticle.childControlWidth = false;
+
     }
 }

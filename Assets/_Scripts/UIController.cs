@@ -12,6 +12,11 @@ using UnityEngine;
         public UIHandler Loginscreen, RegisterScreen,ContestPanel, MainMenuScreen, WinnerLeaderBoard ,SelectMatchTeam,captainscreen;
         public static UIController Instance;
 
+
+
+
+
+        // Start is called before the first frame update
         private void Awake()
         {
             Instance = this;

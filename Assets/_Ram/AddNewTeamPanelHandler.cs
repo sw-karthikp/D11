@@ -128,7 +128,6 @@ public class AddNewTeamPanelHandler : UIHandler
 
     public void ShowThisMatchTypeTeams(GameObject gameObject)
     {
-       
         string matchType = gameObject.GetComponent<Transform>().Find("Text (TMP)").GetComponent<TMP_Text>().text;
         string url = "";
 
@@ -155,6 +154,13 @@ public class AddNewTeamPanelHandler : UIHandler
                                 {
                                     GameObject gameObject1 = Instantiate(teamDisplayPref, teamDisplayParent);
                                     gameObject1.name = url;
+
+                                    Color newColor2 = Color.red;
+                                    
+                                    if (ColorUtility.TryParseHtmlString(colorName, out newColor2))
+                                    {
+                                        gameObject1.transform.GetChild(0).GetComponent<Image>().color = newColor2;   
+                                    }
 
                                     storage = FirebaseStorage.DefaultInstance;
                                     storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
@@ -227,7 +233,67 @@ public class AddNewTeamPanelHandler : UIHandler
     #region other func
     public void SelectedColor(string color)
     {
+        Color newColor1;
         colorName = color;
+        string colorCode;
+
+        switch (color)
+        {
+            case "Red":
+                {
+                    colorCode = "#FF0606";
+                    break;
+                }
+            case "Yellow":
+                {
+                    colorCode = "#FCD527";
+                    break;
+                }
+            case "Blue":
+                {
+                    colorCode = "#5886FF";
+                    break;
+                }
+            case "LightBlue":
+                {
+                    colorCode = "#496DFF";
+                    break;
+                }
+            case "LightViolet":
+                {
+                    colorCode = "#E44BFF";
+                    break;
+                }
+            case "DarkViolet":
+                {
+                    colorCode = "#703ABA";
+                    break;
+                }
+            case "Orange":
+                {
+                    colorCode = "#F87947";
+                    break;
+                }
+            case "Green":
+                {
+                    colorCode = "#56F556";
+                    break;
+                }
+            default:
+                {
+                    colorCode = "#FFFFFF";
+                    break;
+                }
+
+        }
+
+        if(ColorUtility.TryParseHtmlString(colorCode, out newColor1))
+        {
+            foreach (Transform item in teamDisplayParent)
+            {
+                item.transform.GetChild(0).GetComponent<Image>().color = newColor1;//;(Color)typeof(Color).GetProperty(color.ToLowerInvariant()).GetValue(null, null);
+            }
+        }
     }
 
     public void OnCategoryChange(GameObject gameObject)

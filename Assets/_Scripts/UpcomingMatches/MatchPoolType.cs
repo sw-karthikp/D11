@@ -23,6 +23,11 @@ public class MatchPoolType : MonoBehaviour
         
     }
 
+
+    private void OnDestroy()
+    {
+        GameController.Instance.UnSubscribeMatchPools();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -58,6 +63,7 @@ public class MatchPoolType : MonoBehaviour
 
     public void DisplayTeamMembers()
     {
+        GameController.Instance.CurrentPoolID = PoolId;
         UIController.Instance.SelectMatchTeam.ShowMe();
     }
 }

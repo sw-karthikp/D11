@@ -64,7 +64,7 @@ public class AddNewPlayerHandler : UIHandler
                     
                     if (data["TeamName"].ToString() == selectTeamNameIs)
                     {
-                        Debug.Log(" Team data is already existed...");
+                        DebugHelper.Log(" Team data is already existed...");
 
                         Dictionary<string, object> newData = new Dictionary<string, object>();
                         newData.Add("FPoint", playerRun.text);
@@ -80,7 +80,7 @@ public class AddNewPlayerHandler : UIHandler
 
                         database.Child("CommonValues").Child("TeamPlayers").UpdateChildrenAsync(updateData);
 
-                        Debug.Log($"data updated------ ");
+                        DebugHelper.Log($"data updated------ ");
                         GetTeamPlayersProfile();
                         return;
                     }
@@ -107,7 +107,7 @@ public class AddNewPlayerHandler : UIHandler
 
                 database.Child("CommonValues").Child("TeamPlayers").UpdateChildrenAsync(updateData2);
                 database.Child("CommonValues").Child("TeamPlayerCount").SetRawJsonValueAsync(teamCount);
-                Debug.Log($"New Data Created ========= ");
+                DebugHelper.Log($"New Data Created ========= ");
           
                 GetTeamPlayersProfile();
             }
@@ -162,7 +162,7 @@ public class AddNewPlayerHandler : UIHandler
 
     private void GetTeamPlayersProfile()
     {
-        Debug.Log($"12345 Entering GetTeamPlayersProfile");
+        DebugHelper.Log($"12345 Entering GetTeamPlayersProfile");
 
         FirebaseDatabase.DefaultInstance.GetReference("Ram/TeamPlayers").GetValueAsync().ContinueWithOnMainThread(task =>
         {
@@ -181,7 +181,7 @@ public class AddNewPlayerHandler : UIHandler
                                 if(item3.Key == "Players")
                                 {
                                     int totalTeams = Convert.ToInt32(item3.ChildrenCount);
-                                    Debug.Log("12345 total teams" + totalTeams);
+                                    DebugHelper.Log("12345 total teams" + totalTeams);
 
                                     foreach (var item4 in item3.Children)
                                     {
@@ -190,7 +190,7 @@ public class AddNewPlayerHandler : UIHandler
 
                                         bool alreadySpawned = false;
 
-                                        Debug.Log($" 12345 key name is {item4.Key}");
+                                        DebugHelper.Log($" 12345 key name is {item4.Key}");
 
                                         if (profileDisplayParent.childCount != 0)
                                         {
@@ -198,7 +198,7 @@ public class AddNewPlayerHandler : UIHandler
                                             {
                                                 if (profileDisplayParent.GetChild(i).name == item4.Key)
                                                 {
-                                                    Debug.Log($" 12345 This profile is already created {item4.Key}");
+                                                    DebugHelper.Log($" 12345 This profile is already created {item4.Key}");
                                                     alreadySpawned = true;
                                                 }
                                             }
@@ -209,7 +209,7 @@ public class AddNewPlayerHandler : UIHandler
                                                 gameObject.name = item4.Key;
                                                 StartCoroutine(PlayerProfile.instance.DisplayPlayerProfile(url, gameObject));
 
-                                                Debug.Log("12345 Here calling to profile loading...");
+                                                DebugHelper.Log("12345 Here calling to profile loading...");
                                             }
                                         }
                                         else
@@ -218,7 +218,7 @@ public class AddNewPlayerHandler : UIHandler
                                             gameObject1.name = item4.Key;
                                             StartCoroutine(PlayerProfile.instance.DisplayPlayerProfile(url, gameObject1));
 
-                                            Debug.Log("12345 Here calling to profile loading...");
+                                            DebugHelper.Log("12345 Here calling to profile loading...");
                                         }
                                     }
                                 }

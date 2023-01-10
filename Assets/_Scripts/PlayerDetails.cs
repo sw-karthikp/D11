@@ -17,9 +17,9 @@ public class PlayerDetails : MonoBehaviour
     public float CreditsLeft;
     public float TotalSelectedCredits;
 
-    private void Awake()
+    private void OnEnable()
     {
-        tog.onValueChanged.AddListener(delegate { OnvalueChange(); });
+        tog.onValueChanged.AddListener(x => { OnvalueChange(); OnvalueChangeCountPlayerType(); OnvalueChangeTeam(); playerCount(); });
     }
 
     public void SetPlayerData(string _playerName, string _countryName, string _fPoint, int _type)
@@ -30,6 +30,22 @@ public class PlayerDetails : MonoBehaviour
         type = _type;
     }
 
+    public void playerCount()
+    {
+        if(MatchSelection.Instance.playersForTeam.Count == 11)
+        {
+            MatchSelection.Instance.next.interactable = true;
+        }
+        else
+        {
+            MatchSelection.Instance.next.interactable = false;
+        }
+        MatchSelection.Instance.SetToggleUnActive0();
+        MatchSelection.Instance.SetToggleUnActive1();
+        MatchSelection.Instance.SetToggleUnActive2();
+        MatchSelection.Instance.SetToggleUnActive3();
+
+    }
     public void OnvalueChange()
     {
 
@@ -44,23 +60,20 @@ public class PlayerDetails : MonoBehaviour
             {
                 MatchSelection.Instance.playersForTeam.Add(newMatch);
 
-             
+
+
                 for (int i = 0; i < MatchSelection.Instance.playersForTeam.Count; i++)
                 {
-                    if (MatchSelection.Instance.playersForTeam[i].type == 0)
-                    {
-                 
-                    }
-
-                        Sprite_Swap.Instance.objects[i].sprite = Sprite_Swap.Instance.Spritecolor[0];
+                    Sprite_Swap.Instance.objects[i].sprite = Sprite_Swap.Instance.Spritecolor[0];
                 }
+
+
                 MatchSelection.Instance.selectedplayerCount.text = MatchSelection.Instance.playersForTeam.Count.ToString();
                 TotalSelectedCredits = 0;
                 foreach (var item in MatchSelection.Instance.playersForTeam)
                 {
                     TotalSelectedCredits += float.Parse(item.points);
                     Debug.Log(TotalSelectedCredits);
-
                 }
                 CreditsLeft = MatchSelection.Instance.TotalCredits - TotalSelectedCredits;
                 MatchSelection.Instance.CreditsLeft.text = CreditsLeft.ToString();
@@ -68,8 +81,6 @@ public class PlayerDetails : MonoBehaviour
 
             }
 
-            
-            
 
         }
         else
@@ -81,7 +92,6 @@ public class PlayerDetails : MonoBehaviour
 
 
                 Sprite_Swap.Instance.objects[MatchSelection.Instance.playersForTeam.Count].sprite = Sprite_Swap.Instance.Spritecolor[1];
-
                 MatchSelection.Instance.selectedplayerCount.text = MatchSelection.Instance.playersForTeam.Count.ToString();
                 TotalSelectedCredits = 0;
                 foreach (var item in MatchSelection.Instance.playersForTeam)
@@ -98,6 +108,70 @@ public class PlayerDetails : MonoBehaviour
 
 
         }
+
+
+
+    }
+
+    void OnvalueChangeCountPlayerType()
+    {
+
+        int wkt = 0, bat = 0, overall = 0, bowling = 0;
+        foreach (var item in MatchSelection.Instance.playersForTeam)
+        {
+
+
+            if (item.type == 0)
+            {
+               
+                wkt++;
+               
+            }
+            else if (item.type == 1)
+            {
+                bat++;
+             
+            }
+            else if (item.type == 2)
+            {
+                overall++;
+               
+            }
+            else if (item.type == 3)
+            {
+                bowling++;
+                
+            }
+
+
+        }
+        ToggleAdditionCount.Instance.SetValue(wkt, bat, overall, bowling);
+
+    }
+    void OnvalueChangeTeam()
+    {
+
+        int TeamA = 0,  TeamB = 0;
+        foreach (var item in MatchSelection.Instance.playersForTeam)
+        {
+
+
+            if (item.countryName == GameController.Instance.CurrentTeamA)
+            {
+
+                TeamA++;
+
+            }
+            else if (item.countryName ==  GameController.Instance.CurrentTeamB)
+            {
+                TeamB++;
+
+            }
+     
+
+        }
+        ToggleAdditionCount.Instance.SetValueTeam(TeamA, TeamB );
+
     }
 
 

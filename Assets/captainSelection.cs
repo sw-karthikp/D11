@@ -1,7 +1,12 @@
+using Firebase.Extensions;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Firebase;
+using Firebase.Database;
 public class captainSelection : UIHandler
 {
 
@@ -9,6 +14,11 @@ public class captainSelection : UIHandler
     public Transform[] parent;
     public List<Toggle> togscaptain;
     public List<Toggle> togsvcaptain;
+
+    private void Awake()
+    {
+
+    }
     public override void ShowMe()
     {
         UIController.Instance.AddToOpenPages(this);
@@ -25,6 +35,40 @@ public class captainSelection : UIHandler
         UIController.Instance.RemoveFromOpenPages(this);
         gameObject.SetActive(false);
 
+    }
+
+    public void onClickSave()
+    {
+
+        string json = JsonConvert.SerializeObject(MatchSelection.Instance.playersForTeam);
+
+
+
+        //Dictionary<string,object> toDict =  new Dictionary<string, object>();
+
+        //foreach (var item in MatchSelection.Instance.playersForTeam)
+        //{
+        //    toDict.Add(item.playerName, (object)item);
+        //}
+
+        //  Debug.Log(toDict.Count);
+
+        
+
+
+        //DocumentReference docref = db.Collection("users").Document(FireBaseManager.Instance.auth.CurrentUser.UserId);
+
+        //docref.UpdateAsync(toDict).ContinueWithOnMainThread(task =>
+        //{
+
+        //    if (task.IsCanceled || task.IsFaulted)
+        //    {
+        //        Debug.Log("Error: " + task.Exception);
+        //    }
+
+        //    Debug.Log("Succesfully updated.... ");
+
+        //});
     }
 
 
@@ -122,175 +166,20 @@ public class captainSelection : UIHandler
 
             }
 
+
+
+
         }
+
+
+
+
+
+
     }
 
 
-    private void Update()
-    {
-        if(togscaptain[0].isOn == true)
-        {
-            togscaptain[1].isOn = false;
-            togscaptain[2].isOn = false;
-            togscaptain[3].isOn = false;
-            togscaptain[4].isOn = false;
-            togscaptain[5].isOn = false;
-            togscaptain[6].isOn = false;
-            togscaptain[7].isOn = false;
-        }
-        else if(togscaptain[1].isOn ==true)
-        {
-            togscaptain[0].isOn = false;
-            togscaptain[2].isOn = false;
-            togscaptain[3].isOn = false;
-            togscaptain[4].isOn = false;
-            togscaptain[5].isOn = false;
-            togscaptain[6].isOn = false;
-            togscaptain[7].isOn = false;
-        }
-        else if (togscaptain[2].isOn == true)
-        {
-            togscaptain[0].isOn = false;
-            togscaptain[1].isOn = false;
-            togscaptain[3].isOn = false;
-            togscaptain[4].isOn = false;
-            togscaptain[5].isOn = false;
-            togscaptain[6].isOn = false;
-            togscaptain[7].isOn = false;
-        }
-        else if (togscaptain[3].isOn == true)
-        {
-            togscaptain[0].isOn = false;
-            togscaptain[1].isOn = false;
-            togscaptain[2].isOn = false;
-            togscaptain[4].isOn = false;
-            togscaptain[5].isOn = false;
-            togscaptain[6].isOn = false;
-            togscaptain[7].isOn = false;
-        }
-        else if (togscaptain[4].isOn == true)
-        {
-            togscaptain[0].isOn = false;
-            togscaptain[1].isOn = false;
-            togscaptain[2].isOn = false;
-            togscaptain[3].isOn = false;
-            togscaptain[5].isOn = false;
-            togscaptain[6].isOn = false;
-            togscaptain[7].isOn = false;
-        }
-        else if (togscaptain[5].isOn == true)
-        {
-            togscaptain[0].isOn = false;
-            togscaptain[1].isOn = false;
-            togscaptain[2].isOn = false;
-            togscaptain[3].isOn = false;
-            togscaptain[4].isOn = false;
-            togscaptain[6].isOn = false;
-            togscaptain[7].isOn = false;
-        }
-        else if (togscaptain[6].isOn == true)
-        {
-            togscaptain[0].isOn = false;
-            togscaptain[1].isOn = false;
-            togscaptain[2].isOn = false;
-            togscaptain[3].isOn = false;
-            togscaptain[4].isOn = false;
-            togscaptain[5].isOn = false;
-            togscaptain[7].isOn = false;
-        }
-        else if (togscaptain[7].isOn == true)
-        {
-            togscaptain[0].isOn = false;
-            togscaptain[1].isOn = false;
-            togscaptain[2].isOn = false;
-            togscaptain[3].isOn = false;
-            togscaptain[4].isOn = false;
-            togscaptain[5].isOn = false;
-            togscaptain[6].isOn = false;
-        }
-
-        ///////////////////////////////////
-        if (togsvcaptain[0].isOn == true)
-        {
-            togsvcaptain[1].isOn = false;
-            togsvcaptain[2].isOn = false;
-            togsvcaptain[3].isOn = false;
-            togsvcaptain[4].isOn = false;
-            togsvcaptain[5].isOn = false;
-            togsvcaptain[6].isOn = false;
-            togsvcaptain[7].isOn = false;
-        }
-        else if (togsvcaptain[1].isOn == true)
-        {
-            togsvcaptain[0].isOn = false;
-            togsvcaptain[2].isOn = false;
-            togsvcaptain[3].isOn = false;
-            togsvcaptain[4].isOn = false;
-            togsvcaptain[5].isOn = false;
-            togsvcaptain[6].isOn = false;
-            togsvcaptain[7].isOn = false;
-        }
-        else if (togsvcaptain[2].isOn == true)
-        {
-            togsvcaptain[0].isOn = false;
-            togsvcaptain[1].isOn = false;
-            togsvcaptain[3].isOn = false;
-            togsvcaptain[4].isOn = false;
-            togsvcaptain[5].isOn = false;
-            togsvcaptain[6].isOn = false;
-            togsvcaptain[7].isOn = false;
-        }
-        else if (togsvcaptain[3].isOn == true)
-        {
-            togsvcaptain[0].isOn = false;
-            togsvcaptain[1].isOn = false;
-            togsvcaptain[2].isOn = false;
-            togsvcaptain[4].isOn = false;
-            togsvcaptain[5].isOn = false;
-            togsvcaptain[6].isOn = false;
-            togsvcaptain[7].isOn = false;
-        }
-        else if (togsvcaptain[4].isOn == true)
-        {
-            togsvcaptain[0].isOn = false;
-            togsvcaptain[1].isOn = false;
-            togsvcaptain[2].isOn = false;
-            togsvcaptain[3].isOn = false;
-            togsvcaptain[5].isOn = false;
-            togsvcaptain[6].isOn = false;
-            togsvcaptain[7].isOn = false;
-        }
-        else if (togsvcaptain[5].isOn == true)
-        {
-            togsvcaptain[0].isOn = false;
-            togsvcaptain[1].isOn = false;
-            togsvcaptain[2].isOn = false;
-            togsvcaptain[3].isOn = false;
-            togsvcaptain[4].isOn = false;
-            togsvcaptain[6].isOn = false;
-            togsvcaptain[7].isOn = false;
-        }
-        else if (togsvcaptain[6].isOn == true)
-        {
-            togsvcaptain[0].isOn = false;
-            togsvcaptain[1].isOn = false;
-            togsvcaptain[2].isOn = false;
-            togsvcaptain[3].isOn = false;
-            togsvcaptain[4].isOn = false;
-            togsvcaptain[5].isOn = false;
-            togsvcaptain[7].isOn = false;
-        }
-        else if (togsvcaptain[7].isOn == true)
-        {
-            togsvcaptain[0].isOn = false;
-            togsvcaptain[1].isOn = false;
-            togsvcaptain[2].isOn = false;
-            togsvcaptain[3].isOn = false;
-            togsvcaptain[4].isOn = false;
-            togsvcaptain[5].isOn = false;
-            togsvcaptain[6].isOn = false;
-        }
-    }
-
+    
 
 }
+

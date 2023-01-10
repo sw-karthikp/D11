@@ -7,23 +7,32 @@ using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
 using Newtonsoft.Json;
+using Sirenix.OdinInspector;
+using static UnityEditor.Progress;
 
-public class GameController : MonoBehaviour
+public class GameController : SerializedMonoBehaviour
 {
 
     public static GameController Instance;
     public string CurrentTeamA;
     public string CurrentTeamB;
     public int CurrentMatchID;
-
+    public string CurrentMatchTimeDuration;
+    public string CurrentPoolID;
     public List<Team> team;
-    public Match match;
+    public Dictionary<string,Dictionary<string,MatchStatus>> match = new ();
     public List<MatchPoolType> matchpool;
     public List<Player> players;
+
+    private void OnApplicationQuit()
+    {
+        FirebaseDatabase.DefaultInstance.App.Dispose();
+    }
 
     private void Awake()
     {
         Instance = this;
+        Application.targetFrameRate = 120;
     }
     public void SubscribePlayerDetails()
     {
@@ -81,11 +90,28 @@ public class GameController : MonoBehaviour
             Debug.LogError(args.DatabaseError.Message + "*************");
             return;
         }
-        string val = args.Snapshot.GetRawJsonValue();
-        Debug.Log(val);
+        DataSnapshot val = args.Snapshot;
+        Debug.Log(val.GetRawJsonValue());
+        foreach (var item in val.Children)
+        {
+         
+            Dictionary<string, MatchStatus> matchnew = new();
+         
+            foreach (var item1 in item.Children)
+            {
 
-        match = JsonConvert.DeserializeObject<Match>(val);
-       StartCoroutine(MainMenu_Handler.Instance.SetUpcomingMatchDetails());
+                matchnew.Add(item1.Key, JsonConvert.DeserializeObject<MatchStatus>(item1.GetRawJsonValue()));
+
+            }
+            match.Add(item.Key, matchnew);
+
+
+        }
+
+        MainMenu_Handler.Instance.OnvalueChangeT20();
+        MainMenu_Handler.Instance.OnvalueChangeODI();
+        MainMenu_Handler.Instance.OnvalueChangeTEST();
+        MainMenu_Handler.Instance.OnvalueChangeT10();
     }
 
     public void SubscribeMatchPools()
@@ -172,28 +198,6 @@ public class GameController : MonoBehaviour
 
     #endregion
 
-    #region Match
-
-    [Serializable]
-    public class Match
-    {
-        public List<MatchStatus> Completed = new();
-        public List<MatchStatus> Live = new();
-        public List<MatchStatus> Upcoming = new();
-    }
-
-    [Serializable]
-    public class MatchStatus
-    {
-        public bool HotGame;
-        public int ID;
-        public string TeamA;
-        public string TeamB;
-
-    }
-
-    #endregion
-
     #region MatchPools
 
 
@@ -243,6 +247,57 @@ public class GameController : MonoBehaviour
         public string ID;
         public string Name;
         public int Type;
+    }
+
+
+    #endregion
+
+    #region SetPlayerDetailsRealDb
+    public class MatchDeatils
+    {
+        public List<string> Matches = new();
+        public PoolDetails PoolDetail;
+
+    }
+
+    public class PoolDetails
+    {
+        public List<MatchDeatilValues> PoolDetailsval = new();
+
+    }
+
+
+    public class MatchDeatilValues 
+    {
+        public int MatchDetail;
+        public int TeamDetails;
+    }
+
+    public class TeamDetailsValues 
+    {
+        public string TeamId;
+        public List<Playerscls> Players = new();
+    }
+
+
+    public class Playerscls 
+    {
+        public string Captain;
+        public string VCaptain;
+        public List<Teams> TeamA;
+        public List<Teams> TeamB;
+    }
+
+    public class Teams
+    {
+        public string TeamName;
+        public List<Players> Players = new();
+
+    }
+
+    public class Players
+    {
+        public string playerID;
     }
 
     #endregion

@@ -71,7 +71,7 @@ public class ContestHandler : UIHandler
     }
 
 
-    public IEnumerator SetUpcomingMatchPoolDetails(int MatchId ,string teamA ,string teamB)
+    public IEnumerator SetUpcomingMatchPoolDetails(int MatchId ,string teamA ,string teamB , string _timeduration)
     {
         MatchIDVal = MatchId.ToString();
         TeamA = teamA;
@@ -79,22 +79,24 @@ public class ContestHandler : UIHandler
         GameController.Instance.CurrentTeamA = teamA;
         GameController.Instance.CurrentTeamB = teamB;
         GameController.Instance.CurrentMatchID = MatchId;
+        GameController.Instance.CurrentMatchTimeDuration = _timeduration;
         val.Clear();
-        Debug.Log("******************");
+        Debug.Log("******************" + MatchId);
 
         for (int i = 0; i < GameController.Instance.matchpool.Count; i++)
         {
 
-
-            for (int j = 0; j < GameController.Instance.matchpool[i].Pools.Count; j++)
+            if (GameController.Instance.matchpool[i].MatchID == MatchId)
             {
-
-
-                if (GameController.Instance.matchpool[i].MatchID == MatchId)
+                for (int j = 0; j < GameController.Instance.matchpool[i].Pools.Count; j++)
                 {
+
+                    
+               
                     bool canSkip = false;
                     foreach (Transform child in parent)
                     {
+                        Debug.Log("*********" + GameController.Instance.matchpool[i].Pools.Count + "___"+child.name);
                         if (child.name.Contains(GameController.Instance.matchpool[i].Pools[j].PoolID.ToString()))
                         {
                             canSkip = true;
@@ -106,11 +108,13 @@ public class ContestHandler : UIHandler
                     mPoolPrefab.name = GameController.Instance.matchpool[i].Pools[j].PoolID.ToString();
                     mPoolPrefab.GetComponent<MatchPoolType>().SetValueToPoolObject(GameController.Instance.matchpool[i].Pools[j].Entry, GameController.Instance.matchpool[i].Pools[j].PoolID, GameController.Instance.matchpool[i].Pools[j].PrizeList,
                     GameController.Instance.matchpool[i].Pools[j].PrizePool, GameController.Instance.matchpool[i].Pools[j].SlotsFilled, GameController.Instance.matchpool[i].Pools[j].TotalSlots);
-                    yield return new WaitForSeconds(0f);
+
                 }
 
 
             }
         }
+
+        yield return new WaitForSeconds(0f);
     }
 }

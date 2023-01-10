@@ -6,7 +6,8 @@ using Firebase.Auth;
 using Firebase.Functions;
 using Firebase.Database;
 using Firebase.Extensions;
-
+using Firebase.Firestore;
+using TMPro;
 public class FireBaseManager : MonoBehaviour
 {
 
@@ -16,12 +17,12 @@ public class FireBaseManager : MonoBehaviour
     [Header("FireBase")]
     public FirebaseAuth auth;
     public FirebaseUser user;
-
+    public FirebaseFirestore db;
 
     private void Awake()
     {
         Instance = this;
-
+        db = FirebaseFirestore.DefaultInstance;
     }
 
 
@@ -29,6 +30,7 @@ public class FireBaseManager : MonoBehaviour
     {
        
         StartCoroutine(CheckAndFixDependancies());
+       
     }
 
     private IEnumerator CheckAndFixDependancies()
@@ -87,24 +89,27 @@ public class FireBaseManager : MonoBehaviour
         {
             Debug.Log("AutoLogin Success");
 
-            if (user.IsEmailVerified)
-            {
-                ///Temp
-                ///
-                //UIController.Instance.LoadingScreen.HideMe();
-                UIController.Instance.MainMenuScreen.ShowMe();
-                UIController.Instance.Loginscreen.HideMe();
-                UIController.Instance.RegisterScreen.HideMe();
-            }
-            else
-            {
-                ///Temp
-                ///
-                //UIController.Instance.LoadingScreen.HideMe();
-                UIController.Instance.MainMenuScreen.ShowMe();
-                UIController.Instance.Loginscreen.HideMe();
-                UIController.Instance.RegisterScreen.HideMe();
-            }
+            //if (user.IsEmailVerified)
+            //{
+            //    ///Temp
+            //    ///
+            //    //UIController.Instance.LoadingScreen.HideMe();
+            //    UIController.Instance.MainMenuScreen.ShowMe();
+            //    UIController.Instance.Loginscreen.HideMe();
+            //    UIController.Instance.RegisterScreen.HideMe();
+            //}
+            //else
+            //{
+            //    ///Temp
+            //    ///
+            //    //UIController.Instance.LoadingScreen.HideMe();
+            //    UIController.Instance.MainMenuScreen.ShowMe();
+            //    UIController.Instance.Loginscreen.HideMe();
+            //    UIController.Instance.RegisterScreen.HideMe();
+
+            //}
+
+
         }
         else
         {
@@ -143,7 +148,7 @@ public class FireBaseManager : MonoBehaviour
 
 
     #region LoginLogic
-    public IEnumerator LoginLogic(string email, string password, string errormsg)
+    public IEnumerator LoginLogic(string email, string password,TMP_Text errormsg,GameObject loadingtxt,GameObject loadinganim)
     {
         Debug.Log("called");
         Credential credential = EmailAuthProvider.GetCredential(email, password);
@@ -181,7 +186,10 @@ public class FireBaseManager : MonoBehaviour
             }
 
             Debug.Log("Error Message:" + " " + Error);
-            errormsg = Error;
+            errormsg.text = Error;
+            loadingtxt.SetActive(true);
+            loadinganim.SetActive(false);
+
         }
         else
         {
@@ -212,7 +220,7 @@ public class FireBaseManager : MonoBehaviour
 
 
     #region RegisterLogic
-    public IEnumerator RegisterLogic(string username, string email, string password, string mobile, string errormsg)
+    public IEnumerator RegisterLogic(string username, string email, string password, string mobile,TMP_Text errormsg, GameObject loadingtxt, GameObject loadinganim)
     {
         Debug.Log("called");
         var registerTask = auth.CreateUserWithEmailAndPasswordAsync(email, password);
@@ -247,7 +255,9 @@ public class FireBaseManager : MonoBehaviour
             }
 
             Debug.Log("Error Message:" + " " + Error);
-            errormsg = Error;
+            errormsg.text = Error;
+            loadingtxt.SetActive(true);
+            loadinganim.SetActive(false);
             //UIController.Instance.LoadingScreen.HideMe();
 
         }
@@ -278,9 +288,10 @@ public class FireBaseManager : MonoBehaviour
                 }
 
                 Debug.Log("Error Message:" + " " + Error);
-                errormsg = Error;
+                errormsg.text = Error;
                 //UIController.Instance.LoadingScreen.HideMe();
-
+                loadingtxt.SetActive(true);
+                loadinganim.SetActive(false);
 
 
 
@@ -289,7 +300,6 @@ public class FireBaseManager : MonoBehaviour
             {
                 Debug.Log($"FireBase user Created Succesfully : {user.DisplayName} {user.UserId}");
 
-                WalletManager.instance.CreateWalletForNewUser();
 
                 PlayerPrefs.SetInt("signedIn", 1);
                 PlayerPrefs.SetString("userName", user.DisplayName);
@@ -298,7 +308,7 @@ public class FireBaseManager : MonoBehaviour
                 UIController.Instance.MainMenuScreen.ShowMe();
                 UIController.Instance.Loginscreen.HideMe();
                 UIController.Instance.RegisterScreen.HideMe();
-                
+                CreateNewUserInFireStore();
 
 
 
@@ -319,7 +329,37 @@ public class FireBaseManager : MonoBehaviour
     }
     #endregion
 
+    // 
+    public void CreateNewUserInFireStore()
+    {
+        //string userId = FireBaseManager.Instance.user.UserId;
+        //Debug.Log(userId);
+        DocumentReference docRef = db.Collection("users").Document(FireBaseManager.Instance.user.UserId);
 
+        Dictionary<string, object> userData = new Dictionary<string, object>
+        {
+            { "Name" , FireBaseManager.Instance.user.DisplayName },
+            { "Amount" , 100},
+            { "Bonus", 100 }
+        };
+
+        docRef.SetAsync(userData).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.Log("new user data creation is failed....");
+                return;
+            }
+
+            if (task.IsFaulted)
+            {
+                Debug.Log("Something wrong.... " + task.Exception);
+                return;
+            }
+
+            Debug.Log("Successfully wallet created....");
+        });
+    }
 
 }
 

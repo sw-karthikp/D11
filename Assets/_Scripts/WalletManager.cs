@@ -7,6 +7,8 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using Firebase.Database;
 using UnityEngine.UI;
+using DG.Tweening;
+using UnityEngine.Events;
 using System;
 
 public class WalletManager : UIHandler
@@ -21,59 +23,38 @@ public class WalletManager : UIHandler
     [SerializeField] private TMP_InputField userName;
     [SerializeField] private TMP_Text amount;
     [SerializeField] private TMP_Text newAddedAmount;
+    [SerializeField] private TMP_Text bonusAdded;
     [SerializeField] private TMP_InputField newAmount;
     [SerializeField] private Button plus;
     [SerializeField] private Button minus;
+
+    [SerializeField] private Tween Slidetween;
+    [SerializeField] private float XSlidePos = 1000;
 
     // store
     public string userId;
     public int currentAmount;
     public string amount2;
 
-
+    public RectTransform Popup;
+    public Button GobackBtn;
 
     private void Awake()
     {
         instance = this;
 
         db = FirebaseFirestore.DefaultInstance;
+
+
     }
 
-    public void CreateWalletForNewUser()
-    {
-        //string userId = FireBaseManager.Instance.user.UserId;
-        //Debug.Log(userId);
-        DocumentReference docRef = db.Collection("users").Document(FireBaseManager.Instance.user.UserId);
 
-        Dictionary<string, object> userData = new Dictionary<string, object>
-        {
-            { "Name" , userName.text },
-            { "Amount" , 100 },
-        };
-
-        docRef.SetAsync(userData).ContinueWithOnMainThread(task =>
-        {
-            if (task.IsCanceled)
-            {
-                Debug.Log("new user data creation is failed....");
-                return;
-            }
-
-            if (task.IsFaulted)
-            {
-                Debug.Log("Something wrong.... " + task.Exception);
-                return;
-            }
-
-            Debug.Log("Successfully wallet created....");
-        });
-    }
 
     public void LoadUserDetail()
     {
 
         DocumentReference colRef = db.Collection("users").Document(FireBaseManager.Instance.user.UserId);
-        
+
 
         colRef.Listen(task =>
         {
@@ -87,7 +68,7 @@ public class WalletManager : UIHandler
                 {
                     case "Name":
                         {
-                            userName.text = data.Value.ToString();
+                            //   userName.text = data.Value.ToString();
                             break;
                         }
 
@@ -95,6 +76,12 @@ public class WalletManager : UIHandler
                         {
                             amount.text = data.Value.ToString();
                             amount2 = amount.text;
+                            break;
+                        }
+                    case "Bonus":
+                        {
+
+                            bonusAdded.text = data.Value.ToString();
                             break;
                         }
 
@@ -110,8 +97,9 @@ public class WalletManager : UIHandler
 
     public void UpdataWalletValue(bool value)
     {
+
         int newAmount2 = int.Parse(amount2);
-        newAddedAmount.text = newAmount.text;
+
 
         if (value)
         {
@@ -125,33 +113,59 @@ public class WalletManager : UIHandler
         DocumentReference docref = db.Collection("users").Document(FireBaseManager.Instance.auth.CurrentUser.UserId);
         Dictionary<string, object> userData = new Dictionary<string, object>
         {
-            { "Amount", newAmount2.ToString()}
+            { "AmountAdded", newAmount2.ToString()  },
+            { "Amount" , newAmount2.ToString()}
         };
 
         docref.UpdateAsync(userData).ContinueWithOnMainThread(task =>
         {
+
             if (task.IsCanceled || task.IsFaulted)
             {
                 Debug.Log("Error: " + task.Exception);
             }
 
             Debug.Log("Succesfully updated.... ");
+
+
+            newAddedAmount.text = newAmount2.ToString();
+            amount.text = newAmount2.ToString();
+            amount2 = newAmount2.ToString();
         });
     }
 
     public override void HideMe()
     {
         UIController.Instance.RemoveFromOpenPages(this);
-        gameObject.SetActive(false);
+        if (Slidetween != null)
+        {
+            Slidetween.Kill();
+        }
+
+        Slidetween = Popup.DOScaleY(0, 0.5f).OnComplete(() =>
+        {
+            Slidetween = null;
+            gameObject.SetActive(false);
+        });
     }
     public override void ShowMe()
     {
-        UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
+        UIController.Instance.AddToOpenPages(this);
+        if (Slidetween != null)
+            Slidetween.Kill();
+
+        Slidetween = Popup.DOScaleY(1f, 0.5f).OnComplete(() => Slidetween = null);
+
+        LoadUserDetail();
     }
+
+
 
     public override void OnBack()
     {
 
+
+        HideMe();
     }
 }

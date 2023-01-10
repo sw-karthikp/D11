@@ -8,6 +8,8 @@ using System;
 
 public class CreateMatchHandler : UIHandler
 {
+    public static CreateMatchHandler instance;
+
     //[Header("Team A")]
     //[SerializeField] private TMP_InputField teamAId;
     //[SerializeField] private TMP_InputField teamAName;
@@ -31,6 +33,12 @@ public class CreateMatchHandler : UIHandler
 
     // Firebase 
     public DatabaseReference database;
+
+    private void Awake()
+    {
+        instance= this;
+        this.gameObject.SetActive(false);   
+    }
 
     private void Start()
     {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static GameController;
 
 public class PoolManager : MonoBehaviour
 {
@@ -13,7 +14,12 @@ public class PoolManager : MonoBehaviour
 
     Dictionary<string, PoolItems> objectsToCreate= new Dictionary<string, PoolItems>();
 
+    public static PoolManager Instance;
 
+    private void Awake()
+    {
+        Instance= this;
+    }
     void Start()
     {
         foreach (var item in poolObjects)
@@ -42,15 +48,27 @@ public class PoolManager : MonoBehaviour
     
     public void SetPoolObject(string poolID, PoolItems objToAdd)
     {
-        pooledObjects[poolID].Enqueue(objToAdd);
+        objToAdd.gameObject.SetActive(false);
+        StartCoroutine(SetParentToDefault(poolID, objToAdd));
     }
+
+    IEnumerator SetParentToDefault(string poolID,PoolItems objToAdd)
+    {
+        yield return new WaitForEndOfFrame();
+        pooledObjects[poolID].Enqueue(objToAdd);
+        objToAdd.transform.SetParent(poolParent);
+    }
+
 
 
     void CreatePoolObject(string poolId)
     {
         GameObject obj = Instantiate(objectsToCreate[poolId].gameObject,poolParent);
-        obj.gameObject.SetActive(false);
+       Debug.Log(poolId+ "213232321^^^^^^^^^^^");
+        
+       
         obj.GetComponent<PoolItems>().SetPool(this, poolId);
+        obj.SetActive(false);
         if (pooledObjects.ContainsKey(poolId))
             pooledObjects[poolId].Enqueue(obj.GetComponent<PoolItems>());
         else
