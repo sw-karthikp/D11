@@ -223,71 +223,49 @@ public class MatchSelection : UIHandler
 
     public void onTogWicketKeeper()
     {
-        if(tog[0].isOn)
+        if (tog[0].isOn)
         {
-         
+            foreach (Transform child in parent[0])
+            {
+                child.gameObject.SetActive(false);
+            }
+
             parent[0].gameObject.SetActive(true);
             rect.content = parent[0].GetComponent<RectTransform>();
-            for (int i = 0; i < GameController.Instance.players.Count; i++)
+
+            foreach (var item in GameController.Instance.players.Values)
             {
-                if (GameController.Instance.players[i].TeamName.Contains(GameController.Instance.CurrentTeamA))
+                if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
                 {
-                    for (int j = 0; j < GameController.Instance.players[i].Players.Count; j++)
+                    foreach (var item1 in item.Players.Values)
                     {
-
-                        bool canSkip = false;
-                        foreach (Transform child in parent[0])
+                        if (item1.Type == 0)
                         {
-                            if (child.name.Contains(GameController.Instance.players[i].Players[j].Name))
-                            {
-                                Debug.Log("**************");
-                                canSkip = true;
-                                break;
-                            }
-                        }
-                        if (canSkip) continue;
-
-                        if (GameController.Instance.players[i].Players[j].Type == 0)
-                        {
-                            GameObject mPrefab = Instantiate(childPrefab, parent[0]);
-                            mPrefab.name = GameController.Instance.players[i].Players[j].Name;
-                            mPrefab.GetComponent<PlayerDetails>().SetPlayerData(GameController.Instance.players[i].Players[j].Name, GameController.Instance.players[i].TeamName, GameController.Instance.players[i].Players[j].FPoint.ToString(),GameController.Instance.players[i].Players[j].Type);
-                        }
-                     
-                    }
-
-                }
-                if (GameController.Instance.players[i].TeamName.Contains(GameController.Instance.CurrentTeamB))
-                {
-                    for (int j = 0; j < GameController.Instance.players[i].Players.Count; j++)
-                    {
-                        bool canSkip = false;
-                        foreach (Transform child in parent[0])
-                        {
-                            if (child.name.Contains(GameController.Instance.players[i].Players[j].Name))
-                            {
-                                canSkip = true;
-                                break;
-                            }
-                        }
-                        if (canSkip) continue;
-                        if (GameController.Instance.players[i].Players[j].Type == 0)
-                        {
-                            GameObject mPrefab = Instantiate(childPrefab, parent[0]);
-                            mPrefab.name = GameController.Instance.players[i].Players[j].Name;
-                            mPrefab.GetComponent<PlayerDetails>().SetPlayerData(GameController.Instance.players[i].Players[j].Name, GameController.Instance.players[i].TeamName, GameController.Instance.players[i].Players[j].FPoint.ToString(), GameController.Instance.players[i].Players[j].Type);
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            mprefabObj.transform.SetParent(parent[0]);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
                         }
                     }
-
                 }
-
+                if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
+                {
+                    foreach (var item1 in item.Players.Values)
+                    {
+                        if (item1.Type == 0)
+                        {
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            mprefabObj.transform.SetParent(parent[0]);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                        }
+                    }
+                }
             }
         }
         else
         {
-           
             parent[0].gameObject.SetActive(false);
-          
         }
     }
 
@@ -296,71 +274,47 @@ public class MatchSelection : UIHandler
     {
         if (tog[1].isOn)
         {
-           
+            foreach (Transform child in parent[1])
+            {
+                child.gameObject.SetActive(false);
+            }
+
             parent[1].gameObject.SetActive(true);
             rect.content = parent[1].GetComponent<RectTransform>();
-            for (int i = 0; i < GameController.Instance.players.Count; i++)
+
+            foreach (var item in GameController.Instance.players.Values)
             {
-
-                if (GameController.Instance.players[i].TeamName.Contains(GameController.Instance.CurrentTeamA))
+                if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
                 {
-                    for (int j = 0; j < GameController.Instance.players[i].Players.Count; j++)
+                    foreach (var item1 in item.Players.Values)
                     {
-
-                        bool canSkip = false;
-                        foreach (Transform child in parent[1])
+                        if (item1.Type == 1)
                         {
-                            if (child.name.Contains(GameController.Instance.players[i].Players[j].Name))
-                            {
-                                canSkip = true;
-                                break;
-                            }
-                        }
-                        if (canSkip) continue;
-                        if (GameController.Instance.players[i].Players[j].Type == 1)
-                        {
-                            GameObject mPrefab = Instantiate(childPrefab, parent[1]);
-                            mPrefab.name = GameController.Instance.players[i].Players[j].Name;
-                            mPrefab.GetComponent<PlayerDetails>().SetPlayerData(GameController.Instance.players[i].Players[j].Name, GameController.Instance.players[i].TeamName, GameController.Instance.players[i].Players[j].FPoint.ToString(), GameController.Instance.players[i].Players[j].Type);
-                        }
-
-                    }
-
-                }
-                if (GameController.Instance.players[i].TeamName.Contains(GameController.Instance.CurrentTeamB))
-                {
-                    for (int j = 0; j < GameController.Instance.players[i].Players.Count; j++)
-                    {
-                        bool canSkip = false;
-                        foreach (Transform child in parent[1])
-                        {
-                            if (child.name.Contains(GameController.Instance.players[i].Players[j].Name))
-                            {
-                                canSkip = true;
-                                break;
-                            }
-                        }
-                        if (canSkip) continue;
-                        if (GameController.Instance.players[i].Players[j].Type == 1)
-                        {
-                            GameObject mPrefab = Instantiate(childPrefab, parent[1]);
-                            mPrefab.name = GameController.Instance.players[i].Players[j].Name;
-                            mPrefab.GetComponent<PlayerDetails>().SetPlayerData(GameController.Instance.players[i].Players[j].Name, GameController.Instance.players[i].TeamName, GameController.Instance.players[i].Players[j].FPoint.ToString(), GameController.Instance.players[i].Players[j].Type);
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            mprefabObj.transform.SetParent(parent[1]);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
                         }
                     }
-
                 }
-
+                if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
+                {
+                    foreach (var item1 in item.Players.Values)
+                    {
+                        if (item1.Type == 1)
+                        {
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            mprefabObj.transform.SetParent(parent[1]);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                        }
+                    }
+                }
             }
         }
         else
         {
-            //foreach (Transform Child in parent[1])
-            //{
-            //    Destroy(Child.gameObject);
-            //}
             parent[1].gameObject.SetActive(false);
-
         }
     }
 
@@ -368,143 +322,97 @@ public class MatchSelection : UIHandler
     {
         if (tog[2].isOn)
         {
-          
+            foreach (Transform child in parent[2])
+            {
+                child.gameObject.SetActive(false);
+            }
+
             parent[2].gameObject.SetActive(true);
             rect.content = parent[2].GetComponent<RectTransform>();
-            for (int i = 0; i < GameController.Instance.players.Count; i++)
+
+            foreach (var item in GameController.Instance.players.Values)
             {
-
-                if (GameController.Instance.players[i].TeamName.Contains(GameController.Instance.CurrentTeamA))
+                if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
                 {
-                    for (int j = 0; j < GameController.Instance.players[i].Players.Count; j++)
+                    foreach (var item1 in item.Players.Values)
                     {
-                        bool canSkip = false;
-                        foreach (Transform child in parent[2])
+                        if (item1.Type == 2)
                         {
-                            if (child.name.Contains(GameController.Instance.players[i].Players[j].Name))
-                            {
-                                canSkip = true;
-                                break;
-                            }
-                        }
-                        if (canSkip) continue;
-                        if (GameController.Instance.players[i].Players[j].Type == 2)
-                        {
-                            GameObject mPrefab = Instantiate(childPrefab, parent[2]);
-                            mPrefab.name = GameController.Instance.players[i].Players[j].Name;
-                            mPrefab.GetComponent<PlayerDetails>().SetPlayerData(GameController.Instance.players[i].Players[j].Name, GameController.Instance.players[i].TeamName, GameController.Instance.players[i].Players[j].FPoint.ToString(), GameController.Instance.players[i].Players[j].Type);
-                        }
-
-                    }
-
-                }
-                if (GameController.Instance.players[i].TeamName.Contains(GameController.Instance.CurrentTeamB))
-                {
-                    for (int j = 0; j < GameController.Instance.players[i].Players.Count; j++)
-                    {
-                        bool canSkip = false;
-                        foreach (Transform child in parent[2])
-                        {
-                            if (child.name.Contains(GameController.Instance.players[i].Players[j].Name))
-                            {
-                                canSkip = true;
-                                break;
-                            }
-                        }
-                        if (canSkip) continue;
-                        if (GameController.Instance.players[i].Players[j].Type == 2)
-                        {
-                            GameObject mPrefab = Instantiate(childPrefab, parent[2]);
-                            mPrefab.name = GameController.Instance.players[i].Players[j].Name;
-                            mPrefab.GetComponent<PlayerDetails>().SetPlayerData(GameController.Instance.players[i].Players[j].Name, GameController.Instance.players[i].TeamName, GameController.Instance.players[i].Players[j].FPoint.ToString(), GameController.Instance.players[i].Players[j].Type);
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            mprefabObj.transform.SetParent(parent[2]);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
                         }
                     }
-
                 }
-
+                if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
+                {
+                    foreach (var item1 in item.Players.Values)
+                    {
+                        if (item1.Type == 2)
+                        {
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            mprefabObj.transform.SetParent(parent[2]);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                        }
+                    }
+                }
             }
         }
         else
         {
-            //foreach (Transform Child in parent[2])
-            //{
-            //    Destroy(Child.gameObject);
-            //}
             parent[2].gameObject.SetActive(false);
-
         }
     }
     public void onTogAllBowl()
     {
         if (tog[3].isOn)
         {
-          
+            foreach (Transform child in parent[3])
+            {
+                child.gameObject.SetActive(false);
+            }
+
             parent[3].gameObject.SetActive(true);
             rect.content = parent[3].GetComponent<RectTransform>();
-            for (int i = 0; i < GameController.Instance.players.Count; i++)
+
+            foreach (var item in GameController.Instance.players.Values)
             {
-
-                if (GameController.Instance.players[i].TeamName.Contains(GameController.Instance.CurrentTeamA))
+                if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
                 {
-                    for (int j = 0; j < GameController.Instance.players[i].Players.Count; j++)
+                    foreach (var item1 in item.Players.Values)
                     {
-                        bool canSkip = false;
-                        foreach (Transform child in parent[3])
+                        if (item1.Type == 3)
                         {
-                            if (child.name.Contains(GameController.Instance.players[i].Players[j].Name))
-                            {
-                                canSkip = true;
-                                break;
-                            }
-                        }
-                        if (canSkip) continue;
-                        if (GameController.Instance.players[i].Players[j].Type == 3)
-                        {
-                            GameObject mPrefab = Instantiate(childPrefab, parent[3]);
-                            mPrefab.name = GameController.Instance.players[i].Players[j].Name;
-                            mPrefab.GetComponent<PlayerDetails>().SetPlayerData(GameController.Instance.players[i].Players[j].Name, GameController.Instance.players[i].TeamName, GameController.Instance.players[i].Players[j].FPoint.ToString(), GameController.Instance.players[i].Players[j].Type);
-                        }
-
-                    }
-
-                }
-                if (GameController.Instance.players[i].TeamName.Contains(GameController.Instance.CurrentTeamB))
-                {
-                    for (int j = 0; j < GameController.Instance.players[i].Players.Count; j++)
-                    {
-                        bool canSkip = false;
-                        foreach (Transform child in parent[3])
-                        {
-                            if (child.name.Contains(GameController.Instance.players[i].Players[j].Name))
-                            {
-                                canSkip = true;
-                                break;
-                            }
-                        }
-                        if (canSkip) continue;
-                        if (GameController.Instance.players[i].Players[j].Type == 3)
-                        {
-                            GameObject mPrefab = Instantiate(childPrefab, parent[3]);
-                            mPrefab.name = GameController.Instance.players[i].Players[j].Name;
-                            mPrefab.GetComponent<PlayerDetails>().SetPlayerData(GameController.Instance.players[i].Players[j].Name, GameController.Instance.players[i].TeamName, GameController.Instance.players[i].Players[j].FPoint.ToString(), GameController.Instance.players[i].Players[j].Type);
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            mprefabObj.transform.SetParent(parent[3]);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
                         }
                     }
-
                 }
-
+                if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
+                {
+                    foreach (var item1 in item.Players.Values)
+                    {
+                        if (item1.Type == 3)
+                        {
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            mprefabObj.transform.SetParent(parent[3]);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                        }
+                    }
+                }
             }
         }
         else
         {
-            //foreach (Transform Child in parent[3])
-            //{
-            //    Destroy(Child.gameObject);
-            //}
             parent[3].gameObject.SetActive(false);
-
         }
 
-       
+
     }
 
     [Serializable]

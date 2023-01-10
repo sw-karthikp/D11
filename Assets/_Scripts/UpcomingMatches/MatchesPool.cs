@@ -13,22 +13,11 @@ public class MatchesPool : MonoBehaviour
     public TMP_Text pooltype;
 
 
-
-
-
     public void SetValueToObject(int _entryFee, int _poolId, List<Prizevalues> prize, int _prizePool, int _slotsFilled, int _totalSlots ,string _poolType)
     {
-
-
         pooltype.text = _poolType;
         GameObject mPoolPrizePrefab = Instantiate(prefab, parent);
         mPoolPrizePrefab.name = _poolType;
         mPoolPrizePrefab.GetComponent<MatchPoolType>().SetValueToPoolObject(_entryFee, _poolId,prize,_prizePool, _slotsFilled, _totalSlots);
-
-
     }
-
-
-
-
 }

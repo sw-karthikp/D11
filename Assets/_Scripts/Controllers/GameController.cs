@@ -21,9 +21,11 @@ public class GameController : SerializedMonoBehaviour
     public string CurrentPoolID;
     public List<Team> team;
     public Dictionary<string,Dictionary<string,MatchStatus>> match = new ();
-    public List<MatchPoolType> matchpool;
-    public List<Player> players;
-
+    public Dictionary<string,MatchPools> matchpool = new ();
+    public Dictionary<string,Player> players = new();
+    public Dictionary<string, Sprite> flags = new Dictionary<string, Sprite>();
+    public List<Sprite> flagsval= new List<Sprite>();
+    public Dictionary<string, string> countryFullName = new Dictionary<string, string>();
     private void OnApplicationQuit()
     {
         FirebaseDatabase.DefaultInstance.App.Dispose();
@@ -33,6 +35,14 @@ public class GameController : SerializedMonoBehaviour
     {
         Instance = this;
         Application.targetFrameRate = 120;
+    }
+
+    private void Start()
+    {
+        countryFullName = new Dictionary<string, string>() { { "AUS", "Australia" }, { "IND", "India" },
+        { "PAK", "Pakistan" },{ "BAN", "Bangladesh" },{ "ENG", "England" },{ "NZ", "NewZealand" }
+        ,{ "SL", "Sri Lanka" }};
+
     }
     public void SubscribePlayerDetails()
     {
@@ -83,8 +93,6 @@ public class GameController : SerializedMonoBehaviour
 
     void HandleValueMatch(object sender, ValueChangedEventArgs args)
     {
-
-        Debug.Log("************ MatchDetailsListner");
         if (args.DatabaseError != null)
         {
             Debug.LogError(args.DatabaseError.Message + "*************");
@@ -94,20 +102,13 @@ public class GameController : SerializedMonoBehaviour
         Debug.Log(val.GetRawJsonValue());
         foreach (var item in val.Children)
         {
-         
             Dictionary<string, MatchStatus> matchnew = new();
-         
             foreach (var item1 in item.Children)
             {
-
                 matchnew.Add(item1.Key, JsonConvert.DeserializeObject<MatchStatus>(item1.GetRawJsonValue()));
-
             }
             match.Add(item.Key, matchnew);
-
-
         }
-
         MainMenu_Handler.Instance.OnvalueChangeT20();
         MainMenu_Handler.Instance.OnvalueChangeODI();
         MainMenu_Handler.Instance.OnvalueChangeTEST();
@@ -131,18 +132,16 @@ public class GameController : SerializedMonoBehaviour
 
     void HandleValueMatchPools(object sender, ValueChangedEventArgs args)
     {
-
-        Debug.Log("************ MatchDetailsListner");
         if (args.DatabaseError != null)
         {
             Debug.LogError(args.DatabaseError.Message + "*************");
             return;
         }
-        string val = args.Snapshot.GetRawJsonValue();
-        Debug.Log(val);
-
-        matchpool = JsonConvert.DeserializeObject<List<MatchPoolType>>(val);
-
+        DataSnapshot val = args.Snapshot;
+        foreach (var item in val.Children)
+        {
+            matchpool.Add(item.Key,JsonConvert.DeserializeObject<MatchPools>(item.GetRawJsonValue()));
+        }
     }
 
 
@@ -163,20 +162,22 @@ public class GameController : SerializedMonoBehaviour
 
     void HandleValuePlayers(object sender, ValueChangedEventArgs args)
     {
-
         Debug.Log("************ MatchDetailsListner");
         if (args.DatabaseError != null)
         {
             Debug.LogError(args.DatabaseError.Message + "*************");
             return;
         }
-        string val = args.Snapshot.GetRawJsonValue();
-        Debug.Log(val);
 
-        players = JsonConvert.DeserializeObject<List<Player>>(val);
+       string val = args.Snapshot.GetRawJsonValue();
+      // players = JsonConvert.DeserializeObject<List<Player>>(val);
+
+        foreach (var item in args.Snapshot.Children)
+        {
+            players.Add(item.Key, JsonConvert.DeserializeObject<Player>(item.GetRawJsonValue()));
+        }
 
     }
-
 
     #region Team
 
@@ -195,60 +196,6 @@ public class GameController : SerializedMonoBehaviour
         public string T20;
         public string TEST;
     }
-
-    #endregion
-
-    #region MatchPools
-
-
-
-    [Serializable]
-    public class MatchPoolType
-    {
-
-        public int MatchID;
-        public List<Pools> Pools = new List<Pools>();
-
-    }
-
-    [Serializable]
-    public class Pools
-    {
-        public int Entry;
-        public int PoolID;
-        public List<Prizevalues> PrizeList = new List<Prizevalues>();
-        public int PrizePool;
-        public int SlotsFilled;
-        public int TotalSlots;
-        public string Type;
-    }
- 
-    [Serializable]
-    public class Prizevalues
-    {
-        public string Rank;
-        public int Value;
-    }
-
-    #endregion
-
-    #region Players
-
-    [Serializable]
-    public class Player
-    {
-        public List<PlayerDetails> Players;
-        public string TeamName;
-    }
-    [Serializable]
-    public class PlayerDetails
-    {
-        public int FPoint;
-        public string ID;
-        public string Name;
-        public int Type;
-    }
-
 
     #endregion
 

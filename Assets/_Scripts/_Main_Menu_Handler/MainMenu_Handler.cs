@@ -3,7 +3,6 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class MainMenu_Handler : UIHandler
 {
     public ScrollRect rect;
@@ -19,6 +18,9 @@ public class MainMenu_Handler : UIHandler
     public Toggle[] togs;
     public Image[] img;
     public GameObject[] hotGamesObj;
+
+    public Transform Slider;
+    public GameObject[] point;
     private void Awake()
     {
         Instance = this;
@@ -35,7 +37,7 @@ public class MainMenu_Handler : UIHandler
         GameController.Instance.SubscribeMatchDetails();
         //GameController.Instance.SubscribePlayerDetails();
         GameController.Instance.SubscribeMatchPools();
-        //GameController.Instance.SubscribePlayers();
+        GameController.Instance.SubscribePlayers();
         rect.verticalNormalizedPosition = 1;
 
 
@@ -235,7 +237,7 @@ public class MainMenu_Handler : UIHandler
                             mprefabObj.transform.SetParent(parentHotTable[toggleindex]);
                             mprefabObj.gameObject.SetActive(true);
                             string timeStringVal = item1.Time;
-                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID, timeStringVal);
+                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeStringVal,"");
 
                         }
                         else
@@ -244,7 +246,7 @@ public class MainMenu_Handler : UIHandler
                             mprefabObj.transform.SetParent(parentUpComingMatch[toggleindex]);
                             mprefabObj.gameObject.SetActive(true);
                             string timeString = item1.Time;
-                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID, timeString);
+                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString,"");
                         }
                     }
                 }

@@ -62,7 +62,7 @@ public class ContestHandler : UIHandler
     public void OnClickClose()
     {
         UIController.Instance.MainMenuScreen.ShowMe();
-        if(UIController.Instance.WinnerLeaderBoard.gameObject.activeSelf)
+        if (UIController.Instance.WinnerLeaderBoard.gameObject.activeSelf)
         {
             UIController.Instance.WinnerLeaderBoard.HideMe();
             return;
@@ -71,8 +71,14 @@ public class ContestHandler : UIHandler
     }
 
 
-    public IEnumerator SetUpcomingMatchPoolDetails(int MatchId ,string teamA ,string teamB , string _timeduration)
+    public IEnumerator SetUpcomingMatchPoolDetails(int MatchId, string teamA, string teamB, string _timeduration)
     {
+
+        foreach (Transform child in parent)
+        {
+            child.gameObject.SetActive(false);
+        }
+
         MatchIDVal = MatchId.ToString();
         TeamA = teamA;
         TeamB = teamB;
@@ -83,38 +89,20 @@ public class ContestHandler : UIHandler
         val.Clear();
         Debug.Log("******************" + MatchId);
 
-        for (int i = 0; i < GameController.Instance.matchpool.Count; i++)
+
+        foreach (var item in GameController.Instance.matchpool.Values)
         {
-
-            if (GameController.Instance.matchpool[i].MatchID == MatchId)
+            foreach (var item1 in item.Pools.Values)
             {
-                for (int j = 0; j < GameController.Instance.matchpool[i].Pools.Count; j++)
-                {
 
-                    
-               
-                    bool canSkip = false;
-                    foreach (Transform child in parent)
-                    {
-                        Debug.Log("*********" + GameController.Instance.matchpool[i].Pools.Count + "___"+child.name);
-                        if (child.name.Contains(GameController.Instance.matchpool[i].Pools[j].PoolID.ToString()))
-                        {
-                            canSkip = true;
-                            break;
-                        }
-                    }
-                    if (canSkip) continue;
-                    GameObject mPoolPrefab = Instantiate(ViewallChild, parent);
-                    mPoolPrefab.name = GameController.Instance.matchpool[i].Pools[j].PoolID.ToString();
-                    mPoolPrefab.GetComponent<MatchPoolType>().SetValueToPoolObject(GameController.Instance.matchpool[i].Pools[j].Entry, GameController.Instance.matchpool[i].Pools[j].PoolID, GameController.Instance.matchpool[i].Pools[j].PrizeList,
-                    GameController.Instance.matchpool[i].Pools[j].PrizePool, GameController.Instance.matchpool[i].Pools[j].SlotsFilled, GameController.Instance.matchpool[i].Pools[j].TotalSlots);
-
-                }
-
+                PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchPools");
+                mprefabObj.transform.SetParent(parent);
+                mprefabObj.gameObject.SetActive(true);
+                mprefabObj.name = item1.PoolID.ToString();
+                mprefabObj.GetComponent<MatchPoolType>().SetValueToPoolObject(item1.Entry, item1.PoolID, item1.PrizeList, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots);
 
             }
+            yield return new WaitForSeconds(0f);
         }
-
-        yield return new WaitForSeconds(0f);
     }
 }

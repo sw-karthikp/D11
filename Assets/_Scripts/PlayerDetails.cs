@@ -73,7 +73,6 @@ public class PlayerDetails : MonoBehaviour
                 foreach (var item in MatchSelection.Instance.playersForTeam)
                 {
                     TotalSelectedCredits += float.Parse(item.points);
-                    Debug.Log(TotalSelectedCredits);
                 }
                 CreditsLeft = MatchSelection.Instance.TotalCredits - TotalSelectedCredits;
                 MatchSelection.Instance.CreditsLeft.text = CreditsLeft.ToString();
@@ -102,15 +101,8 @@ public class PlayerDetails : MonoBehaviour
                 }
                 CreditsLeft = MatchSelection.Instance.TotalCredits - TotalSelectedCredits;
                 MatchSelection.Instance.CreditsLeft.text = CreditsLeft.ToString();
-
             }
-
-
-
         }
-
-
-
     }
 
     void OnvalueChangeCountPlayerType()
