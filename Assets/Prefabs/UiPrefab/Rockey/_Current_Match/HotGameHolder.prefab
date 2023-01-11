@@ -950,13 +950,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamA: {fileID: 2406852202354663284}
   teamB: {fileID: 9162414912236441204}
+  Match: {fileID: 2406852201328613689}
+  teamAFullName: {fileID: 2406852201328613689}
+  teamBFullName: {fileID: 2406852201328613689}
   TeamA: 
   TeamB: 
   ID: 0
   isPrimeGame: 0
   Click: {fileID: 200482715091595271}
+  MyMatchDetails: {fileID: 0}
   time: {fileID: 2406852201284770904}
+  Image:
+  - {fileID: 2406852202270012985}
+  - {fileID: 2406852200504090448}
   timeValSave: 
+  timeFormat: 
 --- !u!114 &200482715091595271
 MonoBehaviour:
   m_ObjectHideFlags: 0

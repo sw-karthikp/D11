@@ -5,6 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using Firebase.Storage;
+using UnityEditor.SceneManagement;
+using UnityEngine.Networking;
+using Firebase.Extensions;
+
+
+
 
 public class TeamHolderData : MonoBehaviour
 {
@@ -25,6 +32,9 @@ public class TeamHolderData : MonoBehaviour
     bool isCount = false;
     public string timeValSave;
     public string timeFormat;
+    string fileName;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     private void Awake()
     {
         Click.onClick.AddListener(() => { OnClickButton(); });
@@ -36,7 +46,11 @@ public class TeamHolderData : MonoBehaviour
     {
         GameController.Instance.UnSubscribeMatchDetails();
     }
-
+    void Start()
+    {
+        storage = FirebaseStorage.DefaultInstance;
+        storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
+    }
     private void OnDisable()
     {
         StopAllCoroutines();
@@ -44,7 +58,6 @@ public class TeamHolderData : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log("*************************** JJJJJJJJ");
         if (isCount)
         {
             StopCoroutine(Timer(timeValSave));
@@ -55,30 +68,52 @@ public class TeamHolderData : MonoBehaviour
     }
     public void SetDetails(string teamAval, string teamBval, string id, string timeval, string _matchName)
     {
+        Match.text = _matchName;
         teamA.text = teamAval;
         teamB.text = teamBval;
         ID = id;
         TeamA = teamAval;
         TeamB = teamBval;
-        Match.text = "INTERNATIONAL";
-        //foreach (var item in GameController.Instance.flags)
-        //{
-
-        //    if (item.Key == TeamA)
-        //    {
-        //        Image[0].sprite = GameController.Instance.flags[item.Key];
-        //    }
-        //    else if (item.Key == TeamB)
-        //    {
-        //        Image[1].sprite = GameController.Instance.flags[item.Key];
-        //    }
 
 
+        foreach (var item in GameController.Instance.team)
+        {
 
-        //}
+            if (item.Value.TeamName == teamAval)
+            {
+                fileName = item.Value.LogoURL;
+                DisplayImage(Image[0]);
+            }
+            else if (item.Value.TeamName == teamBval)
+            {
+                fileName = item.Value.LogoURL;
+                DisplayImage(Image[1]);
+            }
+        }
+
+
+        if (gameObject.activeInHierarchy)
+        {
+            StopCoroutine(Timer(timeval));
+            StartCoroutine(Timer(timeval));
+        }
+
+        isCount = true;
+
+        SetFullCountryName();
+    }
+
+
+    public void SetFullCountryName()
+    {
+        GameController.Instance.countryFullName.Clear();
+        GameController.Instance.countryFullName = new Dictionary<string, string>() { { "AUS", "Australia" }, { "IND", "India" },
+        { "PAK", "Pakistan" },{ "ENG", "England" }};
 
         foreach (var item in GameController.Instance.countryFullName)
         {
+
+
             if (item.Key == TeamA)
             {
                 teamAFullName.text = item.Value;
@@ -88,18 +123,6 @@ public class TeamHolderData : MonoBehaviour
                 teamBFullName.text = item.Value;
             }
         }
-
-        Match.text = _matchName;
-        //TeamName[0].sprite = GameController.Instance.flags[GameController.Instance.flags.Keys.First(x => x == "AUS")];
-
-        Debug.Log(ID + "&&&&&&&&&&&&&&&&&&&&&&&");
-        if (gameObject.activeInHierarchy)
-        {
-            StopCoroutine(Timer(timeval));
-            StartCoroutine(Timer(timeval));
-        }
-
-        isCount = true;
     }
 
     public void OnClickButton()
@@ -111,8 +134,11 @@ public class TeamHolderData : MonoBehaviour
     }
 
 
-    public void SetDetailsMymatches(string teamAval, string teamBval, string id, string timeval, String detail)
+
+
+    public void SetDetailsMymatches(string teamAval, string teamBval, string id, string timeval, string _matchName)
     {
+        Match.text = _matchName;
         teamA.text = teamAval;
         teamB.text = teamBval;
         TeamA = teamAval;
@@ -120,23 +146,6 @@ public class TeamHolderData : MonoBehaviour
         ID = id;
         Debug.Log(teamA);
 
-
-        foreach (var item in GameController.Instance.flags)
-        {
-
-            if (item.Key == TeamA)
-            {
-                Image[0].sprite = GameController.Instance.flags[item.Key];
-            }
-            else if (item.Key == TeamB)
-            {
-                Image[1].sprite = GameController.Instance.flags[item.Key];
-            }
-
-
-
-        }
-        Match.text = detail;
 
 
         foreach (var item in GameController.Instance.countryFullName)
@@ -150,18 +159,68 @@ public class TeamHolderData : MonoBehaviour
             {
                 teamBFullName.text = GameController.Instance.countryFullName[item.Value];
             }
+        }
 
 
+        foreach (var item in GameController.Instance.team)
+        {
 
+            if (item.Value.TeamName == teamAval)
+            {
+                fileName = item.Value.LogoURL;
+                DisplayImage(Image[0]);
+            }
+            else if (item.Value.TeamName == teamBval)
+            {
+                fileName = item.Value.LogoURL;
+                DisplayImage(Image[1]);
+            }
         }
         if (gameObject.activeInHierarchy)
         {
             StopCoroutine(Timer(timeval));
             StartCoroutine(Timer(timeval));
         }
-
         isCount = true;
+
+
+
     }
+
+    public void DisplayImage(Image _image)
+    {
+        Debug.Log(fileName + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        storage = FirebaseStorage.DefaultInstance;
+        storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
+        StorageReference image = storageReference.Child(fileName);
+        image.GetDownloadUrlAsync().ContinueWithOnMainThread(task =>
+        {
+            if (!task.IsFaulted && !task.IsCanceled)
+            {
+                StartCoroutine(LoadImage(Convert.ToString(task.Result), _image));
+            }
+            else
+            {
+                Debug.Log(task.Exception);
+            }
+        });
+    }
+    public IEnumerator LoadImage(string MediaUrl, Image _image)
+    {
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(MediaUrl);
+        yield return request.SendWebRequest();
+        if (request.isNetworkError || request.isHttpError)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            Texture2D tex = ((DownloadHandlerTexture)request.downloadHandler).texture;
+            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
+            _image.sprite = sprite;
+        }
+    }
+
     public IEnumerator Timer(string timeString)
     {
 
@@ -172,12 +231,12 @@ public class TeamHolderData : MonoBehaviour
 
         string timeNow = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
-        Debug.Log(DateTime.Now.ToString() + "$$$$$$$$$$$$$$");
+
 
         timeValSave = timeValSave.Replace('/', '-');
         timeNow = timeNow.Replace('/', '-');
 
-        Debug.Log(timeValSave + "&&&               %%%%   " + timeNow);
+
         var matchduration = DateTime.Parse(timeValSave) - DateTime.Parse(timeNow);
 
         var TimeDifference = matchduration;

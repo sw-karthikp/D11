@@ -233,31 +233,31 @@ public class MatchSelection : UIHandler
             parent[0].gameObject.SetActive(true);
             rect.content = parent[0].GetComponent<RectTransform>();
 
-            foreach (var item in GameController.Instance.players.Values)
+            foreach (var item in GameController.Instance.players)
             {
                 if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
                 {
-                    foreach (var item1 in item.Players.Values)
+                    foreach (var item1 in item.Players)
                     {
-                        if (item1.Type == 0)
+                        if (item1.Value.Type == 0)
                         {
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
                             mprefabObj.transform.SetParent(parent[0]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
                         }
                     }
                 }
                 if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
                 {
-                    foreach (var item1 in item.Players.Values)
+                    foreach (var item1 in item.Players)
                     {
-                        if (item1.Type == 0)
+                        if (item1.Value.Type == 0)
                         {
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
                             mprefabObj.transform.SetParent(parent[0]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
                         }
                     }
                 }
@@ -282,31 +282,31 @@ public class MatchSelection : UIHandler
             parent[1].gameObject.SetActive(true);
             rect.content = parent[1].GetComponent<RectTransform>();
 
-            foreach (var item in GameController.Instance.players.Values)
+            foreach (var item in GameController.Instance.players)
             {
                 if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
                 {
-                    foreach (var item1 in item.Players.Values)
+                    foreach (var item1 in item.Players)
                     {
-                        if (item1.Type == 1)
+                        if (item1.Value.Type == 1)
                         {
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
                             mprefabObj.transform.SetParent(parent[1]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
                         }
                     }
                 }
                 if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
                 {
-                    foreach (var item1 in item.Players.Values)
+                    foreach (var item1 in item.Players)
                     {
-                        if (item1.Type == 1)
+                        if (item1.Value.Type == 1)
                         {
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
                             mprefabObj.transform.SetParent(parent[1]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
                         }
                     }
                 }
@@ -330,31 +330,31 @@ public class MatchSelection : UIHandler
             parent[2].gameObject.SetActive(true);
             rect.content = parent[2].GetComponent<RectTransform>();
 
-            foreach (var item in GameController.Instance.players.Values)
+            foreach (var item in GameController.Instance.players)
             {
                 if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
                 {
-                    foreach (var item1 in item.Players.Values)
+                    foreach (var item1 in item.Players)
                     {
-                        if (item1.Type == 2)
+                        if (item1.Value.Type == 2)
                         {
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
                             mprefabObj.transform.SetParent(parent[2]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
                         }
                     }
                 }
                 if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
                 {
-                    foreach (var item1 in item.Players.Values)
+                    foreach (var item1 in item.Players)
                     {
-                        if (item1.Type == 2)
+                        if (item1.Value.Type == 2)
                         {
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
                             mprefabObj.transform.SetParent(parent[2]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
                         }
                     }
                 }
@@ -377,31 +377,31 @@ public class MatchSelection : UIHandler
             parent[3].gameObject.SetActive(true);
             rect.content = parent[3].GetComponent<RectTransform>();
 
-            foreach (var item in GameController.Instance.players.Values)
+            foreach (var item in GameController.Instance.players)
             {
                 if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
                 {
-                    foreach (var item1 in item.Players.Values)
+                    foreach (var item1 in item.Players)
                     {
-                        if (item1.Type == 3)
+                        if (item1.Value.Type == 3)
                         {
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
                             mprefabObj.transform.SetParent(parent[3]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
                         }
                     }
                 }
                 if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
                 {
-                    foreach (var item1 in item.Players.Values)
+                    foreach (var item1 in item.Players)
                     {
-                        if (item1.Type == 3)
+                        if (item1.Value.Type == 3)
                         {
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
                             mprefabObj.transform.SetParent(parent[3]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Name, item.TeamName, item1.FPoint.ToString(), item1.Type);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
                         }
                     }
                 }
@@ -411,25 +411,5 @@ public class MatchSelection : UIHandler
         {
             parent[3].gameObject.SetActive(false);
         }
-
-
-    }
-
-    [Serializable]
-    [FirestoreData]
-    public class PlayerSelectedForMatch
-    {
-        [FirestoreProperty]
-        public string playerName { get; set; }
-        [FirestoreProperty]
-        public string points { get; set; }
-        [FirestoreProperty]
-        public string countryName { get; set; }
-        [FirestoreProperty]
-        public int type { get; set; }
-        [FirestoreProperty]
-        public bool isCaptain { get; set; }
-        [FirestoreProperty]
-        public bool isViceCaptain{ get; set; }
     }
 }

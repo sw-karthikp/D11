@@ -1,31 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Firebase.Auth;
-using System;
-using Firebase;
 using Firebase.Database;
-using Firebase.Extensions;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
-using static UnityEditor.Progress;
 
 public class GameController : SerializedMonoBehaviour
 {
-
     public static GameController Instance;
+
+    [Header("CurrentMatchData")]
     public string CurrentTeamA;
     public string CurrentTeamB;
     public int CurrentMatchID;
     public string CurrentMatchTimeDuration;
     public string CurrentPoolID;
-    public List<Team> team;
+    
+    [Header("ListDataFromRealDb")]
+    public List<List<string>> itemsValue = new();
+    public List<Player> players = new();
+
+
+    [Header("DictionaryDataFromRealDb")]
+    public Dictionary<string,Team> team = new();
     public Dictionary<string,Dictionary<string,MatchStatus>> match = new ();
     public Dictionary<string,MatchPools> matchpool = new ();
-    public Dictionary<string,Player> players = new();
-    public Dictionary<string, Sprite> flags = new Dictionary<string, Sprite>();
-    public List<Sprite> flagsval= new List<Sprite>();
     public Dictionary<string, string> countryFullName = new Dictionary<string, string>();
+
+    [Header("DictionaryDataSetFromRealDb")]
+    public Dictionary<string, MyMatchDetails> mymatch = new Dictionary<string, MyMatchDetails>();
+
     private void OnApplicationQuit()
     {
         FirebaseDatabase.DefaultInstance.App.Dispose();
@@ -35,26 +39,21 @@ public class GameController : SerializedMonoBehaviour
     {
         Instance = this;
         Application.targetFrameRate = 120;
+        
     }
 
-    private void Start()
-    {
-        countryFullName = new Dictionary<string, string>() { { "AUS", "Australia" }, { "IND", "India" },
-        { "PAK", "Pakistan" },{ "BAN", "Bangladesh" },{ "ENG", "England" },{ "NZ", "NewZealand" }
-        ,{ "SL", "Sri Lanka" }};
-
-    }
+    #region TEAM
     public void SubscribePlayerDetails()
     {
         FirebaseDatabase.DefaultInstance
-      .GetReference("Teams")
+      .GetReference("Team")
       .ValueChanged += HandleValueChanged;
     }
 
     public void UnSubscribePlayerDetails()
     {
         FirebaseDatabase.DefaultInstance
-      .GetReference("Teams")
+      .GetReference("Team")
       .ValueChanged -= HandleValueChanged;
     }
 
@@ -69,13 +68,17 @@ public class GameController : SerializedMonoBehaviour
             return;
         }
 
-        string val = args.Snapshot.GetRawJsonValue();
-
-
-        team = JsonConvert.DeserializeObject<List<Team>>(val);
+        Debug.Log(args.Snapshot.GetRawJsonValue());
+        foreach (var item in args.Snapshot.Children)
+        {
+            team.Add(item.Key, JsonConvert.DeserializeObject<Team>(item.GetRawJsonValue()));
+        }
+   
     }
 
+    #endregion
 
+    #region MATCH
     public void SubscribeMatchDetails()
     {
         FirebaseDatabase.DefaultInstance
@@ -99,7 +102,6 @@ public class GameController : SerializedMonoBehaviour
             return;
         }
         DataSnapshot val = args.Snapshot;
-        Debug.Log(val.GetRawJsonValue());
         foreach (var item in val.Children)
         {
             Dictionary<string, MatchStatus> matchnew = new();
@@ -115,6 +117,9 @@ public class GameController : SerializedMonoBehaviour
         MainMenu_Handler.Instance.OnvalueChangeT10();
     }
 
+    #endregion
+
+    #region MATCHPOOLS
     public void SubscribeMatchPools()
     {
         FirebaseDatabase.DefaultInstance
@@ -144,7 +149,9 @@ public class GameController : SerializedMonoBehaviour
         }
     }
 
+    #endregion
 
+    #region TEAMPLAYERS
     public void SubscribePlayers()
     {
         FirebaseDatabase.DefaultInstance
@@ -162,6 +169,40 @@ public class GameController : SerializedMonoBehaviour
 
     void HandleValuePlayers(object sender, ValueChangedEventArgs args)
     {
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message + "*************");
+            return;
+        }
+
+  
+        string val = args.Snapshot.GetRawJsonValue();
+        players = JsonConvert.DeserializeObject<List<Player>>(val);
+    
+
+    }
+
+    #endregion
+
+    #region LEADERBOARD
+    public void SubscribeLeaderBoardDetails()
+    {
+        FirebaseDatabase.DefaultInstance
+      .GetReference("Leader")
+      .ValueChanged += HandleLeaderBoardValueChanged;
+    }
+
+    public void UnSubscribeLeaderBoardDetails()
+    {
+        FirebaseDatabase.DefaultInstance
+      .GetReference("Leader")
+      .ValueChanged -= HandleLeaderBoardValueChanged;
+    }
+
+
+    void HandleLeaderBoardValueChanged(object sender, ValueChangedEventArgs args)
+    {
+        itemsValue = new List<List<string>>();
         Debug.Log("************ MatchDetailsListner");
         if (args.DatabaseError != null)
         {
@@ -169,85 +210,16 @@ public class GameController : SerializedMonoBehaviour
             return;
         }
 
-       string val = args.Snapshot.GetRawJsonValue();
-      // players = JsonConvert.DeserializeObject<List<Player>>(val);
+        string val = args.Snapshot.GetRawJsonValue();
 
-        foreach (var item in args.Snapshot.Children)
-        {
-            players.Add(item.Key, JsonConvert.DeserializeObject<Player>(item.GetRawJsonValue()));
-        }
-
-    }
-
-    #region Team
-
-    [Serializable]
-    public class Team
-    {
-        public string ID;
-        public string Name;
-        public TeamType TEAMS = new();
-    }
-
-    [Serializable]
-    public class TeamType
-    {
-        public string ODI;
-        public string T20;
-        public string TEST;
+        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        itemsValue = JsonConvert.DeserializeObject<List<List<string>>>(val);
+        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        //   WinnerLeaderBoard.Instance.OnValueChangeLeaderBord();
     }
 
     #endregion
 
-    #region SetPlayerDetailsRealDb
-    public class MatchDeatils
-    {
-        public List<string> Matches = new();
-        public PoolDetails PoolDetail;
-
-    }
-
-    public class PoolDetails
-    {
-        public List<MatchDeatilValues> PoolDetailsval = new();
-
-    }
-
-
-    public class MatchDeatilValues 
-    {
-        public int MatchDetail;
-        public int TeamDetails;
-    }
-
-    public class TeamDetailsValues 
-    {
-        public string TeamId;
-        public List<Playerscls> Players = new();
-    }
-
-
-    public class Playerscls 
-    {
-        public string Captain;
-        public string VCaptain;
-        public List<Teams> TeamA;
-        public List<Teams> TeamB;
-    }
-
-    public class Teams
-    {
-        public string TeamName;
-        public List<Players> Players = new();
-
-    }
-
-    public class Players
-    {
-        public string playerID;
-    }
-
-    #endregion
 
 }
 

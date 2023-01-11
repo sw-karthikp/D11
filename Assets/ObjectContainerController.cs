@@ -58,3 +58,84 @@ public class PlayerDetailsVal
     public int Type;
 }
 #endregion
+
+#region SettingTeamToRealDb
+
+[Serializable]
+public class SelectedTeam
+{
+    public string TeamID;
+    public SelectedPlayers Players;
+}
+
+[Serializable]
+public class SelectedPlayers
+{
+    public string Captain;
+    public string ViceCaptian;
+    public SelectedTeamPlayers TeamA;
+    public SelectedTeamPlayers TeamB;
+}
+
+[Serializable]
+public class SelectedTeamPlayers
+{
+    public string TeamName;
+    public List<string> players = new List<string>();
+}
+
+[Serializable]
+public class SelectedPoolID
+{
+    public string PoolID;
+    public string TeamID;
+}
+
+[Serializable]
+public class MyMatchDetails
+{
+    public Dictionary<string, SelectedPoolID> SelectedPools = new Dictionary<string, SelectedPoolID>();
+    public Dictionary<string, SelectedTeam> SelectedTeam = new Dictionary<string, SelectedTeam>();
+}
+#endregion
+
+#region PlayerSelectionForMatch
+[Serializable]
+public class PlayerSelectedForMatch
+{
+
+    public string playerName;
+    public string PlayerID;
+
+    public string points;
+
+    public string countryName;
+
+    public int type;
+
+    public bool isCaptain;
+
+    public bool isViceCaptain;
+}
+
+#endregion
+
+#region Team
+
+[Serializable]
+public class Team
+{
+    public string LogoURL;
+    public TeamType PlayerDetails= new();
+    public string TeamName;
+}
+
+[Serializable]
+public class TeamType
+{
+    public string T20;
+    public string ODI;
+    public string TEST;
+}
+
+#endregion

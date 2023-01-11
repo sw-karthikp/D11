@@ -28,22 +28,22 @@ public class ScrollBarSnappingManager : MonoBehaviour
     }
     private void PanelEffects(ScrollPanelData panel,float pos)
     {
-        float dis = Mathf.Abs(MyScrollbar.value - pos);
-        if (dis <= 0.5f)
-        {
-            panel.Panel.localScale = Vector2.Lerp(Vector2.one, Vector2.one * 1f, Mathf.InverseLerp(0, 0.5f, dis));
-            //float colorAlpha = Mathf.Lerp(1, 1f, Mathf.InverseLerp(0, 0.25f, dis));
-            //panel.BG.color = new Color(panel.BG.color.r, panel.BG.color.g, panel.BG.color.b, colorAlpha);
-            //panel.TitleTxt.color = new Color(panel.TitleTxt.color.r, panel.TitleTxt.color.g, panel.TitleTxt.color.b, colorAlpha);
-            //panel.InfoTxt.color = new Color(panel.InfoTxt.color.r, panel.InfoTxt.color.g, panel.InfoTxt.color.b, colorAlpha);
-        }
-        else
-        {
-            panel.Panel.localScale=Vector2.one*0.85f;
-            //panel.BG.color = new Color(panel.BG.color.r, panel.BG.color.g, panel.BG.color.b, 0.75f);
-            //panel.TitleTxt.color = new Color(panel.TitleTxt.color.r, panel.TitleTxt.color.g, panel.TitleTxt.color.b, 0.75f);
-            //panel.InfoTxt.color = new Color(panel.InfoTxt.color.r, panel.InfoTxt.color.g, panel.InfoTxt.color.b, 0.75f);
-        }
+        //float dis = Mathf.Abs(MyScrollbar.value - pos);
+        //if (dis <= 0.5f)
+        //{
+        //    panel.Panel.localScale = Vector2.Lerp(Vector2.one, Vector2.one * 1f, Mathf.InverseLerp(0, 0.5f, dis));
+        //    //float colorAlpha = Mathf.Lerp(1, 1f, Mathf.InverseLerp(0, 0.25f, dis));
+        //    //panel.BG.color = new Color(panel.BG.color.r, panel.BG.color.g, panel.BG.color.b, colorAlpha);
+        //    //panel.TitleTxt.color = new Color(panel.TitleTxt.color.r, panel.TitleTxt.color.g, panel.TitleTxt.color.b, colorAlpha);
+        //    //panel.InfoTxt.color = new Color(panel.InfoTxt.color.r, panel.InfoTxt.color.g, panel.InfoTxt.color.b, colorAlpha);
+        //}
+        //else
+        //{
+        //    panel.Panel.localScale=Vector2.one*0.85f;
+        //    //panel.BG.color = new Color(panel.BG.color.r, panel.BG.color.g, panel.BG.color.b, 0.75f);
+        //    //panel.TitleTxt.color = new Color(panel.TitleTxt.color.r, panel.TitleTxt.color.g, panel.TitleTxt.color.b, 0.75f);
+        //    //panel.InfoTxt.color = new Color(panel.InfoTxt.color.r, panel.InfoTxt.color.g, panel.InfoTxt.color.b, 0.75f);
+        //}
     }
     public async void SnapScrollbar()
     {

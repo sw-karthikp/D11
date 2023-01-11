@@ -64,7 +64,6 @@ public class PoolManager : MonoBehaviour
     void CreatePoolObject(string poolId)
     {
         GameObject obj = Instantiate(objectsToCreate[poolId].gameObject,poolParent);
-       Debug.Log(poolId+ "213232321^^^^^^^^^^^");
         
        
         obj.GetComponent<PoolItems>().SetPool(this, poolId);

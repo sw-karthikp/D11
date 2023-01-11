@@ -40,35 +40,44 @@ public class captainSelection : UIHandler
     public void onClickSave()
     {
 
+
         string json = JsonConvert.SerializeObject(MatchSelection.Instance.playersForTeam);
+        FirebaseDatabase mDatabase = FirebaseDatabase.DefaultInstance;
+        Player teamAplayers = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.CurrentTeamA);
+        Player teamBplayers = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.CurrentTeamB);
 
 
 
-        //Dictionary<string,object> toDict =  new Dictionary<string, object>();
+        SelectedTeamPlayers selectedTeamA = new SelectedTeamPlayers() { TeamName = GameController.Instance.CurrentTeamA };
+        SelectedTeamPlayers selectedTeamB = new SelectedTeamPlayers() { TeamName = GameController.Instance.CurrentTeamB };
 
-        //foreach (var item in MatchSelection.Instance.playersForTeam)
-        //{
-        //    toDict.Add(item.playerName, (object)item);
-        //}
+        string Captain = "";
+        string viceCaptain = "";
+        //ToDo
+        string TeamId = "Team" + (GameController.Instance.mymatch.Count > 0 ? GameController.Instance.mymatch.ContainsKey(GameController.Instance.CurrentMatchID.ToString()) ? GameController.Instance.mymatch[GameController.Instance.CurrentMatchID.ToString()].SelectedTeam.Count + 1 : 1 : 1);
+        string poolId = GameController.Instance.CurrentPoolID;
 
-        //  Debug.Log(toDict.Count);
+        foreach (var item in MatchSelection.Instance.playersForTeam)
+        {
+            if (item.isCaptain) Captain = item.PlayerID;
+            if (item.isViceCaptain) viceCaptain = item.PlayerID;
 
-        
+            if(teamAplayers.Players.ContainsKey(item.PlayerID)) selectedTeamA.players.Add(item.PlayerID);
+            if (teamBplayers.Players.ContainsKey(item.PlayerID)) selectedTeamB.players.Add(item.PlayerID);
+            //if (teamAplayers.Players.Find(x => x.ID == item.PlayerID) != null) selectedTeamA.players.Add(item.PlayerID);
+            //if (teamBplayers.Players.Find(x => x.ID == item.PlayerID) != null) selectedTeamB.players.Add(item.PlayerID);
+        }
+        SelectedPlayers selectedPlayers = new SelectedPlayers() { Captain = Captain, ViceCaptian = viceCaptain, TeamA = selectedTeamA, TeamB = selectedTeamB };
+
+        SelectedTeam selectedTeam = new SelectedTeam() { TeamID = TeamId, Players = selectedPlayers };
+        SelectedPoolID selectedPool = new SelectedPoolID() { PoolID = poolId, TeamID = TeamId };
+        string playerId = PlayerPrefs.GetString("userId");
+        string selectedPoolKey = mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedPools").Push().Key;
+        string selectedTeamKey = mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Push().Key;
+        mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedPools").Child($"{selectedPoolKey}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedPool));
+        mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Child($"{selectedTeamKey}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedTeam));
 
 
-        //DocumentReference docref = db.Collection("users").Document(FireBaseManager.Instance.auth.CurrentUser.UserId);
-
-        //docref.UpdateAsync(toDict).ContinueWithOnMainThread(task =>
-        //{
-
-        //    if (task.IsCanceled || task.IsFaulted)
-        //    {
-        //        Debug.Log("Error: " + task.Exception);
-        //    }
-
-        //    Debug.Log("Succesfully updated.... ");
-
-        //});
     }
 
 
@@ -165,21 +174,7 @@ public class captainSelection : UIHandler
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
 
             }
-
-
-
-
         }
-
-
-
-
-
-
     }
-
-
-    
-
 }
 
