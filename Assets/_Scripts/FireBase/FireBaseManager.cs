@@ -12,7 +12,7 @@ public class FireBaseManager : MonoBehaviour
 {
 
     public static FireBaseManager Instance;
-
+    public bool isFirstTime;
 
     [Header("FireBase")]
     public FirebaseAuth auth;
@@ -21,17 +21,20 @@ public class FireBaseManager : MonoBehaviour
 
     private void Awake()
     {
+ 
         Instance = this;
         db = FirebaseFirestore.DefaultInstance;
+        isFirstTime = true;
     }
 
 
     private void Start()
-    {
-       
+    {    
         StartCoroutine(CheckAndFixDependancies());
-       
+   
     }
+
+
 
     private IEnumerator CheckAndFixDependancies()
     {
@@ -127,20 +130,20 @@ public class FireBaseManager : MonoBehaviour
   
             user = auth.CurrentUser;
 
-            //if (signedIn)
-            //{
-            //    Debug.Log($"Signed In : {user.DisplayName}");
-            //    UIController.Instance.MainMenuScreen.ShowMe();
-            //    UIController.Instance.Loginscreen.HideMe();
-            //    UIController.Instance.RegisterScreen.HideMe();
-            //}
-            //else
-            //{
-            //    Debug.Log("Signed Out");
-            //    UIController.Instance.MainMenuScreen.HideMe();
-            //    UIController.Instance.Loginscreen.HideMe();
-            //    UIController.Instance.RegisterScreen.HideMe();
-            //}
+            if (signedIn)
+            {
+                Debug.Log($"Signed In : {user.DisplayName}");
+                UIController.Instance.MainMenuScreen.ShowMe();
+                UIController.Instance.Loginscreen.HideMe();
+                UIController.Instance.RegisterScreen.HideMe();
+            }
+            else
+            {
+                Debug.Log("Signed Out");
+                UIController.Instance.MainMenuScreen.HideMe();
+                UIController.Instance.Loginscreen.HideMe();
+                UIController.Instance.RegisterScreen.HideMe();
+            }
         }
 
 

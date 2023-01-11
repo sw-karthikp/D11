@@ -66,7 +66,7 @@ public class MyTeamPlayersPanel : UIHandler
                 if (canSkip) continue;
                 GameObject mprefab = Instantiate(ChildPrefab, parent[0]);
                 mprefab.name = MatchSelection.Instance.playersForTeam[i].playerName;
-                mprefab.GetComponent<PlayerDisplay>().SetPlayerDetails(MatchSelection.Instance.playersForTeam[i].playerName , MatchSelection.Instance.playersForTeam[i].isCaptain ,MatchSelection.Instance.playersForTeam[i].isViceCaptain);
+                mprefab.GetComponent<PlayerDisplay>().SetPlayerDetails(MatchSelection.Instance.playersForTeam[i].playerName , MatchSelection.Instance.playersForTeam[i].isCaptain ,MatchSelection.Instance.playersForTeam[i].isViceCaptain,MatchSelection.Instance.playersForTeam[i].playerPic);
 
             }
             if (MatchSelection.Instance.playersForTeam[i].type == 1)
@@ -83,7 +83,7 @@ public class MyTeamPlayersPanel : UIHandler
                 if (canSkip) continue;
                 GameObject mprefab = Instantiate(ChildPrefab, parent[1]);
                 mprefab.name = MatchSelection.Instance.playersForTeam[i].playerName;
-                mprefab.GetComponent<PlayerDisplay>().SetPlayerDetails(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i].isCaptain, MatchSelection.Instance.playersForTeam[i].isViceCaptain);
+                mprefab.GetComponent<PlayerDisplay>().SetPlayerDetails(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i].isCaptain, MatchSelection.Instance.playersForTeam[i].isViceCaptain,MatchSelection.Instance.playersForTeam[i].playerPic);
 
             }
             if (MatchSelection.Instance.playersForTeam[i].type == 2)
@@ -100,7 +100,7 @@ public class MyTeamPlayersPanel : UIHandler
                 if (canSkip) continue;
                 GameObject mprefab = Instantiate(ChildPrefab, parent[2]);
                 mprefab.name = MatchSelection.Instance.playersForTeam[i].playerName;
-                mprefab.GetComponent<PlayerDisplay>().SetPlayerDetails(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i].isCaptain, MatchSelection.Instance.playersForTeam[i].isViceCaptain);
+                mprefab.GetComponent<PlayerDisplay>().SetPlayerDetails(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i].isCaptain, MatchSelection.Instance.playersForTeam[i].isViceCaptain,MatchSelection.Instance.playersForTeam[i].playerPic);
 
             }
             if (MatchSelection.Instance.playersForTeam[i].type == 3)
@@ -117,7 +117,7 @@ public class MyTeamPlayersPanel : UIHandler
                 if (canSkip) continue;
                 GameObject mprefab = Instantiate(ChildPrefab, parent[3]);
                 mprefab.name = MatchSelection.Instance.playersForTeam[i].playerName;
-                mprefab.GetComponent<PlayerDisplay>().SetPlayerDetails(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i].isCaptain, MatchSelection.Instance.playersForTeam[i].isViceCaptain);
+                mprefab.GetComponent<PlayerDisplay>().SetPlayerDetails(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i].isCaptain, MatchSelection.Instance.playersForTeam[i].isViceCaptain,MatchSelection.Instance.playersForTeam[i].playerPic);
 
             }
         }

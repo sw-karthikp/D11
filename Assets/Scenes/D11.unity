@@ -261,6 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 339c1f5605f40ca48a9a9c2588e48279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFirstTime: 0
 --- !u!1 &617854081
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,6 +864,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: spriteImage
+      Entry: 6
+      Data: 
     - Name: mymatch
       Entry: 7
       Data: 8|System.Collections.Generic.Dictionary`2[[System.String, mscorlib],[MyMatchDetails,
@@ -1238,6 +1242,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6588238545698410885, guid: 8412651bcc9f20545b40bd2a9003e730, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6588238545698410885, guid: 8412651bcc9f20545b40bd2a9003e730, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6588238546564797177, guid: 8412651bcc9f20545b40bd2a9003e730, type: 3}
@@ -1823,7 +1831,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8714171195926694656, guid: b6dea1a3cde2f1b4690deff7531206e1, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -79.8291
+      value: -79.82898
       objectReference: {fileID: 0}
     - target: {fileID: 8919170005974346477, guid: b6dea1a3cde2f1b4690deff7531206e1, type: 3}
       propertyPath: m_SizeDelta.x

@@ -22,8 +22,9 @@ public class LoginHandler : UIHandler
     }  
     public override void ShowMe()
     {
-        UIController.Instance.AddToOpenPages(this);
+      
        this.gameObject.SetActive(true);
+        UIController.Instance.AddToOpenPages(this);
         BG.DOAnchorPosX(0, 0.5f);
     }  
     public override void OnBack()

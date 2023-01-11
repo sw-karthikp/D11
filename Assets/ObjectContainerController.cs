@@ -2,6 +2,7 @@
 #region Match
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class MatchStatus
@@ -21,7 +22,7 @@ public class MatchPools
 {
     public int MatchID;
     public string PoolCount;
-    public Dictionary<string,Pools> Pools = new();
+    public Dictionary<string, Pools> Pools = new();
 }
 [Serializable]
 public class Pools
@@ -46,7 +47,7 @@ public class Prizevalues
 #region Players
 public class Player
 {
-    public Dictionary<string,PlayerDetailsVal> Players;
+    public Dictionary<string, PlayerDetailsVal> Players;
     public string TeamName;
 }
 [Serializable]
@@ -56,6 +57,7 @@ public class PlayerDetailsVal
     public string ID;
     public string Name;
     public int Type;
+    public string URL;
 }
 #endregion
 
@@ -103,19 +105,14 @@ public class MyMatchDetails
 [Serializable]
 public class PlayerSelectedForMatch
 {
-
     public string playerName;
     public string PlayerID;
-
     public string points;
-
     public string countryName;
-
     public int type;
-
     public bool isCaptain;
-
     public bool isViceCaptain;
+    public Sprite playerPic;
 }
 
 #endregion
@@ -126,7 +123,7 @@ public class PlayerSelectedForMatch
 public class Team
 {
     public string LogoURL;
-    public TeamType PlayerDetails= new();
+    public TeamType PlayerDetails = new();
     public string TeamName;
 }
 

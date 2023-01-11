@@ -27,12 +27,12 @@ public class PoolManager : MonoBehaviour
             objectsToCreate.Add(item.poolName,item.pool);
             for (int i = 0; i < item.poolCount; i++)
             {
-                CreatePoolObject(item.poolName);
+                CreatePoolObject(item.poolName,false);
             }
         }
     }
 
-    public PoolItems GetPoolObject(string poolID)
+    public PoolItems GetPoolObject(string poolID,bool matchSelection)
     {
         if(pooledObjects[poolID].Count > 0)
         {
@@ -41,8 +41,8 @@ public class PoolManager : MonoBehaviour
         }
         else
         {
-            CreatePoolObject(poolID);
-            return GetPoolObject(poolID);
+            CreatePoolObject(poolID,matchSelection);
+            return GetPoolObject(poolID,matchSelection);
         }
     }
     
@@ -61,7 +61,7 @@ public class PoolManager : MonoBehaviour
 
 
 
-    void CreatePoolObject(string poolId)
+    void CreatePoolObject(string poolId,bool matchSelection)
     {
         GameObject obj = Instantiate(objectsToCreate[poolId].gameObject,poolParent);
         

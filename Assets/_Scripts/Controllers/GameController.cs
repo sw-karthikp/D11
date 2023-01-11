@@ -4,6 +4,13 @@ using UnityEngine;
 using Firebase.Database;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
+using Firebase.Storage;
+using UnityEditor.SceneManagement;
+using UnityEngine.Networking;
+using UnityEngine.UI;
+using Firebase.Extensions;
+using System;
+using static UnityEditor.Progress;
 
 public class GameController : SerializedMonoBehaviour
 {
@@ -15,7 +22,11 @@ public class GameController : SerializedMonoBehaviour
     public int CurrentMatchID;
     public string CurrentMatchTimeDuration;
     public string CurrentPoolID;
-    
+    string fileName;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
+
     [Header("ListDataFromRealDb")]
     public List<List<string>> itemsValue = new();
     public List<Player> players = new();
@@ -25,10 +36,12 @@ public class GameController : SerializedMonoBehaviour
     public Dictionary<string,Team> team = new();
     public Dictionary<string,Dictionary<string,MatchStatus>> match = new ();
     public Dictionary<string,MatchPools> matchpool = new ();
-    public Dictionary<string, string> countryFullName = new Dictionary<string, string>();
+    public Dictionary<string, string> countryFullName = new();
+    public Dictionary<string, Sprite> countrySpriteImage = new();
+    public Dictionary<string, Sprite> playerSpriteImage = new();
 
     [Header("DictionaryDataSetFromRealDb")]
-    public Dictionary<string, MyMatchDetails> mymatch = new Dictionary<string, MyMatchDetails>();
+    public Dictionary<string, MyMatchDetails> mymatch = new();
 
     private void OnApplicationQuit()
     {
@@ -40,6 +53,12 @@ public class GameController : SerializedMonoBehaviour
         Instance = this;
         Application.targetFrameRate = 120;
         
+    }
+    void Start()
+    {
+        storage = FirebaseStorage.DefaultInstance;
+        storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
+        countrySpriteImage = new Dictionary<string, Sprite>();
     }
 
     #region TEAM
@@ -73,7 +92,7 @@ public class GameController : SerializedMonoBehaviour
         {
             team.Add(item.Key, JsonConvert.DeserializeObject<Team>(item.GetRawJsonValue()));
         }
-   
+       
     }
 
     #endregion
@@ -178,8 +197,8 @@ public class GameController : SerializedMonoBehaviour
   
         string val = args.Snapshot.GetRawJsonValue();
         players = JsonConvert.DeserializeObject<List<Player>>(val);
-    
-
+        FetchData();
+        FetchDataPlayerPic();
     }
 
     #endregion
@@ -220,6 +239,111 @@ public class GameController : SerializedMonoBehaviour
 
     #endregion
 
+    #region COUNTRY FLAGS
 
+    public void FetchData()
+    {
+        foreach (var item in players)
+        {
+            foreach (var item2 in team.Values)
+            {
+                if (item.TeamName == item2.TeamName)
+                {
+                    fileName = item2.LogoURL;
+                    DisplayImage(fileName,item2.TeamName);
+                }
+            }   
+        }
+    }
+
+    public IEnumerator LoadImage(string MediaUrl, string _teamName)
+    {
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(MediaUrl);
+        yield return request.SendWebRequest();
+        if (request.isNetworkError || request.isHttpError)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            Texture2D tex = ((DownloadHandlerTexture)request.downloadHandler).texture;
+            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
+            countrySpriteImage.Add(_teamName, sprite);          
+        }
+    }
+
+    public void DisplayImage(string _fileName ,string _teamName)
+    {
+        countrySpriteImage.Clear();
+        Debug.Log(fileName + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        storage = FirebaseStorage.DefaultInstance;
+        storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
+        StorageReference image = storageReference.Child(_fileName);
+        image.GetDownloadUrlAsync().ContinueWithOnMainThread(task =>
+        {
+            if (!task.IsFaulted && !task.IsCanceled)
+            {
+                StartCoroutine(LoadImage(Convert.ToString(task.Result), _teamName));
+            }
+            else
+            {
+                Debug.Log(task.Exception);
+            }
+        });
+    }
+
+
+
+    #endregion
+
+    #region PLAYERPICS
+    public void FetchDataPlayerPic()
+    {
+        foreach (var item in players)
+        {
+            foreach (var item1 in item.Players.Values)
+            {
+                fileName = item1.URL;
+                Debug.Log(fileName);
+                DisplayImagePlayerPic(fileName, item1.ID);
+            }
+                 
+        }
+    }
+    public void DisplayImagePlayerPic(string _fileName, string _playerID)
+    {
+        countrySpriteImage.Clear();
+        storage = FirebaseStorage.DefaultInstance;
+        storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
+        StorageReference image = storageReference.Child(_fileName);
+        image.GetDownloadUrlAsync().ContinueWithOnMainThread(task =>
+        {
+            if (!task.IsFaulted && !task.IsCanceled)
+            {
+                StartCoroutine(LoadImagePlayerPic(Convert.ToString(task.Result), _playerID));
+            }
+            else
+            {
+                Debug.Log(task.Exception);
+            }
+        });
+    }
+
+    public IEnumerator LoadImagePlayerPic(string MediaUrl, string _playerID)
+    {
+        UnityWebRequest request = UnityWebRequestTexture.GetTexture(MediaUrl);
+        yield return request.SendWebRequest();
+        if (request.isNetworkError || request.isHttpError)
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            Texture2D tex = ((DownloadHandlerTexture)request.downloadHandler).texture;
+            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
+            playerSpriteImage.Add(_playerID, sprite);
+        }
+    }
+    #endregion
 }
 

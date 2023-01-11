@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Firebase.Firestore;
+using System.Security.Cryptography;
+using System.Reflection;
 
 public class MatchSelection : UIHandler
 {
@@ -48,10 +50,10 @@ public class MatchSelection : UIHandler
     private void Awake()
     {
         Instance = this;
-        tog[0].onValueChanged.AddListener(delegate { onTogWicketKeeper(); SetToggleUnActive0(); });
-        tog[1].onValueChanged.AddListener(delegate { onTogBatting(); SetToggleUnActive1(); });
-        tog[2].onValueChanged.AddListener(delegate { onTogAllRound(); SetToggleUnActive2(); });
-        tog[3].onValueChanged.AddListener(delegate { onTogAllBowl(); SetToggleUnActive3(); });
+        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0); SetToggleUnActive0(); });
+        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1); SetToggleUnActive1(); });
+        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2); SetToggleUnActive2(); });
+        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3); SetToggleUnActive3(); });
 
     }
 
@@ -95,7 +97,7 @@ public class MatchSelection : UIHandler
         tog[3].isOn = false;
         togGroup.allowSwitchOff = false;
         parent[0].gameObject.SetActive(true);
-        onTogWicketKeeper();
+        PlayerSelectionToggle(0);
     }
 
     public void SetToggleUnActive0()
@@ -182,6 +184,7 @@ public class MatchSelection : UIHandler
                 if (parent[2].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
                 {
                     parent[2].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
+                 
                 }
 
             }
@@ -213,6 +216,7 @@ public class MatchSelection : UIHandler
                 if (parent[3].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
                 {
                     parent[3].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
+
                 }
 
             }
@@ -221,17 +225,16 @@ public class MatchSelection : UIHandler
 
     }
 
-    public void onTogWicketKeeper()
-    {
-        if (tog[0].isOn)
-        {
-            foreach (Transform child in parent[0])
-            {
-                child.gameObject.SetActive(false);
-            }
+    Sprite playerPic;
 
-            parent[0].gameObject.SetActive(true);
-            rect.content = parent[0].GetComponent<RectTransform>();
+    public void PlayerSelectionToggle(int _index)
+    {
+
+
+        if (tog[_index].isOn)
+        {
+            parent[_index].gameObject.SetActive(true);
+            rect.content = parent[_index].GetComponent<RectTransform>();
 
             foreach (var item in GameController.Instance.players)
             {
@@ -239,12 +242,24 @@ public class MatchSelection : UIHandler
                 {
                     foreach (var item1 in item.Players)
                     {
-                        if (item1.Value.Type == 0)
+                        if (item1.Value.Type == _index)
                         {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
-                            mprefabObj.transform.SetParent(parent[0]);
+
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection", false);
+                            mprefabObj.transform.SetParent(parent[_index]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
+                            foreach (var item2 in GameController.Instance.playerSpriteImage)
+                            {
+                                foreach (var sprite in GameController.Instance.playerSpriteImage.Values)
+                                {
+                                    if (item1.Value.ID == item2.Key)
+                                    {
+                                        playerPic = item2.Value;
+                                    }
+                                }
+                            }
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
+
                         }
                     }
                 }
@@ -252,12 +267,22 @@ public class MatchSelection : UIHandler
                 {
                     foreach (var item1 in item.Players)
                     {
-                        if (item1.Value.Type == 0)
+                        if (item1.Value.Type == _index)
                         {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
-                            mprefabObj.transform.SetParent(parent[0]);
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection", false);
+                            mprefabObj.transform.SetParent(parent[_index]);
                             mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
+                            foreach (var item2 in GameController.Instance.playerSpriteImage)
+                            {
+                                foreach (var sprite in GameController.Instance.playerSpriteImage.Values)
+                                {
+                                    if (item1.Value.ID == item2.Key)
+                                    {
+                                        playerPic = item2.Value;
+                                    }
+                                }
+                            }
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
                         }
                     }
                 }
@@ -265,151 +290,12 @@ public class MatchSelection : UIHandler
         }
         else
         {
-            parent[0].gameObject.SetActive(false);
-        }
-    }
+            parent[_index].gameObject.SetActive(false);
 
-
-    public void onTogBatting()
-    {
-        if (tog[1].isOn)
-        {
-            foreach (Transform child in parent[1])
+            foreach (Transform child in parent[_index])
             {
                 child.gameObject.SetActive(false);
             }
-
-            parent[1].gameObject.SetActive(true);
-            rect.content = parent[1].GetComponent<RectTransform>();
-
-            foreach (var item in GameController.Instance.players)
-            {
-                if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
-                {
-                    foreach (var item1 in item.Players)
-                    {
-                        if (item1.Value.Type == 1)
-                        {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
-                            mprefabObj.transform.SetParent(parent[1]);
-                            mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
-                        }
-                    }
-                }
-                if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
-                {
-                    foreach (var item1 in item.Players)
-                    {
-                        if (item1.Value.Type == 1)
-                        {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
-                            mprefabObj.transform.SetParent(parent[1]);
-                            mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            parent[1].gameObject.SetActive(false);
-        }
-    }
-
-    public void onTogAllRound()
-    {
-        if (tog[2].isOn)
-        {
-            foreach (Transform child in parent[2])
-            {
-                child.gameObject.SetActive(false);
-            }
-
-            parent[2].gameObject.SetActive(true);
-            rect.content = parent[2].GetComponent<RectTransform>();
-
-            foreach (var item in GameController.Instance.players)
-            {
-                if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
-                {
-                    foreach (var item1 in item.Players)
-                    {
-                        if (item1.Value.Type == 2)
-                        {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
-                            mprefabObj.transform.SetParent(parent[2]);
-                            mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
-                        }
-                    }
-                }
-                if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
-                {
-                    foreach (var item1 in item.Players)
-                    {
-                        if (item1.Value.Type == 2)
-                        {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
-                            mprefabObj.transform.SetParent(parent[2]);
-                            mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            parent[2].gameObject.SetActive(false);
-        }
-    }
-    public void onTogAllBowl()
-    {
-        if (tog[3].isOn)
-        {
-            foreach (Transform child in parent[3])
-            {
-                child.gameObject.SetActive(false);
-            }
-
-            parent[3].gameObject.SetActive(true);
-            rect.content = parent[3].GetComponent<RectTransform>();
-
-            foreach (var item in GameController.Instance.players)
-            {
-                if (item.TeamName.Contains(GameController.Instance.CurrentTeamA))
-                {
-                    foreach (var item1 in item.Players)
-                    {
-                        if (item1.Value.Type == 3)
-                        {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
-                            mprefabObj.transform.SetParent(parent[3]);
-                            mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
-                        }
-                    }
-                }
-                if (item.TeamName.Contains(GameController.Instance.CurrentTeamB))
-                {
-                    foreach (var item1 in item.Players)
-                    {
-                        if (item1.Value.Type == 3)
-                        {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
-                            mprefabObj.transform.SetParent(parent[3]);
-                            mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type);
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            parent[3].gameObject.SetActive(false);
         }
     }
 }

@@ -28,27 +28,16 @@ public class MainMenu_Handler : UIHandler
         togs[1].onValueChanged.AddListener(delegate { OnvalueChangeODI(); });
         togs[2].onValueChanged.AddListener(delegate { OnvalueChangeTEST(); });
         togs[3].onValueChanged.AddListener(delegate { OnvalueChangeT10(); });
-
+        
     }
 
     private void Start()
     {
-
+        rect.verticalNormalizedPosition = 1;
         GameController.Instance.SubscribeMatchDetails();
         GameController.Instance.SubscribePlayerDetails();
         GameController.Instance.SubscribeMatchPools();
         GameController.Instance.SubscribePlayers();
-      //  GameController.Instance.SubscribeLeaderBoardDetails();
-        rect.verticalNormalizedPosition = 1;
-
-
-
-
-    }
-
-    private void OnEnable()
-    {
-        OnvalueChangeT20();
     }
 
     public override void ShowMe()
@@ -58,7 +47,7 @@ public class MainMenu_Handler : UIHandler
 
         _playerId.text = PlayerPrefs.GetString("userName");
         _playerName.text = PlayerPrefs.GetString("userId");
-      
+        OnvalueChangeT20();
     }
 
 
@@ -239,25 +228,24 @@ public class MainMenu_Handler : UIHandler
                         if (item1.HotGame)
                         {
                
-                           PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("HotGameHolder");
+                           PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("HotGameHolder",false);
                             mprefabObj.transform.SetParent(parentHotTable[toggleindex]);
                             mprefabObj.gameObject.SetActive(true);
                             string timeStringVal = item1.Time;
-                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeStringVal,"INTERNATIONAL");
+                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeStringVal,"ICC MENS CRICKET");
 
                         }
                         else
                         {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("UpcomingGameHolder");
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("UpcomingGameHolder",false);
                             mprefabObj.transform.SetParent(parentUpComingMatch[toggleindex]);
                             mprefabObj.gameObject.SetActive(true);
                             string timeString = item1.Time;
-                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString, "INTERNATIONAL");
+                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString, "ICC MENS CRICKET");
                         }
                     }
                 }
             }
         }
-
     }
 }

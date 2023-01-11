@@ -95,7 +95,7 @@ public class ContestHandler : UIHandler
             foreach (var item1 in item.Pools.Values)
             {
 
-                PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchPools");
+                PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchPools", false);
                 mprefabObj.transform.SetParent(parent);
                 mprefabObj.gameObject.SetActive(true);
                 mprefabObj.name = item1.PoolID.ToString();

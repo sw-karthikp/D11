@@ -12,6 +12,7 @@ public class PlayerDetails : MonoBehaviour
     public TMP_Text playerName;
     public TMP_Text countryName;
     public TMP_Text Fpoint;
+    public Image _profilePic;
     public int type;
     public Toggle tog;
     public float CreditsLeft;
@@ -22,12 +23,13 @@ public class PlayerDetails : MonoBehaviour
         tog.onValueChanged.AddListener(x => { OnvalueChange(); OnvalueChangeCountPlayerType(); OnvalueChangeTeam(); playerCount(); });
     }
 
-    public void SetPlayerData(string _playerName, string _countryName, string _fPoint, int _type)
+    public void SetPlayerData(string _playerName, string _countryName, string _fPoint, int _type ,Sprite pic)
     {
         playerName.text = _playerName;
         countryName.text = _countryName;
         Fpoint.text = _fPoint;
         type = _type;
+        _profilePic.sprite = pic;
     }
 
     public void playerCount()
@@ -54,6 +56,7 @@ public class PlayerDetails : MonoBehaviour
         newMatch.countryName = countryName.text;
         newMatch.points = Fpoint.text;
         newMatch.type = type;
+        newMatch.playerPic = _profilePic.sprite;
         if (tog.isOn)
         {
             if (MatchSelection.Instance.playersForTeam.Find(x => x.playerName == newMatch.playerName) == null)
