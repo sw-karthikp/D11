@@ -42,10 +42,10 @@ public class PlayerDetails : MonoBehaviour
         {
             MatchSelection.Instance.next.interactable = false;
         }
-        MatchSelection.Instance.SetToggleUnActive0();
-        MatchSelection.Instance.SetToggleUnActive1();
-        MatchSelection.Instance.SetToggleUnActive2();
-        MatchSelection.Instance.SetToggleUnActive3();
+        MatchSelection.Instance.SetToggleUnActive(0);
+        MatchSelection.Instance.SetToggleUnActive(1);
+        MatchSelection.Instance.SetToggleUnActive(2);
+        MatchSelection.Instance.SetToggleUnActive(3);
 
     }
     public void OnvalueChange()

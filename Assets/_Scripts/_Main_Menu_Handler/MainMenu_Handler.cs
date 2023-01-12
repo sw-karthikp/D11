@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 public class MainMenu_Handler : UIHandler
 {
     public ScrollRect rect;
@@ -18,9 +19,9 @@ public class MainMenu_Handler : UIHandler
     public Toggle[] togs;
     public Image[] img;
     public GameObject[] hotGamesObj;
-
     public Transform Slider;
     public GameObject[] point;
+    public Ease _ease;
     private void Awake()
     {
         Instance = this;
@@ -92,6 +93,8 @@ public class MainMenu_Handler : UIHandler
 
             img[0].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
             matchTypes[0].SetActive(true);
+            Slider.DOKill();
+            Slider.DOMove(point[0].transform.position, 0.1f).SetEase(_ease);
             SetUpcomingMatchDetails(0);
         }
         else
@@ -126,6 +129,8 @@ public class MainMenu_Handler : UIHandler
             }
             matchTypes[1].SetActive(true);
             img[1].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
+            Slider.DOKill();
+            Slider.DOMove(point[1].transform.position, 0.1f).SetEase(_ease);
             SetUpcomingMatchDetails(1);
         }
         else
@@ -157,6 +162,8 @@ public class MainMenu_Handler : UIHandler
                 }
             }
             img[2].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
+            Slider.DOKill();
+            Slider.DOMove(point[2].transform.position, 0.1f).SetEase(_ease);
             matchTypes[2].SetActive(true);
             SetUpcomingMatchDetails(2);
         }
@@ -192,6 +199,8 @@ public class MainMenu_Handler : UIHandler
                 }
             }
             img[3].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
+            Slider.DOKill();
+            Slider.DOMove(point[3].transform.position, 0.1f).SetEase(_ease);
             matchTypes[3].SetActive(true);
             SetUpcomingMatchDetails(3);
         }

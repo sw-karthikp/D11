@@ -115,6 +115,7 @@ public class GameController : SerializedMonoBehaviour
 
     void HandleValueMatch(object sender, ValueChangedEventArgs args)
     {
+        match.Clear();
         if (args.DatabaseError != null)
         {
             Debug.LogError(args.DatabaseError.Message + "*************");

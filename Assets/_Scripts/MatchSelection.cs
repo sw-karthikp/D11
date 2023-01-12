@@ -27,9 +27,11 @@ public class MatchSelection : UIHandler
     public TMP_Text teamACount;
     public TMP_Text teamBCount;
     public TMP_Text timeDuration;
+    public TMP_Text toggleInformationText;
     public float TotalCredits = 100.0f;
     public Button next;
     public ScrollRect rect;
+    Sprite playerPic;
     public override void HideMe()
     {
         UIController.Instance.RemoveFromOpenPages(this);
@@ -50,10 +52,10 @@ public class MatchSelection : UIHandler
     private void Awake()
     {
         Instance = this;
-        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0); SetToggleUnActive0(); });
-        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1); SetToggleUnActive1(); });
-        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2); SetToggleUnActive2(); });
-        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3); SetToggleUnActive3(); });
+        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3); SetToggleUnActive(0); TextAllocator(0); });
+        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0); SetToggleUnActive(1); TextAllocator(1); });
+        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2); SetToggleUnActive(2); TextAllocator(2); });
+        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1); SetToggleUnActive(3); TextAllocator(3); });
 
     }
 
@@ -61,17 +63,12 @@ public class MatchSelection : UIHandler
     {
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
-
         selectedplayerCount.text = "0";
         CreditsLeft.text = "100";
-
         for (int i = 0; i < Sprite_Swap.Instance.objects.Length; i++)
         {
-
-
             Sprite_Swap.Instance.objects[i].sprite = Sprite_Swap.Instance.Spritecolor[1];
         }
-
     }
 
     public override void OnBack()
@@ -100,46 +97,16 @@ public class MatchSelection : UIHandler
         PlayerSelectionToggle(0);
     }
 
-    public void SetToggleUnActive0()
+    public void SetToggleUnActive(int _index)
     {
-        if(playersForTeam.Count ==  11 && parent[0].gameObject.activeSelf)
+        if (playersForTeam.Count == 11 && parent[_index].gameObject.activeSelf)
         {
-            for (int i = 0; i < parent[0].childCount; i++)
-            {
-              
-                if (parent[0].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
-                {
-                    parent[0].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = false;
-                }
-              
-            }
-
-        }
-        else
-        {
-            for (int i = 0; i < parent[0].childCount; i++)
+            for (int i = 0; i < parent[_index].childCount; i++)
             {
 
-                if (parent[0].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
+                if (parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
                 {
-                    parent[0].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
-                }
-
-            }
-        }
-    
-    }
-
-    public void SetToggleUnActive1()
-    {
-        if (playersForTeam.Count == 11 && parent[1].gameObject.activeSelf)
-        {
-            for (int i = 0; i < parent[1].childCount; i++)
-            {
-
-                if (parent[1].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
-                {
-                    parent[1].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = false;
+                    parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = false;
                 }
 
             }
@@ -147,90 +114,45 @@ public class MatchSelection : UIHandler
         }
         else
         {
-            for (int i = 0; i < parent[1].childCount; i++)
+            for (int i = 0; i < parent[_index].childCount; i++)
             {
 
-                if (parent[1].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
+                if (parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
                 {
-                    parent[1].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
+                    parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
                 }
 
             }
         }
-
-
     }
 
-    public void SetToggleUnActive2()
+    public void TextAllocator(int _index)
     {
-        if (playersForTeam.Count == 11 && parent[2].gameObject.activeSelf)
+        switch (_index)
         {
-            for (int i = 0; i < parent[2].childCount; i++)
-            {
-
-                if (parent[2].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
-                {
-                    parent[2].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = false;
-                }
-
-            }
-
+            case 0:
+                toggleInformationText.text = "Select 1 - 4 Wicket-Keepers";
+                break;
+            case 1:
+                toggleInformationText.text = "Select 3 - 6 Batters";
+                break;
+            case 2:
+                toggleInformationText.text = "Select 1 - 4 All-Rounders";
+                break;
+            case 3:
+                toggleInformationText.text = "Select 3 - 6 Bowlers";
+                break;
         }
-        else
-        {
-            for (int i = 0; i < parent[2].childCount; i++)
-            {
-
-                if (parent[2].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
-                {
-                    parent[2].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
-                 
-                }
-
-            }
-        }
-
-
     }
 
-    public void SetToggleUnActive3()
-    {
-        if (playersForTeam.Count == 11 && parent[3].gameObject.activeSelf)
-        {
-            for (int i = 0; i < parent[3].childCount; i++)
-            {
-
-                if (parent[3].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
-                {
-                    parent[3].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = false;
-                }
-
-            }
-
-        }
-        else
-        {
-            for (int i = 0; i < parent[3].childCount; i++)
-            {
-
-                if (parent[3].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
-                {
-                    parent[3].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
-
-                }
-
-            }
-        }
-
-
-    }
-
-    Sprite playerPic;
-
+ 
     public void PlayerSelectionToggle(int _index)
     {
 
-
+        foreach (Transform child in parent[_index])
+        {
+            child.gameObject.SetActive(false);
+        }
         if (tog[_index].isOn)
         {
             parent[_index].gameObject.SetActive(true);
@@ -269,7 +191,7 @@ public class MatchSelection : UIHandler
                     {
                         if (item1.Value.Type == _index)
                         {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection", false);
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject ("MatchSelection", false);
                             mprefabObj.transform.SetParent(parent[_index]);
                             mprefabObj.gameObject.SetActive(true);
                             foreach (var item2 in GameController.Instance.playerSpriteImage)
@@ -291,11 +213,7 @@ public class MatchSelection : UIHandler
         else
         {
             parent[_index].gameObject.SetActive(false);
-
-            foreach (Transform child in parent[_index])
-            {
-                child.gameObject.SetActive(false);
-            }
+         
         }
     }
 }

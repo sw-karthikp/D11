@@ -16,7 +16,7 @@ public class ContestHandler : UIHandler
     public Dictionary<string, List<string>> val = new Dictionary<string, List<string>>();
     public GameObject viewAllPoolMatches;
     public GameObject viewTypePoolMatches;
-    public ScrollRect rect;
+    public VerticalLayoutGroup rect;
     public string TeamA;
     public string TeamB;
     public string MatchIDVal;
@@ -53,10 +53,10 @@ public class ContestHandler : UIHandler
 
     private void OnEnable()
     {
-        rect.content = viewTypePoolMatches.GetComponent<RectTransform>();
+
         viewAllPoolMatches.SetActive(false);
         viewTypePoolMatches.SetActive(true);
-
+        rect.reverseArrangement = true;
     }
 
     public void OnClickClose()
@@ -99,10 +99,15 @@ public class ContestHandler : UIHandler
                 mprefabObj.transform.SetParent(parent);
                 mprefabObj.gameObject.SetActive(true);
                 mprefabObj.name = item1.PoolID.ToString();
-                mprefabObj.GetComponent<MatchPoolType>().SetValueToPoolObject(item1.Entry, item1.PoolID, item1.PrizeList, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots);
+                mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Entry, item1.PoolID, item1.PrizeList, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots,item1.Type);
 
             }
+
             yield return new WaitForSeconds(0f);
+            rect.reverseArrangement = false;
+
         }
+       
+
     }
 }
