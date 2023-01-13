@@ -237,7 +237,7 @@ public class MainMenu_Handler : UIHandler
                         if (item1.HotGame)
                         {
                
-                           PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("HotGameHolder",false);
+                           PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("HotGameHolder");
                             mprefabObj.transform.SetParent(parentHotTable[toggleindex]);
                             mprefabObj.gameObject.SetActive(true);
                             string timeStringVal = item1.Time;
@@ -246,7 +246,7 @@ public class MainMenu_Handler : UIHandler
                         }
                         else
                         {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("UpcomingGameHolder",false);
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("UpcomingGameHolder");
                             mprefabObj.transform.SetParent(parentUpComingMatch[toggleindex]);
                             mprefabObj.gameObject.SetActive(true);
                             string timeString = item1.Time;

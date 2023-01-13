@@ -38,10 +38,7 @@ public class TeamHolderData : MonoBehaviour
         //  MyMatchDetails.onClick.AddListener(() => { OnClickButton();  })
     }
 
-    private void OnDestroy()
-    {
-        GameController.Instance.UnSubscribeMatchDetails();
-    }
+
     private void OnDisable()
     {
         StopAllCoroutines();

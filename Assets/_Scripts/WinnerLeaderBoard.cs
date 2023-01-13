@@ -43,14 +43,14 @@ public class WinnerLeaderBoard : UIHandler
     }
 
 
-    public void GetPrizeList( string poolId ,List<Prizevalues> prize ,string _prizePool , string _entryAmount ,string _spotsLeft ,string _totalsports)
+    public void GetPrizeList( string poolId, Dictionary<string, Prizevalues> prizeList, string _prizePool , string _entryAmount ,string _spotsLeft ,string _totalsports)
     {
         prizePool.text = _prizePool;
         entryAmount.text = _entryAmount;
         spotsLeft.text = _spotsLeft;
         totalSpots.text = _totalsports;
 
-        foreach (var item in prize)
+        foreach (var item in prizeList.Values)
         {
             GameObject mprefab = Instantiate(childWinner, parent);
             mprefab.GetComponent<WinnerContainer>().setRank(item.Rank, item.Value.ToString());

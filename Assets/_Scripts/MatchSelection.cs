@@ -36,7 +36,6 @@ public class MatchSelection : UIHandler
     {
         UIController.Instance.RemoveFromOpenPages(this);
         gameObject.SetActive(false);
-
         for (int i = 0; i < parent.Length; i++)
         {
             foreach (Transform Child in parent[i])
@@ -45,17 +44,15 @@ public class MatchSelection : UIHandler
             }
         }
         playersForTeam.Clear();
-     
-
     }
 
     private void Awake()
     {
         Instance = this;
-        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3); SetToggleUnActive(0); TextAllocator(0); });
-        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0); SetToggleUnActive(1); TextAllocator(1); });
+        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0); SetToggleUnActive(0); TextAllocator(0); });
+        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1); SetToggleUnActive(1); TextAllocator(1); });
         tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2); SetToggleUnActive(2); TextAllocator(2); });
-        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1); SetToggleUnActive(3); TextAllocator(3); });
+        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3); SetToggleUnActive(3); TextAllocator(3); });
 
     }
 
@@ -103,25 +100,20 @@ public class MatchSelection : UIHandler
         {
             for (int i = 0; i < parent[_index].childCount; i++)
             {
-
                 if (parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
                 {
                     parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = false;
                 }
-
             }
-
         }
         else
         {
             for (int i = 0; i < parent[_index].childCount; i++)
             {
-
                 if (parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
                 {
                     parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
                 }
-
             }
         }
     }
@@ -148,11 +140,6 @@ public class MatchSelection : UIHandler
  
     public void PlayerSelectionToggle(int _index)
     {
-
-        foreach (Transform child in parent[_index])
-        {
-            child.gameObject.SetActive(false);
-        }
         if (tog[_index].isOn)
         {
             parent[_index].gameObject.SetActive(true);
@@ -167,9 +154,21 @@ public class MatchSelection : UIHandler
                         if (item1.Value.Type == _index)
                         {
 
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection", false);
-                            mprefabObj.transform.SetParent(parent[_index]);
-                            mprefabObj.gameObject.SetActive(true);
+                            bool canSkip = false;
+                            foreach (Transform child in parent[_index])
+                            {
+                                if (child.name.Contains(item1.Value.Name))
+                                {
+                                    canSkip = true;
+                                    break;
+                                }
+                            }
+                            if (canSkip) continue;
+                            // PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchSelection");
+                            GameObject mprefabObj = Instantiate(childPrefab, parent[_index]);
+                            mprefabObj.name = item1.Value.Name;
+                            // mprefabObj.transform.SetParent(parent[_index]);
+                            //mprefabObj.gameObject.SetActive(true);
                             foreach (var item2 in GameController.Instance.playerSpriteImage)
                             {
                                 foreach (var sprite in GameController.Instance.playerSpriteImage.Values)
@@ -191,9 +190,22 @@ public class MatchSelection : UIHandler
                     {
                         if (item1.Value.Type == _index)
                         {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject ("MatchSelection", false);
-                            mprefabObj.transform.SetParent(parent[_index]);
-                            mprefabObj.gameObject.SetActive(true);
+
+                            bool canSkip = false;
+                            foreach (Transform child in parent[_index])
+                            {
+                                if (child.name.Contains(item1.Value.Name))
+                                {
+                                    canSkip = true;
+                                    break;
+                                }
+                            }
+                            if (canSkip) continue;
+                            // PoolItems mprefabObj = PoolManager.Instance.GetPoolObject ("MatchSelection");
+                            GameObject mprefabObj = Instantiate(childPrefab, parent[_index]);
+                            mprefabObj.name = item1.Value.Name;
+                            //mprefabObj.transform.SetParent(parent[_index]);
+                            //mprefabObj.gameObject.SetActive(true);
                             foreach (var item2 in GameController.Instance.playerSpriteImage)
                             {
                                 foreach (var sprite in GameController.Instance.playerSpriteImage.Values)

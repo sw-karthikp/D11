@@ -29,7 +29,7 @@ public class Pools
 {
     public int Entry;
     public int PoolID;
-    public List<Prizevalues> PrizeList = new();
+    public Dictionary<string,Prizevalues> PrizeList = new();
     public int PrizePool;
     public int SlotsFilled;
     public int TotalSlots;

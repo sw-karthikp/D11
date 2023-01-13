@@ -16,7 +16,7 @@ public class MatchPoolType : MonoBehaviour
     public Slider silder;
     public Button click;
     public Button entryButtonClick;
-    public List<Prizevalues> prizeList;
+    public Dictionary<string, Prizevalues> prizeList =new();
     // Start is called before the first frame update
     void Start()
     {
@@ -39,7 +39,7 @@ public class MatchPoolType : MonoBehaviour
         entryButtonClick.onClick.AddListener(() => { DisplayTeamMembers(); });
     }
 
-    public void SetValueToPoolObject(int _entryFee, int _poolId, List<Prizevalues> prize, int _prizePool, int _slotsFilled, int _totalSlots)
+    public void SetValueToPoolObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, int _prizePool, int _slotsFilled, int _totalSlots)
     {
         prizeList.Clear();
         int val1 = _totalSlots;
@@ -58,7 +58,7 @@ public class MatchPoolType : MonoBehaviour
 
     public void PrizeListShow()
     {
-        WinnerLeaderBoard.Instance.GetPrizeList(PoolId, prizeList,prizePool.text,entryFee.text,slotsFilled.text,totalSpots.text);
+        WinnerLeaderBoard.Instance.GetPrizeList(PoolId, prizeList, prizePool.text,entryFee.text,slotsFilled.text,totalSpots.text);
     }
 
     public void DisplayTeamMembers()
