@@ -762,6 +762,8 @@ GameObject:
   - component: {fileID: 4961599534994940655}
   - component: {fileID: 4961599534994940657}
   - component: {fileID: 4961599534994940656}
+  - component: {fileID: 5658748786462067910}
+  - component: {fileID: 3231259067201600630}
   m_Layer: 0
   m_Name: BatterContainer
   m_TagString: Untagged
@@ -834,6 +836,38 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5658748786462067910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4961599534994940654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f53e6c675207914c86f4406ab65be7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isEnabled: 0
+--- !u!114 &3231259067201600630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4961599534994940654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40ff58ccd8749774383fcf565d81b715, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerName: {fileID: 4961599535750429365}
+  playerStatus: {fileID: 4961599535702471020}
+  Runs: {fileID: 4961599534910813394}
+  Bowls: {fileID: 4961599534853966179}
+  fours: {fileID: 4961599534849407407}
+  sixs: {fileID: 4961599534644937485}
+  strikeRate: {fileID: 4961599534696131324}
 --- !u!1 &4961599535702471018
 GameObject:
   m_ObjectHideFlags: 0

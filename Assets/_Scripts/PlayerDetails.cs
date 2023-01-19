@@ -5,13 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-using static MatchSelection;
 
 public class PlayerDetails : MonoBehaviour
 {
     public TMP_Text playerName;
     public TMP_Text countryName;
     public TMP_Text Fpoint;
+    public string playerID;
     public Image _profilePic;
     public int type;
     public Toggle tog;
@@ -23,9 +23,10 @@ public class PlayerDetails : MonoBehaviour
         tog.onValueChanged.AddListener(x => { OnvalueChange(); OnvalueChangeCountPlayerType(); OnvalueChangeTeam(); playerCount(); });
     }
 
-    public void SetPlayerData(string _playerName, string _countryName, string _fPoint, int _type ,Sprite pic)
+    public void SetPlayerData(string _playerID,string _playerName, string _countryName, string _fPoint, int _type ,Sprite pic)
     {
         playerName.text = _playerName;
+        playerID = _playerID;
         countryName.text = _countryName;
         Fpoint.text = _fPoint;
         type = _type;
@@ -53,10 +54,11 @@ public class PlayerDetails : MonoBehaviour
 
         PlayerSelectedForMatch newMatch = new PlayerSelectedForMatch();
         newMatch.playerName = playerName.text;
+        newMatch.PlayerID = playerID;
         newMatch.countryName = countryName.text;
         newMatch.points = Fpoint.text;
         newMatch.type = type;
-        newMatch.playerPic = _profilePic.sprite;
+       // newMatch.playerPic = _profilePic.sprite;
         if (tog.isOn)
         {
             if (MatchSelection.Instance.playersForTeam.Find(x => x.playerName == newMatch.playerName) == null)

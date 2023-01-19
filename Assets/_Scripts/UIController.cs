@@ -9,7 +9,7 @@ using UnityEngine;
     public class UIController : MonoBehaviour
     {
         public List<UIHandler> openedPages;
-        public UIHandler Loginscreen, RegisterScreen,ContestPanel, MainMenuScreen, WinnerLeaderBoard ,SelectMatchTeam,captainscreen;
+        public UIHandler Loginscreen, RegisterScreen,ContestPanel, MainMenuScreen, WinnerLeaderBoard ,SelectMatchTeam,captainscreen,mymatches;
         public static UIController Instance;
 
 

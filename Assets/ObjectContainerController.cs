@@ -1,8 +1,9 @@
-
-#region Match
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+#region Match
+
 
 [Serializable]
 public class MatchStatus
@@ -133,6 +134,100 @@ public class TeamType
     public string T20;
     public string ODI;
     public string TEST;
+}
+
+#endregion
+
+#region PlayerSelectedMatchDetails
+
+public class MatchID
+{
+    public Dictionary<string, SelectdPoolID> SelectedPools = new();
+    public Dictionary<string, SelectedTeamID> SelectedTeam = new();
+
+}
+
+public class SelectdPoolID
+{ 
+    public string PoolID;
+    public string TeamID;
+}
+
+public class SelectedTeamID 
+{
+    public PlayersSelected Players;
+}
+
+public class PlayersSelected
+{
+    public string Captain;
+    public TeamSelected TeamA;
+    public TeamSelected TeamB;
+    public string ViceCaptian;
+}
+
+public class TeamSelected
+{
+    public string TeamName;
+    public List<string> players = new();
+}
+#endregion
+
+#region ScoreCard
+
+public class LiveMatchScoreCard
+{
+    public Dictionary<string, InningsDetails> MatchDetails = new();
+    public string TeamA;
+    public string TeamB;
+    public string TossWon;
+}
+
+public class InningsDetails 
+{ 
+    public ScoreLive Batting = new();
+    public Dictionary<string, TeamDeatilsBowling> Bowling = new();   
+    public int InningsOvers;
+    public int InningsRuns;
+    public int InningsWickets;
+}
+
+public class ScoreLive
+{
+    public Dictionary<string,TeamDeatilsBatting> Score = new();
+}
+
+public class TeamDeatilsBatting 
+{
+    public string Balls;
+    public string Four;
+    public string Score;
+    public string Six;
+    public string Status;
+    public string StatusDetails;
+
+}
+public class BowlingLive
+{
+    public Dictionary<string, TeamDeatilsBowling> Team = new();
+}
+
+public class TeamDeatilsBowling
+{
+    public string Extra;
+    public string Mainden;
+    public string Over;
+    public string Runs;
+    public string Wicket;
+}
+#endregion
+
+#region EnumCollections
+public enum MatchTypeStatus 
+{
+    Upcoming,
+    Live,
+    Complete
 }
 
 #endregion

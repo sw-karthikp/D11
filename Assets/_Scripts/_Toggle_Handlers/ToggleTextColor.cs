@@ -14,7 +14,7 @@ public class ToggleTextColor : MonoBehaviour
 
     private void Awake()
     {
-
+        this.gameObject.GetComponent<Toggle>().onValueChanged.AddListener((x) => ToggleTextColorstates(x));
     }
     public void ToggleTextColorstates(bool state)
     {

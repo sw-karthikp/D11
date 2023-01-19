@@ -9,6 +9,7 @@ public class MatchPoolType : MonoBehaviour
 {
     public TMP_Text entryFee;
     public string PoolId;
+    public string PoolTypeName;
     public bool Gauranted;
     public TMP_Text prizePool;
     public TMP_Text totalSpots;
@@ -39,7 +40,7 @@ public class MatchPoolType : MonoBehaviour
         entryButtonClick.onClick.AddListener(() => { DisplayTeamMembers(); });
     }
 
-    public void SetValueToPoolObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, int _prizePool, int _slotsFilled, int _totalSlots)
+    public void SetValueToPoolObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, int _prizePool, int _slotsFilled, int _totalSlots,string _poolTypeName)
     {
         prizeList.Clear();
         int val1 = _totalSlots;
@@ -54,6 +55,7 @@ public class MatchPoolType : MonoBehaviour
         silder.value = _slotsFilled;
         PoolId = _poolId.ToString();
         prizeList = prize;
+        PoolTypeName = _poolTypeName;
     }
 
     public void PrizeListShow()
@@ -64,6 +66,7 @@ public class MatchPoolType : MonoBehaviour
     public void DisplayTeamMembers()
     {
         GameController.Instance.CurrentPoolID = PoolId;
+        GameController.Instance.CurrentPoolTypeName = PoolTypeName; 
         UIController.Instance.SelectMatchTeam.ShowMe();
     }
 }

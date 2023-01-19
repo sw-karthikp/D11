@@ -2316,6 +2316,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f154f24efd169c4986814666ec592ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
   TeamA: {fileID: 5976805394213023249}
   TeamB: {fileID: 7514477243892850550}
   playerCount: {fileID: 3711573730723804797}

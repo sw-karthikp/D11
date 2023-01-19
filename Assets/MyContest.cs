@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class MyContest : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public TMP_Text contestName;
+    public TMP_Text spotsCount;
+    public TMP_Text teamName;
+    public TMP_Text teamCount;
 
-    // Update is called once per frame
-    void Update()
+
+    public void SetDataToMyContest(string _contestName ,string _spotsCount,string _teamName,string _teamCount)
     {
-        
+        contestName.text= _contestName;
+        spotsCount.text= _spotsCount;
+        teamName.text= _teamName;
+        teamCount.text= _teamCount;
     }
 }

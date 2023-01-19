@@ -18,6 +18,6 @@ public class MatchesPool : MonoBehaviour
         pooltype.text = _poolType;
         GameObject mPoolPrizePrefab = Instantiate(prefab, parent);
         mPoolPrizePrefab.name = _poolType;
-        mPoolPrizePrefab.GetComponent<MatchPoolType>().SetValueToPoolObject(_entryFee, _poolId,prize,_prizePool, _slotsFilled, _totalSlots);
+        mPoolPrizePrefab.GetComponent<MatchPoolType>().SetValueToPoolObject(_entryFee, _poolId,prize,_prizePool, _slotsFilled, _totalSlots,_poolType);
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public abstract class UIHandler : MonoBehaviour
+using Sirenix.OdinInspector;
+public abstract class UIHandler : SerializedMonoBehaviour
 {  
     public abstract void ShowMe();
     public abstract void HideMe();

@@ -16,12 +16,16 @@ public class GameController : SerializedMonoBehaviour
 {
     public static GameController Instance;
 
+    [Header("CurrentUserID")]
+    public string myUserID;
+
     [Header("CurrentMatchData")]
     public string CurrentTeamA;
     public string CurrentTeamB;
     public int CurrentMatchID;
     public string CurrentMatchTimeDuration;
     public string CurrentPoolID;
+    public string CurrentPoolTypeName;
     string fileName;
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -36,12 +40,24 @@ public class GameController : SerializedMonoBehaviour
     public Dictionary<string,Team> team = new();
     public Dictionary<string,Dictionary<string,MatchStatus>> match = new ();
     public Dictionary<string,MatchPools> matchpool = new ();
-    public Dictionary<string, string> countryFullName = new();
-    public Dictionary<string, Sprite> countrySpriteImage = new();
-    public Dictionary<string, Sprite> playerSpriteImage = new();
+    public Dictionary<string,string> countryFullName = new();
+    public Dictionary<string,Sprite> countrySpriteImage = new();
+    public Dictionary<string,Sprite> playerSpriteImage = new();
 
     [Header("DictionaryDataSetFromRealDb")]
-    public Dictionary<string, MyMatchDetails> mymatch = new();
+    public Dictionary<string,MyMatchDetails> mymatch = new();
+
+    [Header("DictionaryDataGetFromRealDb")]
+    public Dictionary<string, MatchID> selectedMatches = new();
+
+   // public Dictionary<string, LiveMatchScoreCard> liveMatchData = new();
+
+    [Header("DictionaryDataGetFromRealDb")]
+    public LiveMatchScoreCard scoreCard;
+
+
+    [Header("Referance")]
+    public MyMatches mymatches;
 
     private void OnApplicationQuit()
     {
@@ -198,8 +214,8 @@ public class GameController : SerializedMonoBehaviour
   
         string val = args.Snapshot.GetRawJsonValue();
         players = JsonConvert.DeserializeObject<List<Player>>(val);
-        FetchData();
-        FetchDataPlayerPic();
+        //FetchData();
+        //FetchDataPlayerPic();
     }
 
     #endregion
@@ -240,6 +256,92 @@ public class GameController : SerializedMonoBehaviour
 
     #endregion
 
+    #region PLAYERMATCHS
+    public void SubscribeSelectedMatchDetails()
+    {
+        FirebaseDatabase.DefaultInstance
+      .GetReference($"PlayerMatches/{myUserID}")
+      .GetValueAsync().ContinueWithOnMainThread(task => {
+          if (task.IsFaulted)
+          {
+              
+          }
+          else if (task.IsCompleted)
+          {
+              FirebaseDatabase.DefaultInstance
+                 .GetReference($"PlayerMatches/{myUserID}")
+                 .ValueChanged += HandleValueSelectedMatch;
+
+          }
+      });
+   
+    }
+
+    public void UnSubscribeSelectedMatchDetails()
+    {
+        FirebaseDatabase.DefaultInstance
+      .GetReference("PlayerMatches")
+      .ValueChanged -= HandleValueSelectedMatch;
+    }
+
+
+    void HandleValueSelectedMatch(object sender, ValueChangedEventArgs args)
+    {
+
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message + "*************");
+            return;
+        }
+
+        DataSnapshot val = args.Snapshot;
+        Debug.Log(args.Snapshot.GetRawJsonValue());
+        selectedMatches = JsonConvert.DeserializeObject<Dictionary<string, MatchID>>(val.GetRawJsonValue());
+        mymatches.UpdateData();
+    }
+
+    #endregion
+
+    #region LIVEMATCHSCORE
+    public void SubscribeLiveScoreDetails(string _matchID)
+    {
+        FirebaseDatabase.DefaultInstance
+                 .GetReference($"LiveMatchScoreCard/{_matchID}")
+                 .ValueChanged += HandleLiveScoreMatch;
+    }
+
+    public void UnSubscribeLiveScoreDetails(string _matchID)
+    {
+        FirebaseDatabase.DefaultInstance
+      .GetReference($"LiveMatchScoreCard/{_matchID}")
+      .ValueChanged -= HandleLiveScoreMatch;
+        scoreCard = null;
+    }
+
+
+    void HandleLiveScoreMatch(object sender, ValueChangedEventArgs args)
+    {
+
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message + "*************");
+            return;
+        }
+
+        
+
+        DataSnapshot val = args.Snapshot;
+        Debug.Log(args.Snapshot.GetRawJsonValue());
+        scoreCard = JsonConvert.DeserializeObject<LiveMatchScoreCard>(val.GetRawJsonValue());
+        if(ScoreCardPanel.Instance.gameObject.activeSelf)
+        {
+            ScoreCardPanel.Instance.InstantDataInnings1();
+            ScoreCardPanel.Instance.InstantDataInnings2();
+        }
+  
+    }
+
+    #endregion
     #region COUNTRY FLAGS
 
     public void FetchData()
@@ -346,5 +448,6 @@ public class GameController : SerializedMonoBehaviour
         }
     }
     #endregion
+
 }
 

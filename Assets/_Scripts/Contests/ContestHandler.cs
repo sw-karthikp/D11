@@ -4,11 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using static GameController;
-using System.Drawing;
-using Newtonsoft.Json.Bson;
-
 public class ContestHandler : UIHandler
 {
     public static ContestHandler Instance;
@@ -72,13 +67,7 @@ public class ContestHandler : UIHandler
         UIController.Instance.ContestPanel.HideMe();
     }
 
-    public IEnumerator TestCase()
-    {
-        yield return new WaitForSeconds(0.1f);
-        rect.reverseArrangement = false;
-        rect.reverseArrangement = true;
-        rect.reverseArrangement = false;
-    }
+ 
 
 
     public IEnumerator SetUpcomingMatchPoolDetails(int MatchId, string teamA, string teamB, string _timeduration)
@@ -88,7 +77,7 @@ public class ContestHandler : UIHandler
         {
             child.gameObject.SetActive(false);
         }
-
+       
         MatchIDVal = MatchId.ToString();
         TeamA = teamA;
         TeamB = teamB;
@@ -108,11 +97,12 @@ public class ContestHandler : UIHandler
                 mprefabObj.gameObject.SetActive(true);
                 mprefabObj.name = item1.PoolID.ToString();
                 mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Entry, item1.PoolID,item1.PrizeList, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots, item1.Type);
+                Canvas.ForceUpdateCanvases();
             }
         }
 
-        yield return new WaitForSeconds(0.5f);
-        TestCase();
+        yield return null;
+         
     }
 
 

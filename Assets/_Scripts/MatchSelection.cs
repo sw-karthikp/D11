@@ -179,7 +179,7 @@ public class MatchSelection : UIHandler
                                     }
                                 }
                             }
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.ID,item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
 
                         }
                     }
@@ -216,7 +216,7 @@ public class MatchSelection : UIHandler
                                     }
                                 }
                             }
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.ID, item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
                         }
                     }
                 }
