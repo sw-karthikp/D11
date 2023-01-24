@@ -63,6 +63,8 @@ public class PoolManager : MonoBehaviour
 
     void CreatePoolObject(string poolId)
     {
+       
+
         GameObject obj = Instantiate(objectsToCreate[poolId].gameObject,poolParent);
         
        

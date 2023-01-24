@@ -94,12 +94,6 @@ public class SelectedPoolID
     public string TeamID;
 }
 
-[Serializable]
-public class MyMatchDetails
-{
-    public Dictionary<string, SelectedPoolID> SelectedPools = new Dictionary<string, SelectedPoolID>();
-    public Dictionary<string, SelectedTeam> SelectedTeam = new Dictionary<string, SelectedTeam>();
-}
 #endregion
 
 #region PlayerSelectionForMatch
@@ -174,7 +168,7 @@ public class TeamSelected
 #endregion
 
 #region ScoreCard
-
+[Serializable]
 public class LiveMatchScoreCard
 {
     public Dictionary<string, InningsDetails> MatchDetails = new();
@@ -182,7 +176,7 @@ public class LiveMatchScoreCard
     public string TeamB;
     public string TossWon;
 }
-
+[Serializable]
 public class InningsDetails 
 { 
     public ScoreLive Batting = new();
@@ -191,12 +185,12 @@ public class InningsDetails
     public int InningsRuns;
     public int InningsWickets;
 }
-
+[Serializable]
 public class ScoreLive
 {
     public Dictionary<string,TeamDeatilsBatting> Score = new();
 }
-
+[Serializable]
 public class TeamDeatilsBatting 
 {
     public string Balls;
@@ -207,11 +201,12 @@ public class TeamDeatilsBatting
     public string StatusDetails;
 
 }
+[Serializable]
 public class BowlingLive
 {
     public Dictionary<string, TeamDeatilsBowling> Team = new();
 }
-
+[Serializable]
 public class TeamDeatilsBowling
 {
     public string Extra;
@@ -221,7 +216,6 @@ public class TeamDeatilsBowling
     public string Wicket;
 }
 #endregion
-
 #region EnumCollections
 public enum MatchTypeStatus 
 {
@@ -230,4 +224,11 @@ public enum MatchTypeStatus
     Complete
 }
 
+public enum PlayerRoleType
+{
+    Batters,
+    Bowlers,
+    AllArounder,
+    WicketKeeper
+}
 #endregion

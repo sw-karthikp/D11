@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Networking;
 using Firebase.Storage;
-using UnityEditor.SceneManagement;
 using Firebase.Extensions;
 using System;
 

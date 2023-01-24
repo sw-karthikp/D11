@@ -8,6 +8,8 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Firebase.Firestore;
 using TMPro;
+using D11;
+
 public class FireBaseManager : MonoBehaviour
 {
 
@@ -132,7 +134,7 @@ public class FireBaseManager : MonoBehaviour
 
             if (signedIn)
             {
-                Debug.Log($"Signed In : {user.UserId}");
+                DebugHelper.Log($"Signed In : {user.UserId}");
                 PlayerPrefs.SetString("userId", user.UserId);
                 UIController.Instance.MainMenuScreen.ShowMe();
                 UIController.Instance.Loginscreen.HideMe();
@@ -140,7 +142,7 @@ public class FireBaseManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Signed Out");
+                DebugHelper.Log("Signed Out");
                 UIController.Instance.MainMenuScreen.HideMe();
                 UIController.Instance.Loginscreen.HideMe();
                 UIController.Instance.RegisterScreen.HideMe();

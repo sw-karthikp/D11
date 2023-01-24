@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
 using Firebase.Database;
+using D11;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using static UnityEditor.Progress;
+
 public class captainSelection : UIHandler
 {
 
@@ -15,9 +19,12 @@ public class captainSelection : UIHandler
     public List<Toggle> togscaptain;
     public List<Toggle> togsvcaptain;
 
+    public static captainSelection Instance;
+
+
     private void Awake()
     {
-
+        Instance = this;
     }
     public override void ShowMe()
     {
@@ -39,63 +46,66 @@ public class captainSelection : UIHandler
 
     public void onClickSave()
     {
+        string json = JsonConvert.SerializeObject(MatchSelection.Instance.playersForTeam, Formatting.None, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 
-
-        string json = JsonConvert.SerializeObject(MatchSelection.Instance.playersForTeam,Formatting.None,new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-        FirebaseDatabase mDatabase = FirebaseDatabase.DefaultInstance;
         Player teamAplayers = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.CurrentTeamA);
         Player teamBplayers = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.CurrentTeamB);
 
         SelectedTeamPlayers selectedTeamA = new SelectedTeamPlayers() { TeamName = GameController.Instance.CurrentTeamA };
         SelectedTeamPlayers selectedTeamB = new SelectedTeamPlayers() { TeamName = GameController.Instance.CurrentTeamB };
-
+        FirebaseDatabase mDatabase = FirebaseDatabase.DefaultInstance;
         string Captain = "";
         string viceCaptain = "";
         //ToDo
-        string TeamId = "Team" + (GameController.Instance.mymatch.Count > 0 ? GameController.Instance.mymatch.ContainsKey(GameController.Instance.CurrentMatchID.ToString()) ? GameController.Instance.mymatch[GameController.Instance.CurrentMatchID.ToString()].SelectedTeam.Count + 1 : 1 : 1);
+        string TeamId = "Team" + (GameController.Instance.selectedMatches.Count > 0 ? GameController.Instance.selectedMatches.ContainsKey(GameController.Instance.CurrentMatchID.ToString()) ? GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID.ToString()].SelectedTeam.Count + 1 : 1 : 1);
         string poolId = GameController.Instance.CurrentPoolID;
+        selectedTeamA.players.Clear();
+        selectedTeamB.players.Clear();
         foreach (var item in MatchSelection.Instance.playersForTeam)
         {
             if (item.isCaptain) Captain = item.PlayerID;
             if (item.isViceCaptain) viceCaptain = item.PlayerID;
 
 
+       
             foreach (var item1 in teamAplayers.Players.Values)
             {
-                if(item1.ID.Contains(item.PlayerID))
+                if (item1.ID.Contains(item.PlayerID))
                 {
+  
                     selectedTeamA.players.Add(item.PlayerID);
-    
+                    break;
                 }
             }
 
             foreach (var item2 in teamBplayers.Players.Values)
             {
-                if(item2.ID.Contains(item.PlayerID))
+                if (item2.ID.Contains(item.PlayerID))
                 {
+            
                     selectedTeamB.players.Add(item.PlayerID);
-  
+                    break;
                 }
             }
-            Debug.Log(selectedTeamA.players.Count + "$$$$$$$$$" + selectedTeamB.players.Count);
-            //if (teamAplayers.Players.Find(x => x.ID == item.PlayerID) != null) selectedTeamA.players.Add(item.PlayerID);
-            //if (teamBplayers.Players.Find(x => x.ID == item.PlayerID) != null) selectedTeamB.players.Add(item.PlayerID);
+            DebugHelper.Log(selectedTeamA.players.Count + "$$$$$$$$$" + selectedTeamB.players.Count);
+
         }
-        SelectedPlayers selectedPlayers = new SelectedPlayers() { Captain = Captain, ViceCaptian = viceCaptain, TeamA = selectedTeamA, TeamB = selectedTeamB};
+        SelectedPlayers selectedPlayers = new SelectedPlayers() { Captain = Captain, ViceCaptian = viceCaptain, TeamA = selectedTeamA, TeamB = selectedTeamB };
         SelectedTeam selectedTeam = new SelectedTeam() { TeamID = TeamId, Players = selectedPlayers };
-        SelectedPoolID selectedPool = new SelectedPoolID() { PoolID = poolId,TeamID = TeamId };
+        SelectedPoolID selectedPool = new SelectedPoolID() { PoolID = poolId, TeamID = TeamId };
         string playerId = PlayerPrefs.GetString("userId");
-        Debug.Log(playerId);
+        DebugHelper.Log(playerId);
         string selectedPoolKey = mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedPools").Push().Key;
         string selectedTeamKey = mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Push().Key;
         mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedPools").Child($"{selectedPoolKey}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedPool));
-        mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Child($"{selectedTeamKey}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedTeam));
-
+        mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Child($"{TeamId}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedTeam));
+        string val1 = GameController.Instance.CurrentMatchID.ToString();
+        string val2 = GameController.Instance.myUserID.ToString();
+        mDatabase.RootReference.Child("JoinedPlayers").Child($"{val1}").Push().SetValueAsync(val2);
 
         GameController.Instance.SubscribeSelectedMatchDetails();
-
+        BottomHandler.Instance.ResetScreen();
     }
-
 
     private void OnEnable()
     {
@@ -107,7 +117,7 @@ public class captainSelection : UIHandler
     {
         for (int i = 0; i < MatchSelection.Instance.playersForTeam.Count; i++)
         {
-            if(MatchSelection.Instance.playersForTeam[i].type == 0)
+            if (MatchSelection.Instance.playersForTeam[i].type == 0)
             {
 
                 bool canSkip = false;
@@ -124,10 +134,10 @@ public class captainSelection : UIHandler
                 if (canSkip) continue;
                 GameObject mprefab = Instantiate(childPrefab, parent[0]);
                 mprefab.name = MatchSelection.Instance.playersForTeam[i].playerName;
-                mprefab.GetComponent<captinslectionHandler>().Setval(MatchSelection.Instance.playersForTeam[i].playerName ,MatchSelection.Instance.playersForTeam[i]);
+                mprefab.GetComponent<captinslectionHandler>().Setval(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i]);
                 togscaptain.Add(mprefab.GetComponent<captinslectionHandler>().Captain);
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
-      
+
             }
             else if (MatchSelection.Instance.playersForTeam[i].type == 1)
             {
@@ -149,7 +159,8 @@ public class captainSelection : UIHandler
                 togscaptain.Add(mprefab.GetComponent<captinslectionHandler>().Captain);
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
 
-            } else if (MatchSelection.Instance.playersForTeam[i].type == 2)
+            }
+            else if (MatchSelection.Instance.playersForTeam[i].type == 2)
             {
                 bool canSkip = false;
                 foreach (Transform child in parent[2])
@@ -169,7 +180,8 @@ public class captainSelection : UIHandler
                 togscaptain.Add(mprefab.GetComponent<captinslectionHandler>().Captain);
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
 
-            } else if (MatchSelection.Instance.playersForTeam[i].type == 3)
+            }
+            else if (MatchSelection.Instance.playersForTeam[i].type == 3)
             {
                 bool canSkip = false;
                 foreach (Transform child in parent[3])
@@ -189,6 +201,58 @@ public class captainSelection : UIHandler
                 togscaptain.Add(mprefab.GetComponent<captinslectionHandler>().Captain);
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
 
+            }
+        }
+    }
+  
+     public void CheckForToggle1()
+    {
+
+        if (this.gameObject.activeSelf)
+
+        {
+            int count1 = 0;
+
+            for (int i = 0; i < togscaptain.Count; i++)
+            {
+                if (togscaptain[i].isOn)
+                {
+
+
+
+                    if (++count1 > 1)
+                    {
+
+                        togscaptain[i].isOn = false;
+
+                    }
+                    Debug.Log(count1);
+                }
+            }
+   
+        }
+    }
+    public void CheckForToggle2()
+    {
+
+        if (this.gameObject.activeSelf)
+
+        {
+
+            int count2 = 0;
+
+            for (int i = 0; i < togsvcaptain.Count; i++)
+            {
+                if (togsvcaptain[i].isOn)
+                {
+
+         
+                    if (++count2 > 1)
+                    {
+                        togsvcaptain[i].isOn = false;
+                    }
+                    Debug.Log(count2);
+                }
             }
         }
     }

@@ -5,7 +5,7 @@ using System.Numerics;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
+
 
 public class MyMatches : UIHandler
 {
@@ -24,10 +24,15 @@ public class MyMatches : UIHandler
         toggles[2].onValueChanged.AddListener(delegate { OnvalueChnaged(2); });
     }
 
+    private void OnEnable()
+    {
+        toggles[0].isOn = true;
+    }
+
     public override void ShowMe()
     {
         gameObject.SetActive(true);
-        toggles[0].isOn = true;
+        
     }
     public override void HideMe()
     {

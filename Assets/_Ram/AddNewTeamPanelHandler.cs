@@ -8,7 +8,7 @@ using System.IO;
 using System;
 using Newtonsoft.Json;
 using Firebase.Extensions;
-using static UnityEditor.Progress;
+
 using UnityEngine.UI;
 using Firebase.Storage;
 using UnityEngine.Networking;

@@ -4,8 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using static UnityEditor.Progress;
 using UnityEngine.Rendering;
+using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
 
 public class MainMenu_Handler : UIHandler
 {
@@ -28,10 +30,10 @@ public class MainMenu_Handler : UIHandler
     private void Awake()
     {
         Instance = this;
-        togs[0].onValueChanged.AddListener(delegate { OnvalueChangeT20(); });
-        togs[1].onValueChanged.AddListener(delegate { OnvalueChangeODI(); });
-        togs[2].onValueChanged.AddListener(delegate { OnvalueChangeTEST(); });
-        togs[3].onValueChanged.AddListener(delegate { OnvalueChangeT10(); });
+        togs[0].onValueChanged.AddListener(delegate { OnValueChange(0); });
+        togs[1].onValueChanged.AddListener(delegate { OnValueChange(1); });
+        togs[2].onValueChanged.AddListener(delegate { OnValueChange(2); });
+        togs[3].onValueChanged.AddListener(delegate { OnValueChange(3); });
         
     }
 
@@ -52,8 +54,17 @@ public class MainMenu_Handler : UIHandler
 
         _playerId.text = PlayerPrefs.GetString("userName");
         _playerName.text = PlayerPrefs.GetString("userId");
-        OnvalueChangeT20();
+        togs[0].isOn = true;
         GameController.Instance.myUserID = PlayerPrefs.GetString("userId");
+
+
+        int[] scores = { 90, 97, 78, 68, 85 };
+        IEnumerable<int> highScoresQuery =
+            from score in scores
+            where score > 80
+            orderby score descending
+            select score;
+        Debug.Log(highScoresQuery.ToString());
     }
 
 
@@ -73,9 +84,9 @@ public class MainMenu_Handler : UIHandler
 
     }
 
-    public void OnvalueChangeT20()
+    public void OnValueChange(int _index)
     {
-        if (togs[0].isOn)
+        if (togs[_index].isOn)
         {
             foreach (var item in GameController.Instance.match.Values)
             {
@@ -83,12 +94,12 @@ public class MainMenu_Handler : UIHandler
                 {
 
 
-                    hotGamesObj[0].SetActive(false);
-                    if (item1.Type == 0)
+                    hotGamesObj[_index].SetActive(false);
+                    if (item1.Type == _index)
                     {
                         if (item1.HotGame == true)
                         {
-                            hotGamesObj[0].SetActive(true);
+                            hotGamesObj[_index].SetActive(true);
                             break;
 
                         }
@@ -96,127 +107,22 @@ public class MainMenu_Handler : UIHandler
                 }
             }
 
-            img[0].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
-            matchTypes[0].SetActive(true);
+            img[_index].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
+            matchTypes[_index].SetActive(true);
             Slider.DOKill();
-            Slider.DOMove(point[0].transform.position, 0.1f).SetEase(_ease);
-            SetUpcomingMatchDetails(0);
+            Slider.DOMove(point[_index].transform.position, 0.1f).SetEase(_ease);
+            SetUpcomingMatchDetails(_index);
         }
         else
         {
-            img[0].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
-            verticle[0].childControlWidth = false;
-            matchTypes[0].SetActive(false);
-
-        }
-
-    }
-    public void OnvalueChangeODI()
-    {
-        if (togs[1].isOn)
-        {
-
-            foreach (var item in GameController.Instance.match.Values)
-            {
-                foreach (var item1 in item.Values)
-                {
-                    hotGamesObj[1].SetActive(false);
-                    if (item1.Type == 1)
-                    {
-
-                        if (item1.HotGame == true)
-                        {
-                            hotGamesObj[1].SetActive(true);
-
-                        }
-                    }
-                }
-            }
-            matchTypes[1].SetActive(true);
-            img[1].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
-            Slider.DOKill();
-            Slider.DOMove(point[1].transform.position, 0.1f).SetEase(_ease);
-            SetUpcomingMatchDetails(1);
-        }
-        else
-        {
-            img[1].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
-            verticle[1].childControlWidth = false;
-            matchTypes[1].SetActive(false);
+            img[_index].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
+            verticle[_index].childControlWidth = false;
+            matchTypes[_index].SetActive(false);
 
         }
     }
-    public void OnvalueChangeTEST()
-    {
-        if (togs[2].isOn)
-        {
-            foreach (var item in GameController.Instance.match.Values)
-            {
-                foreach (var item1 in item.Values)
-                {
-                    hotGamesObj[2].SetActive(false);
-                    if (item1.Type == 2)
-                    {
 
-                        if (item1.HotGame == true)
-                        {
-                            hotGamesObj[2].SetActive(true);
-
-                        }
-                    }
-                }
-            }
-            img[2].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
-            Slider.DOKill();
-            Slider.DOMove(point[2].transform.position, 0.1f).SetEase(_ease);
-            matchTypes[2].SetActive(true);
-            SetUpcomingMatchDetails(2);
-        }
-        else
-        {
-            img[2].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
-            verticle[2].childControlWidth = false;
-            matchTypes[2].SetActive(false);
-
-        }
-    }
-    public void OnvalueChangeT10()
-    {
-        if (togs[3].isOn)
-        {
-
-            foreach (var item in GameController.Instance.match.Values)
-            {
-                foreach (var item1 in item.Values)
-                {
-
-                    hotGamesObj[3].SetActive(false);
-                    if (item1.Type == 3)
-                    {
-
-                        if (item1.HotGame == true)
-                        {
-                            hotGamesObj[3].SetActive(true);
-                            break;
-
-                        }
-                    }
-                }
-            }
-            img[3].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
-            Slider.DOKill();
-            Slider.DOMove(point[3].transform.position, 0.1f).SetEase(_ease);
-            matchTypes[3].SetActive(true);
-            SetUpcomingMatchDetails(3);
-        }
-        else
-        {
-            img[3].color = new Color(0.5254f, 0.5254f, 0.5254f, 1);
-            verticle[3].childControlWidth = false;
-            matchTypes[3].SetActive(false);
-
-        }
-    }
+ 
     public void SetUpcomingMatchDetails(int toggleindex)
     {
 

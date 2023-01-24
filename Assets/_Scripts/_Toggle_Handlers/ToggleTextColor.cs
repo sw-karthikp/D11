@@ -12,14 +12,14 @@ public class ToggleTextColor : MonoBehaviour
     public Color32 ChecmarkColorOff = new Color32(134,134,134,255);
 
 
-    private void Awake()
+    private void OnEnable()
     {
-        this.gameObject.GetComponent<Toggle>().onValueChanged.AddListener((x) => ToggleTextColorstates(x));
+        this.gameObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { ToggleTextColorstates(); });
     }
-    public void ToggleTextColorstates(bool state)
+    public void ToggleTextColorstates()
     {
        
-        if (state)
+        if (this.GetComponent<Toggle>().isOn)
         {
             ToggleText.color = CheckmarkColorOn;
         }

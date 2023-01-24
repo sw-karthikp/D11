@@ -30,7 +30,8 @@ public class _My_Matches : UIHandler
     public string TeamA;
     public string TeamB;
 
-    string matchID;
+    
+    public string matchID;
 
     private void Awake()
     {
@@ -43,6 +44,7 @@ public class _My_Matches : UIHandler
     public override void ShowMe()
     {
         gameObject.SetActive(true);
+        toggles[0].isOn= true;
     }
     public override void HideMe()
     {
@@ -64,11 +66,40 @@ public class _My_Matches : UIHandler
         TeamA = _teamA;
         TeamB = _teamB;
         headerText.text = _teamA + " vs " + _teamB;
+        matchID= _id;
         teamFullNameA.text = _teamAFullName;
         teamFullNameB.text = _teamBFullName;
-        contestCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Contests ({GameController.Instance.selectedMatches.Count})" : "My Contests";
+        contestCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Contests ({ReturnContestCount()})" : "My Contests";
        
     }
 
    
+    public string ReturnContestCount()
+    {
+        int count = 0;
+        foreach (var item in GameController.Instance.selectedMatches)
+        {
+            if (item.Key == GameController.Instance.CurrentMatchID.ToString())
+            {
+                foreach (var item1 in item.Value.SelectedPools.Values)
+                {
+                    foreach (var item2 in GameController.Instance.matchpool.Values)
+                    {
+                        if (item.Key == item2.MatchID.ToString())
+                        {
+                            foreach (var item3 in item2.Pools.Values)
+                            {
+                                if (item1.PoolID == item3.PoolID.ToString())
+                                {
+                                    count++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return count.ToString();
+    }
+
 }

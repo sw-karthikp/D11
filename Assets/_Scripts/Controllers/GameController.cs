@@ -5,12 +5,11 @@ using Firebase.Database;
 using Newtonsoft.Json;
 using Sirenix.OdinInspector;
 using Firebase.Storage;
-using UnityEditor.SceneManagement;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using Firebase.Extensions;
 using System;
-using static UnityEditor.Progress;
+
 
 public class GameController : SerializedMonoBehaviour
 {
@@ -43,9 +42,6 @@ public class GameController : SerializedMonoBehaviour
     public Dictionary<string,string> countryFullName = new();
     public Dictionary<string,Sprite> countrySpriteImage = new();
     public Dictionary<string,Sprite> playerSpriteImage = new();
-
-    [Header("DictionaryDataSetFromRealDb")]
-    public Dictionary<string,MyMatchDetails> mymatch = new();
 
     [Header("DictionaryDataGetFromRealDb")]
     public Dictionary<string, MatchID> selectedMatches = new();
@@ -96,14 +92,13 @@ public class GameController : SerializedMonoBehaviour
     void HandleValueChanged(object sender, ValueChangedEventArgs args)
     {
 
-        Debug.Log("************ MatchDetailsListner");
         if (args.DatabaseError != null)
         {
-            Debug.LogError(args.DatabaseError.Message + "*************");
+            DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
 
-        Debug.Log(args.Snapshot.GetRawJsonValue());
+        DebugHelper.Log(args.Snapshot.GetRawJsonValue());
         foreach (var item in args.Snapshot.Children)
         {
             team.Add(item.Key, JsonConvert.DeserializeObject<Team>(item.GetRawJsonValue()));
@@ -134,7 +129,7 @@ public class GameController : SerializedMonoBehaviour
         match.Clear();
         if (args.DatabaseError != null)
         {
-            Debug.LogError(args.DatabaseError.Message + "*************");
+            DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
         DataSnapshot val = args.Snapshot;
@@ -147,10 +142,10 @@ public class GameController : SerializedMonoBehaviour
             }
             match.Add(item.Key, matchnew);
         }
-        MainMenu_Handler.Instance.OnvalueChangeT20();
-        MainMenu_Handler.Instance.OnvalueChangeODI();
-        MainMenu_Handler.Instance.OnvalueChangeTEST();
-        MainMenu_Handler.Instance.OnvalueChangeT10();
+        MainMenu_Handler.Instance.OnValueChange(0);
+        MainMenu_Handler.Instance.OnValueChange(1);
+        MainMenu_Handler.Instance.OnValueChange(2);
+        MainMenu_Handler.Instance.OnValueChange(3);
     }
 
     #endregion
@@ -175,7 +170,7 @@ public class GameController : SerializedMonoBehaviour
     {
         if (args.DatabaseError != null)
         {
-            Debug.LogError(args.DatabaseError.Message + "*************");
+            DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
         DataSnapshot val = args.Snapshot;
@@ -207,7 +202,7 @@ public class GameController : SerializedMonoBehaviour
     {
         if (args.DatabaseError != null)
         {
-            Debug.LogError(args.DatabaseError.Message + "*************");
+            DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
 
@@ -239,18 +234,18 @@ public class GameController : SerializedMonoBehaviour
     void HandleLeaderBoardValueChanged(object sender, ValueChangedEventArgs args)
     {
         itemsValue = new List<List<string>>();
-        Debug.Log("************ MatchDetailsListner");
+        DebugHelper.Log("************ MatchDetailsListner");
         if (args.DatabaseError != null)
         {
-            Debug.LogError(args.DatabaseError.Message + "*************");
+            DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
 
         string val = args.Snapshot.GetRawJsonValue();
 
-        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        DebugHelper.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         itemsValue = JsonConvert.DeserializeObject<List<List<string>>>(val);
-        Debug.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        DebugHelper.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         //   WinnerLeaderBoard.Instance.OnValueChangeLeaderBord();
     }
 
@@ -290,12 +285,12 @@ public class GameController : SerializedMonoBehaviour
 
         if (args.DatabaseError != null)
         {
-            Debug.LogError(args.DatabaseError.Message + "*************");
+            DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
 
         DataSnapshot val = args.Snapshot;
-        Debug.Log(args.Snapshot.GetRawJsonValue());
+        DebugHelper.Log(args.Snapshot.GetRawJsonValue());
         selectedMatches = JsonConvert.DeserializeObject<Dictionary<string, MatchID>>(val.GetRawJsonValue());
         mymatches.UpdateData();
     }
@@ -324,16 +319,16 @@ public class GameController : SerializedMonoBehaviour
 
         if (args.DatabaseError != null)
         {
-            Debug.LogError(args.DatabaseError.Message + "*************");
+            DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
 
         
 
         DataSnapshot val = args.Snapshot;
-        Debug.Log(args.Snapshot.GetRawJsonValue());
+        DebugHelper.Log(args.Snapshot.GetRawJsonValue());
         scoreCard = JsonConvert.DeserializeObject<LiveMatchScoreCard>(val.GetRawJsonValue());
-        if(ScoreCardPanel.Instance.gameObject.activeSelf)
+        if(ScoreCardPanel.Instance.gameObject.activeInHierarchy)
         {
             ScoreCardPanel.Instance.InstantDataInnings1();
             ScoreCardPanel.Instance.InstantDataInnings2();
@@ -365,7 +360,7 @@ public class GameController : SerializedMonoBehaviour
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError)
         {
-            Debug.Log(request.error);
+            DebugHelper.Log(request.error);
         }
         else
         {
@@ -378,7 +373,7 @@ public class GameController : SerializedMonoBehaviour
     public void DisplayImage(string _fileName ,string _teamName)
     {
         countrySpriteImage.Clear();
-        Debug.Log(fileName + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        DebugHelper.Log(fileName + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         storage = FirebaseStorage.DefaultInstance;
         storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
         StorageReference image = storageReference.Child(_fileName);
@@ -390,7 +385,7 @@ public class GameController : SerializedMonoBehaviour
             }
             else
             {
-                Debug.Log(task.Exception);
+                DebugHelper.Log(task.Exception.ToString());
             }
         });
     }
@@ -407,7 +402,7 @@ public class GameController : SerializedMonoBehaviour
             foreach (var item1 in item.Players.Values)
             {
                 fileName = item1.URL;
-                Debug.Log(fileName);
+                DebugHelper.Log(fileName);
                 DisplayImagePlayerPic(fileName, item1.ID);
             }
                  
@@ -427,7 +422,7 @@ public class GameController : SerializedMonoBehaviour
             }
             else
             {
-                Debug.Log(task.Exception);
+                DebugHelper.Log(task.Exception.ToString());
             }
         });
     }
@@ -438,7 +433,7 @@ public class GameController : SerializedMonoBehaviour
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError)
         {
-            Debug.Log(request.error);
+            DebugHelper.Log(request.error);
         }
         else
         {

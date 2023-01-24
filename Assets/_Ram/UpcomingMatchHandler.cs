@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Database;
-using static UnityEditor.Progress;
+
 using Newtonsoft.Json.Serialization;
 using Unity.VisualScripting;
 using TMPro;

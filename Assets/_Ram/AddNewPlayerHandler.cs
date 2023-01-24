@@ -6,7 +6,6 @@ using Firebase.Database;
 using Firebase.Extensions;
 using UnityEngine.UI;
 using TMPro;
-using static UnityEditor.Progress;
 using Unity.VisualScripting;
 using Newtonsoft.Json;
 using static AddNewTeamPanelHandler;

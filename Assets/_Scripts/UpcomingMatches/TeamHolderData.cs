@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using Firebase.Storage;
-using UnityEditor.SceneManagement;
 using UnityEngine.Networking;
 using Firebase.Extensions;
 using D11;
@@ -35,7 +34,7 @@ public class TeamHolderData : MonoBehaviour
     {
      
         Click.onClick.AddListener(() => { OnClickButton(); });
-        //  MyMatchDetails.onClick.AddListener(() => { OnClickButton();  })
+
     }
 
 
@@ -65,7 +64,6 @@ public class TeamHolderData : MonoBehaviour
 
         if (gameObject.activeInHierarchy)
         {
-            Debug.Log(timeval + "%%%%%%%%%%%%%%%%%%%%%%%%%");
             StopCoroutine(Timer(timeval));
             StartCoroutine(Timer(timeval));
         }
@@ -121,7 +119,7 @@ public class TeamHolderData : MonoBehaviour
 
         UIController.Instance.ContestPanel.ShowMe();
         StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(int.Parse(ID), TeamA, TeamB, timeFormat));
-        UIController.Instance.MainMenuScreen.HideMe();
+        //UIController.Instance.MainMenuScreen.HideMe();
     }
 
 
@@ -135,11 +133,11 @@ public class TeamHolderData : MonoBehaviour
         TeamA = teamAval;
         TeamB = teamBval;
         ID = id;
-        Debug.Log(teamA);
+        DebugHelper.Log(teamA.text);
 
         if (gameObject.activeInHierarchy)
         {
-            Debug.Log(timeval + "%%%%%%%%%%%%%%%%%%%%%%%%%");
+            DebugHelper.Log(timeval + "%%%%%%%%%%%%%%%%%%%%%%%%%");
             StopCoroutine(Timer(timeval));
             StartCoroutine(Timer(timeval));
         }

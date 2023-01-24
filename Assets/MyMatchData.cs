@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
+
 
 public class MyMatchData : MonoBehaviour
 {
@@ -119,14 +119,14 @@ public class MyMatchData : MonoBehaviour
         {
             UIController.Instance.ContestPanel.ShowMe();
             StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(int.Parse(ID), TeamA, TeamB, timeFormat));
-            UIController.Instance.MainMenuScreen.HideMe();
+            //UIController.Instance.MainMenuScreen.HideMe();
         }
         else if((MatchTypeStatus)matchStatusID == MatchTypeStatus.Live)
         {
             UIController.Instance.mymatches.ShowMe();
             GameController.Instance.SubscribeLiveScoreDetails(ID);
             _My_Matches.Instance.SetDataToMyMatches(TeamA,TeamB,teamAFullName.text,teamBFullName.text,ID);
-            UIController.Instance.MainMenuScreen.HideMe();
+           // UIController.Instance.MainMenuScreen.HideMe();
         }
         else if ((MatchTypeStatus)matchStatusID == MatchTypeStatus.Complete)
         {
@@ -134,7 +134,7 @@ public class MyMatchData : MonoBehaviour
             Debug.Log(ID + "#############################321");
             GameController.Instance.SubscribeLiveScoreDetails(ID);
             _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID);
-            UIController.Instance.MainMenuScreen.HideMe();
+           // UIController.Instance.MainMenuScreen.HideMe();
         }
 
     }
