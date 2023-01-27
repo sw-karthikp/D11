@@ -35,6 +35,7 @@ public class TeamHolderData : MonoBehaviour
     public string timeFormat;
     public Image color1;
     public Image color2;
+    string valTimeSend;
     private void Awake()
     {
 
@@ -239,7 +240,7 @@ public class TeamHolderData : MonoBehaviour
                         Debug.Log("called * ");
                         GameController.Instance.SubscribeLiveScoreDetails(ID);
                         UIController.Instance.mymatches.ShowMe();
-                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID,timeFormat);
+                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID, valTimeSend);
 
                         return;
                     }
@@ -247,7 +248,7 @@ public class TeamHolderData : MonoBehaviour
                     {
                         Debug.Log("called **");
                         UIController.Instance.ContestPanel.ShowMe();
-                        StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(ID, TeamA, TeamB, timeFormat));
+                        StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(ID, TeamA, TeamB, valTimeSend));
                         return;
                     }
 
@@ -256,7 +257,7 @@ public class TeamHolderData : MonoBehaviour
                         Debug.Log("called ***");
                         UIController.Instance.mymatches.ShowMe();
                         GameController.Instance.SubscribeLiveScoreDetails(ID);
-                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID,timeFormat);
+                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID, valTimeSend);
                         return;
 
                     }
@@ -295,21 +296,25 @@ public class TeamHolderData : MonoBehaviour
     {
         timeValSave = timeString;
         if (string.IsNullOrWhiteSpace(timeValSave)) yield break;
-        string[] formats = { "dd/MM/yyyy HH:mm:ss" };
-        var matchduration = DateTime.Parse(timeValSave) - DateTime.Now;
-
+        var matchduration = DateTime.ParseExact(timeValSave, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) - DateTime.Now;
         var TimeDifference = matchduration;
-       
         if (TimeDifference.Days * 24 + TimeDifference.Hours <= 0)
         {
             if (TimeDifference.Minutes <= 0 && TimeDifference.Seconds <= 0)
-                time.text = "Live";
+            {
+                time.text = "Starting Soon";
+                valTimeSend = "Starting Soon";
+            }
             else
+            {
                 time.text = TimeDifference.Minutes + "m" + TimeDifference.Seconds + "s";
+                valTimeSend = TimeDifference.Minutes + "m" + TimeDifference.Seconds + "s" + " " + "Left";
+            }
         }
         else
         {
             time.text = (TimeDifference.Days * 24 + TimeDifference.Hours) + "h" + TimeDifference.Minutes + "m";
+            valTimeSend = (TimeDifference.Days * 24 + TimeDifference.Hours) + "h" + TimeDifference.Minutes + "m" + " " + "Left";
         }
 
         yield return new WaitForSeconds(1f);

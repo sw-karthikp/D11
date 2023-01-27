@@ -18,12 +18,15 @@ public class WinnerLeaderBoard : UIHandler
     public TMP_Text entryAmount;
     public TMP_Text spotsLeft;
     public TMP_Text totalSpots;
+    public Slider val;
     public GameObject childWinner;
     public Transform parent;
     public GameObject childLeaderBoard;
     public Transform parentLeader;
     public Toggle[] swap;
     public RectTransform rect;
+    int val1slider;
+    int val2slider;
     public TMP_Text val1;
     public TMP_Text val2;
     FirebaseFirestore db;
@@ -56,8 +59,10 @@ public class WinnerLeaderBoard : UIHandler
     {
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
+
         swap[0].isOn = true;
-        Invoke("setData1", 0.5f);
+        Invoke("setData1", 0.2f);
+      
     }
 
       
@@ -68,7 +73,7 @@ public class WinnerLeaderBoard : UIHandler
     }
     private void OnEnable()
     {
-   
+       
     }
     public void OnClickWinner()
     {
@@ -142,23 +147,24 @@ public class WinnerLeaderBoard : UIHandler
         }
     }
 
-    public void GetPrizeList(string poolId, Dictionary<string, Prizevalues> _prizeList, string _prizePool, string _entryAmount, string _spotsLeft, string _totalsports)
+    public void GetPrizeList(string poolId, Dictionary<string, Prizevalues> _prizeList, string _prizePool, string _entryAmount, int _spotsLeft, int _totalsports)
     {
         prizePool.text = _prizePool;
-        entryAmount.text = _entryAmount;
-        spotsLeft.text = _spotsLeft;
-        totalSpots.text = _totalsports;
+        entryAmount.text = "JOIN" +" "+ _entryAmount;
+        val1slider = _spotsLeft;
+        val2slider = _totalsports;
         prizeList = _prizeList;
+        val.minValue = 0;
+        val.maxValue = val2slider;
+        int valslid = val1slider - val2slider;
+        spotsLeft.text = valslid.ToString() + " spots left";
+        totalSpots.text = val2slider.ToString();
 
     }
 
 
-    public void GetLeaderBoardList(string poolId, Dictionary<string, string> _leader, string _prizePool, string _entryAmount, string _spotsLeft, string _totalsports)
+    public void GetLeaderBoardList(string poolId, Dictionary<string, string> _leader, string _prizePool, string _entryAmount, int  _spotsLeft, int  _totalsports)
     {
-        prizePool.text = _prizePool;
-        entryAmount.text = _entryAmount;
-        spotsLeft.text = _spotsLeft;
-        totalSpots.text = _totalsports;
         leader = _leader;
 
     }

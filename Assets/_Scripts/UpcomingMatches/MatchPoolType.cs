@@ -19,6 +19,8 @@ public class MatchPoolType : MonoBehaviour
     public Button entryButtonClick;
     public Dictionary<string, Prizevalues> prizeList =new();
     public Dictionary<string, string> leader = new();
+    int val1;
+    int val2;
     // Start is called before the first frame update
     void Start()
     {
@@ -43,12 +45,11 @@ public class MatchPoolType : MonoBehaviour
 
     public void SetValueToPoolObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, string> _leader, int _prizePool, int _slotsFilled, int _totalSlots,string _poolTypeName)
     {
-        prizeList.Clear();
-        leader.Clear();
-        int val1 = _totalSlots;
-        int val2 = _slotsFilled;
+       
+        val1 = _totalSlots;
+        val2 = _slotsFilled;
         int val = val1 - val2;
-        entryFee.text = _entryFee.ToString();
+        entryFee.text = "<sprite index=2>" +" " +_entryFee.ToString();
         prizePool.text = _prizePool.ToString();
         slotsFilled.text = val.ToString() + " spots left";
         totalSpots.text = _totalSlots.ToString();
@@ -63,11 +64,11 @@ public class MatchPoolType : MonoBehaviour
 
     public void PrizeListShow()
     {
-        WinnerLeaderBoard.Instance.GetPrizeList(PoolId, prizeList, prizePool.text,entryFee.text,slotsFilled.text,totalSpots.text);
+        WinnerLeaderBoard.Instance.GetPrizeList(PoolId, prizeList, prizePool.text,entryFee.text, val2, val1);
     }
     public void LeaderListShow()
     {
-        WinnerLeaderBoard.Instance.GetLeaderBoardList(PoolId, leader, prizePool.text, entryFee.text, slotsFilled.text, totalSpots.text);
+        WinnerLeaderBoard.Instance.GetLeaderBoardList(PoolId, leader, prizePool.text, entryFee.text, val2, val1);
     }
     public void DisplayTeamMembers()
     {

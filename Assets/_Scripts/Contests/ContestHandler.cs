@@ -20,6 +20,7 @@ public class ContestHandler : UIHandler
     public string TeamB;
     public string MatchIDVal;
     public TMP_Text contestCount;
+    public TMP_Text contestText;
 
 
     [Header("ToggleHolder")]
@@ -92,6 +93,7 @@ public class ContestHandler : UIHandler
         GameController.Instance.CurrentTeamB = teamB;
         GameController.Instance.CurrentMatchID = MatchId;
         GameController.Instance.CurrentMatchTimeDuration = _timeduration;
+        contestText.text = $"{TeamA} vs {TeamB}\n{_timeduration}";
         val.Clear();
         OnenableToggleForContest();
         DebugHelper.Log("******************" + MatchId);

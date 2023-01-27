@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Firebase;
 using Firebase.Database;
+using TMPro;
 using D11;
 using JetBrains.Annotations;
 
@@ -17,7 +18,7 @@ public class captainSelection : UIHandler
     public Transform[] parent;
     public List<Toggle> togscaptain;
     public List<Toggle> togsvcaptain;
-
+    public TMP_Text contest;
     public static captainSelection Instance;
 
 
@@ -146,6 +147,7 @@ public class captainSelection : UIHandler
     private void OnEnable()
     {
         DisplayValue();
+        contest.text = GameController.Instance.CurrentMatchTimeDuration;
     }
 
 

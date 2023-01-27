@@ -32,11 +32,12 @@ public class MyMatchData : MonoBehaviour
     public int matchStatusID;
     public Image color1;
     public Image color2;
+    string valTimeSend;
     private void Awake()
     {
 
         Click.onClick.AddListener(() => { OnClickButton(); });
-      
+
     }
 
 
@@ -77,19 +78,17 @@ public class MyMatchData : MonoBehaviour
                             if (gameObject.activeInHierarchy)
                             {
                                 Time();
-                                StopCoroutine(Timer(timeValSave));
-                                StartCoroutine(Timer(timeValSave));
+                                StopCoroutine(Timer(timeFormat));
+                                StartCoroutine(Timer(timeFormat));
                                 isCount = true;
                             }
                         }
                     }
                 }
-
             }
-
         }
     }
-    public void SetDetails(string teamAval, string teamBval, string id, string timeval, string _matchName,int _matchStatusID)
+    public void SetDetails(string teamAval, string teamBval, string id, string timeval, string _matchName, int _matchStatusID)
     {
         Match.text = _matchName;
         teamA.text = teamAval;
@@ -99,8 +98,6 @@ public class MyMatchData : MonoBehaviour
         TeamB = teamBval;
         matchStatusID = _matchStatusID;
         timeFormat = timeval;
-        Debug.Log(_matchStatusID + "%%%%%%%%%%");
-
         if (this.gameObject.activeInHierarchy)
         {
             StartCoroutine(SetFullCountryName());
@@ -108,13 +105,11 @@ public class MyMatchData : MonoBehaviour
 
         if (gameObject.activeInHierarchy)
         {
-            Debug.Log(timeval + "%%%%%%%%%%%%%%%%%%%%%%%%%");
             foreach (var item in GameController.Instance.match)
             {
-
                 foreach (var item1 in item.Value)
                 {
-                    if (this.gameObject.name == item1.Value.ID) 
+                    if (this.gameObject.name == item1.Value.ID)
                     {
                         if (item.Key == "Live")
                         {
@@ -131,26 +126,19 @@ public class MyMatchData : MonoBehaviour
                             if (gameObject.activeInHierarchy)
                             {
                                 Time();
-                                StopCoroutine(Timer(timeValSave));
-                                StartCoroutine(Timer(timeValSave));
+                                StopCoroutine(Timer(timeFormat));
+                                StartCoroutine(Timer(timeFormat));
                                 isCount = true;
                             }
-
-                          
                         }
                     }
                 }
-
             }
-
-
-
         }
     }
 
     public void Time()
     {
-        Debug.Log(DateTime.Now + "#####################");
         if (DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).Day == DateTime.Now.Day)
         {
             string time = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).TimeOfDay.ToString();
@@ -227,7 +215,7 @@ public class MyMatchData : MonoBehaviour
 
         }
 
-       
+
     }
 
     public void OnClickButton()
@@ -246,7 +234,7 @@ public class MyMatchData : MonoBehaviour
                     if ((MatchTypeStatus)matchStatusID == MatchTypeStatus.Upcoming)
                     {
                         UIController.Instance.ContestPanel.ShowMe();
-                        StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(ID, TeamA, TeamB, timeFormat));
+                        StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(ID, TeamA, TeamB, valTimeSend));
 
                         //UIController.Instance.MainMenuScreen.HideMe();
                     }
@@ -254,7 +242,7 @@ public class MyMatchData : MonoBehaviour
                     {
                         UIController.Instance.mymatches.ShowMe();
                         GameController.Instance.SubscribeLiveScoreDetails(ID);
-                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID, timeFormat);
+                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID, valTimeSend);
 
                         // UIController.Instance.MainMenuScreen.HideMe();
                     }
@@ -264,7 +252,7 @@ public class MyMatchData : MonoBehaviour
                         UIController.Instance.mymatches.ShowMe();
                         Debug.Log(ID + "#############################321");
                         GameController.Instance.SubscribeLiveScoreDetails(ID);
-                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID, timeFormat);
+                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID, valTimeSend);
 
                         // UIController.Instance.MainMenuScreen.HideMe();
                     }
@@ -302,21 +290,29 @@ public class MyMatchData : MonoBehaviour
     {
         timeValSave = timeString;
         if (string.IsNullOrWhiteSpace(timeValSave)) yield break;
-        string[] formats = { "dd/MM/yyyy HH:mm:ss" };
-        var matchduration = DateTime.Parse(timeValSave) - DateTime.Now;
-
+        var matchduration = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture) - DateTime.Now;
         var TimeDifference = matchduration;
         if (TimeDifference.Days * 24 + TimeDifference.Hours <= 0)
         {
             if (TimeDifference.Minutes <= 0 && TimeDifference.Seconds <= 0)
-                time.text = "Live";
+            {
+                time.text = "Starting Soon";
+                valTimeSend = "Starting Soon";
+            }
             else
+            {
                 time.text = TimeDifference.Minutes + "m" + TimeDifference.Seconds + "s";
+                valTimeSend = TimeDifference.Minutes + "m" + TimeDifference.Seconds + "s" + " " + "Left";
+            }
+       
         }
         else
         {
             time.text = (TimeDifference.Days * 24 + TimeDifference.Hours) + "h" + TimeDifference.Minutes + "m";
+            valTimeSend = (TimeDifference.Days * 24 + TimeDifference.Hours) + "h" + TimeDifference.Minutes + "m" + " " +"Left";
+
         }
+    
 
         yield return new WaitForSeconds(1f);
         StartCoroutine(Timer(timeString));

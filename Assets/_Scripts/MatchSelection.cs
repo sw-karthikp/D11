@@ -86,9 +86,7 @@ public class MatchSelection : UIHandler
         teamBCount.text = "0";
         TeamA.text = GameController.Instance.CurrentTeamA;
         TeamB.text = GameController.Instance.CurrentTeamB;
-        teamA.sprite = GameController.Instance.countrySpriteImage[TeamA.text];
-        teamB.sprite = GameController.Instance.countrySpriteImage[TeamB.text];
-        timeDuration.text = GameController.Instance.CurrentMatchTimeDuration + " " + "Left";
+        timeDuration.text = GameController.Instance.CurrentMatchTimeDuration;
         togGroup.allowSwitchOff = true;
         tog[0].isOn = true;
         tog[1].isOn = false;
@@ -96,7 +94,9 @@ public class MatchSelection : UIHandler
         tog[3].isOn = false;
         togGroup.allowSwitchOff = false;
         parent[0].gameObject.SetActive(true);
-        
+        teamA.sprite = GameController.Instance.countrySpriteImage[TeamA.text];
+        teamB.sprite = GameController.Instance.countrySpriteImage[TeamB.text];
+
     }
 
     public void SetToggleUnActive(int _index)

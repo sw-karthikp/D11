@@ -137,7 +137,6 @@ public class MyMatches : UIHandler
             mprefabObj.transform.SetParent(contentsToDisplay[_index].transform);
             mprefabObj.gameObject.SetActive(true);
             mprefabObj.name = item.Value.ID;
-            Debug.Log("TimeValue*************" + item.Value.Time);
             mprefabObj.GetComponent<MyMatchData>().SetDetails(item.Value.TeamA, item.Value.TeamB, item.Value.ID.ToString(), item.Value.Time, "ICC MENS CRICKET", _index);
            
         }

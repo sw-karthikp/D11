@@ -122,6 +122,7 @@ public class FireBaseManager : MonoBehaviour
             if (signedIn)
             {
                 DebugHelper.Log($"Signed In : {user.UserId}");
+                GameController.Instance.myUserID = user.UserId;
                 PlayerPrefs.SetString("userId", user.UserId);
                 UIController.Instance.MainMenuScreen.ShowMe();
                 UIController.Instance.Loginscreen.HideMe();
