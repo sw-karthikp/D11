@@ -60,6 +60,12 @@ public class MatchPoolType : MonoBehaviour
         prizeList = prize;
         leader = _leader;
         PoolTypeName = _poolTypeName;
+        if(silder.value == _totalSlots)
+        {
+            entryButtonClick.interactable = false;
+            click.interactable = false;
+            entryFee.text = "Closed";
+        }
     }
 
     public void PrizeListShow()

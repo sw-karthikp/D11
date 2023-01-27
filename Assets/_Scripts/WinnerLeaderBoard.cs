@@ -156,7 +156,8 @@ public class WinnerLeaderBoard : UIHandler
         prizeList = _prizeList;
         val.minValue = 0;
         val.maxValue = val2slider;
-        int valslid = val1slider - val2slider;
+        int valslid =  val2slider - val1slider;
+        val.value = valslid;
         spotsLeft.text = valslid.ToString() + " spots left";
         totalSpots.text = val2slider.ToString();
 
