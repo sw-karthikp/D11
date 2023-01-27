@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ using UnityEngine;
 public class MatchStatus
 {
     public bool HotGame;
-    public int ID;
+    public string ID;
     public string Time;
     public string TeamA;
     public string TeamB;
@@ -21,9 +22,10 @@ public class MatchStatus
 [Serializable]
 public class MatchPools
 {
-    public int MatchID;
+    public string MatchID;
     public string PoolCount;
     public Dictionary<string, Pools> Pools = new();
+    public Dictionary<string, float> Stats = new();
 }
 [Serializable]
 public class Pools
@@ -31,6 +33,7 @@ public class Pools
     public int Entry;
     public int PoolID;
     public Dictionary<string,Prizevalues> PrizeList = new();
+    public Dictionary<string,string> LeaderBoard = new();
     public int PrizePool;
     public int SlotsFilled;
     public int TotalSlots;
@@ -42,6 +45,8 @@ public class Prizevalues
     public string Rank;
     public int Value;
 }
+
+
 
 #endregion
 
@@ -67,7 +72,6 @@ public class PlayerDetailsVal
 [Serializable]
 public class SelectedTeam
 {
-    public string TeamID;
     public SelectedPlayers Players;
 }
 
@@ -186,7 +190,7 @@ public class InningsDetails
     public int InningsWickets;
 }
 [Serializable]
-public class ScoreLive
+public class ScoreLive 
 {
     public Dictionary<string,TeamDeatilsBatting> Score = new();
 }
@@ -216,6 +220,7 @@ public class TeamDeatilsBowling
     public string Wicket;
 }
 #endregion
+
 #region EnumCollections
 public enum MatchTypeStatus 
 {

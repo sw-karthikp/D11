@@ -11,17 +11,19 @@ using Firebase.Extensions;
 using System;
 
 
-public class GameController : SerializedMonoBehaviour
+
+public class GameController : MonoBehaviour
 {
     public static GameController Instance;
 
     [Header("CurrentUserID")]
     public string myUserID;
+    public string myName;
 
     [Header("CurrentMatchData")]
     public string CurrentTeamA;
     public string CurrentTeamB;
-    public int CurrentMatchID;
+    public string CurrentMatchID;
     public string CurrentMatchTimeDuration;
     public string CurrentPoolID;
     public string CurrentPoolTypeName;
@@ -36,25 +38,25 @@ public class GameController : SerializedMonoBehaviour
 
 
     [Header("DictionaryDataFromRealDb")]
-    public Dictionary<string,Team> team = new();
-    public Dictionary<string,Dictionary<string,MatchStatus>> match = new ();
-    public Dictionary<string,MatchPools> matchpool = new ();
-    public Dictionary<string,string> countryFullName = new();
-    public Dictionary<string,Sprite> countrySpriteImage = new();
-    public Dictionary<string,Sprite> playerSpriteImage = new();
+    public Dictionary<string, Team> team = new();
+    public Dictionary<string, Dictionary<string, MatchStatus>> match = new();
+    public Dictionary<string, MatchPools> matchpool = new();
+    public Dictionary<string, string> countryFullName = new();
+    public Dictionary<string, Sprite> countrySpriteImage = new();
+    public Dictionary<string, Sprite> playerSpriteImage = new();
 
     [Header("DictionaryDataGetFromRealDb")]
     public Dictionary<string, MatchID> selectedMatches = new();
-
-   // public Dictionary<string, LiveMatchScoreCard> liveMatchData = new();
+    public Dictionary<string,Dictionary<string,string>> _joinedPlayers = new();
 
     [Header("DictionaryDataGetFromRealDb")]
-    public LiveMatchScoreCard scoreCard;
+    public LiveMatchScoreCard scoreCard = new();
 
 
     [Header("Referance")]
     public MyMatches mymatches;
 
+    DatabaseReference referenceRealDb; 
     private void OnApplicationQuit()
     {
         FirebaseDatabase.DefaultInstance.App.Dispose();
@@ -64,12 +66,13 @@ public class GameController : SerializedMonoBehaviour
     {
         Instance = this;
         Application.targetFrameRate = 120;
-        
+
     }
     void Start()
     {
         storage = FirebaseStorage.DefaultInstance;
         storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
+        referenceRealDb = FirebaseDatabase.DefaultInstance.RootReference;
         countrySpriteImage = new Dictionary<string, Sprite>();
     }
 
@@ -103,7 +106,7 @@ public class GameController : SerializedMonoBehaviour
         {
             team.Add(item.Key, JsonConvert.DeserializeObject<Team>(item.GetRawJsonValue()));
         }
-       
+
     }
 
     #endregion
@@ -176,7 +179,8 @@ public class GameController : SerializedMonoBehaviour
         DataSnapshot val = args.Snapshot;
         foreach (var item in val.Children)
         {
-            matchpool.Add(item.Key,JsonConvert.DeserializeObject<MatchPools>(item.GetRawJsonValue()));
+            matchpool.Add(item.Key, JsonConvert.DeserializeObject<MatchPools>(item.GetRawJsonValue()));
+
         }
     }
 
@@ -206,47 +210,12 @@ public class GameController : SerializedMonoBehaviour
             return;
         }
 
-  
+
         string val = args.Snapshot.GetRawJsonValue();
         players = JsonConvert.DeserializeObject<List<Player>>(val);
-        //FetchData();
-        //FetchDataPlayerPic();
-    }
-
-    #endregion
-
-    #region LEADERBOARD
-    public void SubscribeLeaderBoardDetails()
-    {
-        FirebaseDatabase.DefaultInstance
-      .GetReference("Leader")
-      .ValueChanged += HandleLeaderBoardValueChanged;
-    }
-
-    public void UnSubscribeLeaderBoardDetails()
-    {
-        FirebaseDatabase.DefaultInstance
-      .GetReference("Leader")
-      .ValueChanged -= HandleLeaderBoardValueChanged;
-    }
-
-
-    void HandleLeaderBoardValueChanged(object sender, ValueChangedEventArgs args)
-    {
-        itemsValue = new List<List<string>>();
-        DebugHelper.Log("************ MatchDetailsListner");
-        if (args.DatabaseError != null)
-        {
-            DebugHelper.LogError(args.DatabaseError.Message + "*************");
-            return;
-        }
-
-        string val = args.Snapshot.GetRawJsonValue();
-
-        DebugHelper.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        itemsValue = JsonConvert.DeserializeObject<List<List<string>>>(val);
-        DebugHelper.Log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        //   WinnerLeaderBoard.Instance.OnValueChangeLeaderBord();
+        FetchData();
+        FetchDataPlayerPic();
+        SubscribeJoinedPlayerDetails();
     }
 
     #endregion
@@ -256,10 +225,11 @@ public class GameController : SerializedMonoBehaviour
     {
         FirebaseDatabase.DefaultInstance
       .GetReference($"PlayerMatches/{myUserID}")
-      .GetValueAsync().ContinueWithOnMainThread(task => {
+      .GetValueAsync().ContinueWithOnMainThread(task =>
+      {
           if (task.IsFaulted)
           {
-              
+
           }
           else if (task.IsCompleted)
           {
@@ -269,7 +239,7 @@ public class GameController : SerializedMonoBehaviour
 
           }
       });
-   
+
     }
 
     public void UnSubscribeSelectedMatchDetails()
@@ -297,6 +267,8 @@ public class GameController : SerializedMonoBehaviour
 
     #endregion
 
+  
+
     #region LIVEMATCHSCORE
     public void SubscribeLiveScoreDetails(string _matchID)
     {
@@ -316,27 +288,22 @@ public class GameController : SerializedMonoBehaviour
 
     void HandleLiveScoreMatch(object sender, ValueChangedEventArgs args)
     {
-
         if (args.DatabaseError != null)
         {
             DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
-
-        
-
         DataSnapshot val = args.Snapshot;
-        DebugHelper.Log(args.Snapshot.GetRawJsonValue());
+
         scoreCard = JsonConvert.DeserializeObject<LiveMatchScoreCard>(val.GetRawJsonValue());
-        if(ScoreCardPanel.Instance.gameObject.activeInHierarchy)
-        {
-            ScoreCardPanel.Instance.InstantDataInnings1();
-            ScoreCardPanel.Instance.InstantDataInnings2();
-        }
-  
+        ScoreCardPanel.Instance.InstantDataInnings1();
+        ScoreCardPanel.Instance.InstantDataInnings2();
+        _My_Matches.Instance.Total1();
+        _My_Matches.Instance.Total2();
     }
 
     #endregion
+
     #region COUNTRY FLAGS
 
     public void FetchData()
@@ -348,14 +315,15 @@ public class GameController : SerializedMonoBehaviour
                 if (item.TeamName == item2.TeamName)
                 {
                     fileName = item2.LogoURL;
-                    DisplayImage(fileName,item2.TeamName);
+                    DisplayImage(fileName, item2.TeamName);
                 }
-            }   
+            }
         }
     }
 
     public IEnumerator LoadImage(string MediaUrl, string _teamName)
     {
+        countrySpriteImage.Clear();
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(MediaUrl);
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError)
@@ -366,11 +334,11 @@ public class GameController : SerializedMonoBehaviour
         {
             Texture2D tex = ((DownloadHandlerTexture)request.downloadHandler).texture;
             Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
-            countrySpriteImage.Add(_teamName, sprite);          
+            countrySpriteImage.Add(_teamName, sprite);
         }
     }
 
-    public void DisplayImage(string _fileName ,string _teamName)
+    public void DisplayImage(string _fileName, string _teamName)
     {
         countrySpriteImage.Clear();
         DebugHelper.Log(fileName + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
@@ -405,12 +373,12 @@ public class GameController : SerializedMonoBehaviour
                 DebugHelper.Log(fileName);
                 DisplayImagePlayerPic(fileName, item1.ID);
             }
-                 
+
         }
     }
     public void DisplayImagePlayerPic(string _fileName, string _playerID)
     {
-        countrySpriteImage.Clear();
+
         storage = FirebaseStorage.DefaultInstance;
         storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
         StorageReference image = storageReference.Child(_fileName);
@@ -429,6 +397,7 @@ public class GameController : SerializedMonoBehaviour
 
     public IEnumerator LoadImagePlayerPic(string MediaUrl, string _playerID)
     {
+        playerSpriteImage.Clear();
         UnityWebRequest request = UnityWebRequestTexture.GetTexture(MediaUrl);
         yield return request.SendWebRequest();
         if (request.isNetworkError || request.isHttpError)
@@ -441,6 +410,49 @@ public class GameController : SerializedMonoBehaviour
             Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
             playerSpriteImage.Add(_playerID, sprite);
         }
+    }
+    #endregion
+
+    #region JOINEDPLAYERS
+    public void SubscribeJoinedPlayerDetails()
+    {
+        FirebaseDatabase.DefaultInstance
+      .GetReference("JoinedPlayers")
+      .ValueChanged += JoinedPlayerValueChanged;
+    }
+
+    public void UnSubscribeJoinedPlayerDetails()
+    {
+        FirebaseDatabase.DefaultInstance
+      .GetReference("JoinedPlayers")
+      .ValueChanged -= JoinedPlayerValueChanged;
+    }
+
+
+    void JoinedPlayerValueChanged(object sender, ValueChangedEventArgs args)
+    {
+
+        if (args.DatabaseError != null)
+        {
+            DebugHelper.LogError(args.DatabaseError.Message + "*************");
+            return;
+        }
+
+        DebugHelper.Log(args.Snapshot.GetRawJsonValue());
+        _joinedPlayers = JsonConvert.DeserializeObject<Dictionary<string,Dictionary<string,string>>>(args.Snapshot.GetRawJsonValue());
+     
+
+    }
+    #endregion
+
+    #region SETLEADERBOARDPLAYERS
+
+    public void writeNewUser(string userId,string key1, string key2)
+    {
+        Dictionary<string,object> boardData = new();
+        boardData.Add(userId,"");
+       // referenceRealDb.Child("MatchPools").Child(key1).Child("Pools").Child(key2).Child("LeaderBoard").UpdateChildrenAsync(boardData);
+        Debug.Log("caleed" + "***********************");
     }
     #endregion
 

@@ -94,35 +94,22 @@ public class FireBaseManager : MonoBehaviour
         {
             Debug.Log("AutoLogin Success");
 
-            //if (user.IsEmailVerified)
-            //{
-            //    ///Temp
-            //    ///
-            //    //UIController.Instance.LoadingScreen.HideMe();
-            //    UIController.Instance.MainMenuScreen.ShowMe();
-            //    UIController.Instance.Loginscreen.HideMe();
-            //    UIController.Instance.RegisterScreen.HideMe();
-            //}
-            //else
-            //{
-            //    ///Temp
-            //    ///
-            //    //UIController.Instance.LoadingScreen.HideMe();
-            //    UIController.Instance.MainMenuScreen.ShowMe();
-            //    UIController.Instance.Loginscreen.HideMe();
-            //    UIController.Instance.RegisterScreen.HideMe();
+          
+                //UIController.Instance.MainMenuScreen.ShowMe();
+                //UIController.Instance.Loginscreen.HideMe();
+                //UIController.Instance.RegisterScreen.HideMe();
+                // UIController.Instance.loading.SetActive(true);
 
-            //}
 
 
         }
         else
         {
             //UIController.Instance.LoadingScreen.HideMe();
-            UIController.Instance.Loginscreen.ShowMe();
+          //  UIController.Instance.Loginscreen.ShowMe();
         }
     }
-    bool signedIn;
+    bool signedIn =false;
     public void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
         signedIn = PlayerPrefs.GetInt("signedIn") == 0 ? false :true ;
@@ -139,6 +126,7 @@ public class FireBaseManager : MonoBehaviour
                 UIController.Instance.MainMenuScreen.ShowMe();
                 UIController.Instance.Loginscreen.HideMe();
                 UIController.Instance.RegisterScreen.HideMe();
+                UIController.Instance.loading.SetActive(true);
             }
             else
             {
@@ -146,6 +134,7 @@ public class FireBaseManager : MonoBehaviour
                 UIController.Instance.MainMenuScreen.HideMe();
                 UIController.Instance.Loginscreen.HideMe();
                 UIController.Instance.RegisterScreen.HideMe();
+       
             }
         }
 
@@ -170,23 +159,23 @@ public class FireBaseManager : MonoBehaviour
             //UIController.Instance.LoadingScreen.HideMe();
             FirebaseException firebaseException = (FirebaseException)loginTask.Exception.GetBaseException();
             AuthError error = (AuthError)firebaseException.ErrorCode;
-            string Error = "Unknown Error  Validate the Error in Switch";
+            string Error = "Unknown Error";
             switch (error)
             {
                 case AuthError.MissingEmail:
-                    Error = "please Enter your Email";
+                    Error = "Please enter your email";
                     break;
                 case AuthError.MissingPassword:
-                    Error = "please Enter your Password";
+                    Error = "Please enter your password";
                     break;
                 case AuthError.InvalidEmail:
-                    Error = "Invalid Email";
+                    Error = "Invalid email";
                     break;
                 case AuthError.WrongPassword:
-                    Error = "Incorrect  Password";
+                    Error = "Incorrect password";
                     break;
                 case AuthError.UserNotFound:
-                    Error = "Acccount Does  not Exsit ";
+                    Error = "Account does not exist ";
                     break;
 
             }
@@ -195,24 +184,29 @@ public class FireBaseManager : MonoBehaviour
             errormsg.text = Error;
             loadingtxt.SetActive(true);
             loadinganim.SetActive(false);
+            StartCoroutine(LoginHandler.Instance.clear());
 
         }
         else
         {
 
+         
             if (user.IsEmailVerified)
             {
-
+                UIController.Instance.loading.SetActive(true);
                 UIController.Instance.MainMenuScreen.ShowMe();
                 UIController.Instance.Loginscreen.HideMe();
                 UIController.Instance.RegisterScreen.HideMe();
-              
+                GameController.Instance.myUserID = user.UserId;
+                GameController.Instance.myName = user.DisplayName;
+
             }
             else
             {
-               
 
-
+                GameController.Instance.myUserID = user.UserId;
+                GameController.Instance.myName = user.DisplayName;
+                UIController.Instance.loading.SetActive(true);
                 PlayerPrefs.SetInt("signedIn", 1);
                 UIController.Instance.MainMenuScreen.ShowMe();
                 UIController.Instance.Loginscreen.HideMe();
@@ -240,19 +234,19 @@ public class FireBaseManager : MonoBehaviour
             switch (error)
             {
                 case AuthError.InvalidEmail:
-                    Error = "Invalid Email";
+                    Error = "Invalid email";
                     break;
                 case AuthError.EmailAlreadyInUse:
-                    Error = "Email Already in Use";
+                    Error = "Email already in use";
                     break;
                 case AuthError.WeakPassword:
-                    Error = " weakpassword";
+                    Error = "Weakpassword";
                     break;
                 case AuthError.MissingEmail:
-                    Error = " Please Enter your email";
+                    Error = "Please enter your email";
                     break;
                 case AuthError.MissingPassword:
-                    Error = "Please Enter your  Password";
+                    Error = "Please enter your password";
                     break;
                 case AuthError.Failure:
                     Error = "Failure";
@@ -264,6 +258,7 @@ public class FireBaseManager : MonoBehaviour
             errormsg.text = Error;
             loadingtxt.SetActive(true);
             loadinganim.SetActive(false);
+            StartCoroutine(RegisterHandler.Instance.clear());
             //UIController.Instance.LoadingScreen.HideMe();
 
         }
@@ -295,6 +290,7 @@ public class FireBaseManager : MonoBehaviour
 
                 Debug.Log("Error Message:" + " " + Error);
                 errormsg.text = Error;
+                StartCoroutine(RegisterHandler.Instance.clear());
                 //UIController.Instance.LoadingScreen.HideMe();
                 loadingtxt.SetActive(true);
                 loadinganim.SetActive(false);
@@ -306,10 +302,11 @@ public class FireBaseManager : MonoBehaviour
             {
                 Debug.Log($"FireBase user Created Succesfully : {user.DisplayName} {user.UserId}");
 
-
+                UIController.Instance.loading.SetActive(true);
                 PlayerPrefs.SetInt("signedIn", 1);
-                PlayerPrefs.SetString("userName", user.DisplayName);
-                PlayerPrefs.SetString("userId", user.UserId);
+                GameController.Instance.myUserID = user.UserId;
+                GameController.Instance.myName = user.DisplayName;
+        
                 //UIController.Instance.LoadingScreen.HideMe();
                 UIController.Instance.MainMenuScreen.ShowMe();
                 UIController.Instance.Loginscreen.HideMe();

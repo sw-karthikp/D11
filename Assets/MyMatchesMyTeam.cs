@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static AddNewPlayerHandler;
-using static Dummy;
+using Sirenix.OdinInspector;
+
 
 public class MyMatchesMyTeam : MonoBehaviour
 {
@@ -28,7 +28,7 @@ public class MyMatchesMyTeam : MonoBehaviour
     public Image ViceCaptainPic;
 
     [Header("List of Teams")]
-    public List<string> Teams = new();
+    public Dictionary<string, List<string>> Teams = new();
 
     [Header("Button")]
     public Button click;
@@ -38,7 +38,7 @@ public class MyMatchesMyTeam : MonoBehaviour
         click.onClick.AddListener(() => { OnClickMyTeams(); });
     }
 
-    public void SetData(string _teamName,string _points,string _wk,string _bat,string _ar, string _bowl ,string _captain ,string _viceCaptain ,List<string> _teams,string _capID,string _viceCapID)
+    public void SetData(string _teamName,string _points,string _wk,string _bat,string _ar, string _bowl ,string _captain ,string _viceCaptain ,Dictionary<string,List<string>> _teams,string _capID,string _viceCapID)
     {
         Teams.Clear();
         teamName.text = _teamName;
@@ -51,8 +51,22 @@ public class MyMatchesMyTeam : MonoBehaviour
         viceCaptain.text = _viceCaptain;
         Teams = _teams;
         capID = _capID;
-        viceCapID= _viceCapID;  
-               
+        viceCapID= _viceCapID;
+
+        foreach (var item in GameController.Instance.playerSpriteImage)
+        {
+            if(item.Key == _capID)
+            {
+                captainPic.sprite = item.Value;
+            }
+
+            if(item.Key == _viceCapID)
+            {
+                ViceCaptainPic.sprite = item.Value;
+            }
+          
+        }
+
     }
 
      public void OnClickMyTeams()
@@ -60,7 +74,7 @@ public class MyMatchesMyTeam : MonoBehaviour
         Debug.Log("Called");
         UIController.Instance.myTeamsPlayersHolder.ShowMe();
         MyTeamPlayersPanel.Instance.isMyMatch = false;
-        MyTeamPlayersPanel.Instance.SetMySelectedPlayerList(Teams, capID, viceCapID);
+        MyTeamPlayersPanel.Instance.SetMySelectedPlayerList(Teams, capID, viceCapID,teamName.text);
     }
 
 

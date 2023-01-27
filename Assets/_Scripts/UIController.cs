@@ -11,7 +11,7 @@ using UnityEngine;
         public List<UIHandler> openedPages;
         public UIHandler Loginscreen, RegisterScreen,ContestPanel, MainMenuScreen, WinnerLeaderBoard ,SelectMatchTeam,captainscreen,mymatches,myTeamsPlayersHolder;
         public static UIController Instance;
-
+        public GameObject loading;
 
 
 

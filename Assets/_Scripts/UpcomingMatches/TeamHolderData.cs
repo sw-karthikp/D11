@@ -10,6 +10,7 @@ using UnityEngine.Networking;
 using Firebase.Extensions;
 using D11;
 
+
 public class TeamHolderData : MonoBehaviour
 {
 
@@ -32,7 +33,7 @@ public class TeamHolderData : MonoBehaviour
 
     private void Awake()
     {
-     
+
         Click.onClick.AddListener(() => { OnClickButton(); });
 
     }
@@ -45,13 +46,46 @@ public class TeamHolderData : MonoBehaviour
 
     private void OnEnable()
     {
+        Invoke("setTimeAfterDelay", 0.2f);
+
+    }
+
+    public void setTimeAfterDelay()
+    {
         if (isCount)
         {
-            StopCoroutine(Timer(timeValSave));
-            StartCoroutine(Timer(timeValSave));
+            foreach (var item in GameController.Instance.match)
+            {
+
+                foreach (var item1 in item.Value)
+                {
+                    if (item1.Value.ID == ID)
+                    {
+                        if (item.Key == "Live")
+                        {
+                            time.text = "LIVE";
+
+                        }
+                        else if (item.Key == "Complete")
+                        {
+                            time.text = "0s";
+
+                        }
+                        else
+                        {
+                            if (gameObject.activeInHierarchy)
+                            {
+                                StopCoroutine(Timer(timeValSave));
+                                StartCoroutine(Timer(timeValSave));
+                                isCount = true;
+                            }
+                        }
+                    }
+                }
+
+            }
 
         }
-
     }
     public void SetDetails(string teamAval, string teamBval, string id, string timeval, string _matchName)
     {
@@ -61,16 +95,40 @@ public class TeamHolderData : MonoBehaviour
         ID = id;
         TeamA = teamAval;
         TeamB = teamBval;
+        Debug.Log(ID + "^^^^^^^^^^");
+        StartCoroutine(SetFullCountryName());
 
-        if (gameObject.activeInHierarchy)
+        foreach (var item in GameController.Instance.match)
         {
-            StopCoroutine(Timer(timeval));
-            StartCoroutine(Timer(timeval));
+
+            foreach (var item1 in item.Value)
+            {
+
+                if (item1.Value.ID == ID)
+                 {
+                    if (item.Key == "Live")
+                    {
+                        time.text = "LIVE";
+                        isCount = true;
+                    }
+                    else if (item.Key == "Complete")
+                    {
+                        time.text = "0s";
+                        isCount = true;
+                    }
+                    else
+                    {
+                        if (gameObject.activeInHierarchy)
+                        {
+                            StopCoroutine(Timer(timeval));
+                            StartCoroutine(Timer(timeval));
+                            isCount = true;
+                        }
+                    }
+                }
+            }
+
         }
-
-        isCount = true;
-
-       StartCoroutine(SetFullCountryName());
     }
 
 
@@ -91,10 +149,11 @@ public class TeamHolderData : MonoBehaviour
             }
         }
 
-        if(FireBaseManager.Instance.isFirstTime)
+        if (FireBaseManager.Instance.isFirstTime)
         {
-            yield return new WaitForSeconds(1.2f);
+            yield return new WaitForSeconds(3f);
             FireBaseManager.Instance.isFirstTime = false;
+           
         }
         else
         {
@@ -112,14 +171,49 @@ public class TeamHolderData : MonoBehaviour
                 Image[1].sprite = item1.Value;
             }
         }
+        UIController.Instance.loading.SetActive(false);
     }
 
     public void OnClickButton()
     {
+        Debug.Log("called");
+        foreach (var item in GameController.Instance.match)
+        {
+            foreach (var item1 in item.Value)
+            {
+                if (item1.Value.ID == ID)
+                {
+                    Debug.Log("callled" + ID);
+                    if (item.Key == "Live")
+                    {
+                        Debug.Log("called * ");
+                        GameController.Instance.SubscribeLiveScoreDetails(ID);
+                        UIController.Instance.mymatches.ShowMe();
+                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID,timeFormat);
 
-        UIController.Instance.ContestPanel.ShowMe();
-        StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(int.Parse(ID), TeamA, TeamB, timeFormat));
-        //UIController.Instance.MainMenuScreen.HideMe();
+                        return;
+                    }
+                     if (item.Key == "Upcoming")
+                    {
+                        Debug.Log("called **");
+                        UIController.Instance.ContestPanel.ShowMe();
+                        StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(ID, TeamA, TeamB, timeFormat));
+                        return;
+                    }
+
+                     if (item.Key == "Complete")
+                    {
+                        Debug.Log("called ***");
+                        UIController.Instance.mymatches.ShowMe();
+                        GameController.Instance.SubscribeLiveScoreDetails(ID);
+                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID,timeFormat);
+                        return;
+
+                    }
+                }
+            }
+
+        }
     }
 
 
@@ -152,9 +246,10 @@ public class TeamHolderData : MonoBehaviour
         timeValSave = timeString;
         if (string.IsNullOrWhiteSpace(timeValSave)) yield break;
         string[] formats = { "dd/MM/yyyy HH:mm:ss" };
-        var matchduration = DateTime.Parse(CommonFunctions.Instance.ChangeDateFormat(timeValSave, formats)) - DateTime.Now;
+        var matchduration = DateTime.Parse(timeValSave) - DateTime.Now;
 
         var TimeDifference = matchduration;
+       
         if (TimeDifference.Days * 24 + TimeDifference.Hours <= 0)
         {
             if (TimeDifference.Minutes <= 0 && TimeDifference.Seconds <= 0)

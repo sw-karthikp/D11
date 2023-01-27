@@ -47,6 +47,7 @@ public class ContestHandler : UIHandler
     {
         UIController.Instance.RemoveFromOpenPages(this);
         gameObject.SetActive(false);
+        GameController.Instance.CurrentMatchID = "";
     }
     public override void ShowMe()
     {
@@ -82,7 +83,7 @@ public class ContestHandler : UIHandler
  
 
 
-    public IEnumerator SetUpcomingMatchPoolDetails(int MatchId, string teamA, string teamB, string _timeduration)
+    public IEnumerator SetUpcomingMatchPoolDetails(string MatchId, string teamA, string teamB, string _timeduration)
     {       
         MatchIDVal = MatchId.ToString();
         TeamA = teamA;
@@ -119,12 +120,12 @@ public class ContestHandler : UIHandler
                     mprefabObj.transform.SetParent(parent);
                     mprefabObj.gameObject.SetActive(true);
                     mprefabObj.name = item1.PoolID.ToString();
-                    mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Entry, item1.PoolID, item1.PrizeList, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots, item1.Type);
+                    mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Entry, item1.PoolID, item1.PrizeList,item1.LeaderBoard, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots, item1.Type);
                     Canvas.ForceUpdateCanvases();
                 }
                
             }
-          
+            LayoutRebuilder.ForceRebuildLayoutImmediate(parent.transform as RectTransform);
         }
         contestCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Contests ({ReturnContestCount()})" : "My Contests";
     }

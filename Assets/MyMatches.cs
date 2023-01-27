@@ -32,7 +32,7 @@ public class MyMatches : UIHandler
     public override void ShowMe()
     {
         gameObject.SetActive(true);
-        
+        OnvalueChnaged(0);
     }
     public override void HideMe()
     {
@@ -136,8 +136,10 @@ public class MyMatches : UIHandler
             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MyMatchData");
             mprefabObj.transform.SetParent(contentsToDisplay[_index].transform);
             mprefabObj.gameObject.SetActive(true);
-            mprefabObj.name = "";
+            mprefabObj.name = item.Value.ID;
+            Debug.Log("TimeValue*************" + item.Value.Time);
             mprefabObj.GetComponent<MyMatchData>().SetDetails(item.Value.TeamA, item.Value.TeamB, item.Value.ID.ToString(), item.Value.Time, "ICC MENS CRICKET", _index);
+           
         }
 
     }

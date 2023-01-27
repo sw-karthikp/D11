@@ -32,6 +32,8 @@ public class MatchSelection : UIHandler
     public Button next;
     public ScrollRect rect;
     Sprite playerPic;
+    public Image teamA;
+    public Image teamB;
     public override void HideMe()
     {
         UIController.Instance.RemoveFromOpenPages(this);
@@ -49,10 +51,10 @@ public class MatchSelection : UIHandler
     private void Awake()
     {
         Instance = this;
-        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0); SetToggleUnActive(0); TextAllocator(0); });
-        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1); SetToggleUnActive(1); TextAllocator(1); });
-        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2); SetToggleUnActive(2); TextAllocator(2); });
-        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3); SetToggleUnActive(3); TextAllocator(3); });
+        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0,3); SetToggleUnActive(0); TextAllocator(0); });
+        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1,0); SetToggleUnActive(1); TextAllocator(1); });
+        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2,2); SetToggleUnActive(2); TextAllocator(2); });
+        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3,1); SetToggleUnActive(3); TextAllocator(3); });
 
     }
 
@@ -66,6 +68,7 @@ public class MatchSelection : UIHandler
         {
             Sprite_Swap.Instance.objects[i].sprite = Sprite_Swap.Instance.Spritecolor[1];
         }
+        PlayerSelectionToggle(0, 3);
     }
 
     public override void OnBack()
@@ -83,6 +86,8 @@ public class MatchSelection : UIHandler
         teamBCount.text = "0";
         TeamA.text = GameController.Instance.CurrentTeamA;
         TeamB.text = GameController.Instance.CurrentTeamB;
+        teamA.sprite = GameController.Instance.countrySpriteImage[TeamA.text];
+        teamB.sprite = GameController.Instance.countrySpriteImage[TeamB.text];
         timeDuration.text = GameController.Instance.CurrentMatchTimeDuration + " " + "Left";
         togGroup.allowSwitchOff = true;
         tog[0].isOn = true;
@@ -91,7 +96,7 @@ public class MatchSelection : UIHandler
         tog[3].isOn = false;
         togGroup.allowSwitchOff = false;
         parent[0].gameObject.SetActive(true);
-        PlayerSelectionToggle(0);
+        
     }
 
     public void SetToggleUnActive(int _index)
@@ -138,7 +143,7 @@ public class MatchSelection : UIHandler
     }
 
  
-    public void PlayerSelectionToggle(int _index)
+    public void PlayerSelectionToggle(int _index , int _indexType)
     {
         if (tog[_index].isOn)
         {
@@ -151,7 +156,7 @@ public class MatchSelection : UIHandler
                 {
                     foreach (var item1 in item.Players)
                     {
-                        if (item1.Value.Type == _index)
+                        if (item1.Value.Type == _indexType)
                         {
 
                             bool canSkip = false;
@@ -188,7 +193,7 @@ public class MatchSelection : UIHandler
                 {
                     foreach (var item1 in item.Players)
                     {
-                        if (item1.Value.Type == _index)
+                        if (item1.Value.Type == _indexType)
                         {
 
                             bool canSkip = false;

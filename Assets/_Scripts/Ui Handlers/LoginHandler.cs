@@ -14,7 +14,7 @@ public class LoginHandler : UIHandler
     public GameObject loadingtxt;
     public GameObject loadingAnim;
 
-
+    public static LoginHandler Instance; 
     public override void HideMe()
     {       
         UIController.Instance.RemoveFromOpenPages(this);
@@ -38,16 +38,18 @@ public class LoginHandler : UIHandler
         loadingAnim.SetActive(true);
         if ((string.IsNullOrWhiteSpace(_emailId.text)))
         {
-            errorTxt.text = "Email ID can't be  Empty";
+            errorTxt.text = "Email ID can't be empty";
             loadingtxt.SetActive(true);
             loadingAnim.SetActive(false);
+            StartCoroutine(clear());
             return;
         }
         else if ((string.IsNullOrWhiteSpace(_passWord.text)))
         {
-            errorTxt.text = "passWord can't be  Empty";
+            errorTxt.text = "Password can't be empty";
             loadingtxt.SetActive(true);
             loadingAnim.SetActive(false);
+            StartCoroutine(clear());
             return;
         }
 
@@ -55,5 +57,10 @@ public class LoginHandler : UIHandler
         StartCoroutine(FireBaseManager.Instance.LoginLogic(_emailId.text, _passWord.text, errorTxt,loadingtxt.gameObject,loadingAnim.gameObject));
 
     
+    }
+    public IEnumerator clear()
+    {
+        yield return new WaitForSeconds(0.8f);
+        errorTxt.text = "";
     }
 }

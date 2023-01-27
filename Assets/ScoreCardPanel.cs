@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 using System.Linq;
+using Unity.VisualScripting;
 
 public class ScoreCardPanel : MonoBehaviour
 {
@@ -17,15 +18,16 @@ public class ScoreCardPanel : MonoBehaviour
     public TMP_Text TeamBText;
     public TMP_Text OverBText;
     public TMP_Text ScoreBTeam;
+
     public Button onClickA;
     public Button onClickB;
-
     [Header("Transform")]
     public Transform parentABatter;
     public Transform parentBBatter;
     public Transform parentABowler;
     public Transform parentBBowler;
-
+    public Transform content;
+    
 
     [Header("objectToExpand")]
     public GameObject teamAExpandBatters;
@@ -44,12 +46,22 @@ public class ScoreCardPanel : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        onClickA.onClick.AddListener(() => { OnClickExpandA(); Canvas.ForceUpdateCanvases(); });
-        onClickB.onClick.AddListener(() => { OnClickExpandB(); Canvas.ForceUpdateCanvases(); });
+        onClickA.onClick.AddListener(() => { OnClickExpandA(); });
+        onClickB.onClick.AddListener(() => { OnClickExpandB();  });
     }
     private void OnEnable()
     {
         GetData();
+        teamAExpandBatters.SetActive(false);
+        teamAExpandBowlers.SetActive(false);
+        arrowA.transform.DORotate(new Vector3(0, 0, -90), 0.1f);
+        teamBExpandBatters.SetActive(false);
+        teamBExpandBowlers.SetActive(false);
+        arrowB.transform.DORotate(new Vector3(0, 0, -90), 0.1f);
+        OverAText.text = "(overs)";
+        ScoreATeam.text = "-";
+        OverBText.text = "(overs)";
+        ScoreBTeam.text = "-";
     }
 
     public void GetData()
@@ -75,6 +87,9 @@ public class ScoreCardPanel : MonoBehaviour
             arrowA.transform.DORotate(new Vector3(0, 0, -90), 0.1f);
             isOnA = true;
         }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parentABatter.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
     }
     public void OnClickExpandB()
     {
@@ -93,6 +108,10 @@ public class ScoreCardPanel : MonoBehaviour
             arrowB.transform.DORotate(new Vector3(0, 0, -90), 0.1f);
             isOnB = true;
         }
+      
+    
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parentBBatter.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
     }
 
 
@@ -116,6 +135,7 @@ public class ScoreCardPanel : MonoBehaviour
             var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamA).Players.Values.First(x => x.ID == item1.Key);
             DebugHelper.Log(detail.Name + "BBBBBBBBB");
             mprefabObj.GetComponent<BatterContainer>().SetData(detail.Name, item1.Value.Status, item1.Value.Score, item1.Value.Balls, item1.Value.Four, item1.Value.Six, "");
+           
         }
 
         foreach (var item2 in GameController.Instance.scoreCard.MatchDetails.First(x => x.Key == "Innings1").Value.Bowling)
@@ -128,7 +148,20 @@ public class ScoreCardPanel : MonoBehaviour
             mprefabObj.GetComponent<BowlerContainer>().SetData(detail.Name, item2.Value.Over, item2.Value.Mainden, item2.Value.Runs, item2.Value.Wicket, item2.Value.Extra);
         }
 
+        foreach (var item in GameController.Instance.scoreCard.MatchDetails)
+        {
+            if(item.Key == "Innings1")
+            {
+                OverAText.text = item.Value.InningsOvers.ToString();
+                ScoreATeam.text = item.Value.InningsRuns.ToString();
 
+}
+         
+        }
+     
+        
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parentABatter.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
 
 
     }
@@ -167,6 +200,18 @@ public class ScoreCardPanel : MonoBehaviour
                 mprefabObj.GetComponent<BowlerContainer>().SetData(detail.Name, item2.Value.Over, item2.Value.Mainden, item2.Value.Runs, item2.Value.Wicket, item2.Value.Extra);
             }
         }
- 
+
+        foreach (var item in GameController.Instance.scoreCard.MatchDetails)
+        {
+            if (item.Key == "Innings2")
+            {
+                OverBText.text = item.Value.InningsOvers.ToString();
+                ScoreBTeam.text = item.Value.InningsRuns.ToString();
+         
+            }
+
+        }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parentABatter.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
     }
 }

@@ -58,7 +58,7 @@ public class PlayerDetails : MonoBehaviour
         newMatch.countryName = countryName.text;
         newMatch.points = Fpoint.text;
         newMatch.type = type;
-       // newMatch.playerPic = _profilePic.sprite;
+        newMatch.playerPic = _profilePic.sprite;
         if (tog.isOn)
         {
             if (MatchSelection.Instance.playersForTeam.Find(x => x.playerName == newMatch.playerName) == null)
@@ -118,13 +118,13 @@ public class PlayerDetails : MonoBehaviour
         {
 
 
-            if (item.type == 0)
+            if (item.type == 3)
             {
                
                 wkt++;
                
             }
-            else if (item.type == 1)
+            else if (item.type == 0)
             {
                 bat++;
              
@@ -134,7 +134,7 @@ public class PlayerDetails : MonoBehaviour
                 overall++;
                
             }
-            else if (item.type == 3)
+            else if (item.type == 1)
             {
                 bowling++;
                 

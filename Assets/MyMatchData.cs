@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+
 public class MyMatchData : MonoBehaviour
 {
     public TMP_Text teamA;
@@ -42,13 +43,46 @@ public class MyMatchData : MonoBehaviour
 
     private void OnEnable()
     {
+        Invoke("setTimeAfterDelay", 0.2f);
+
+    }
+
+    public void setTimeAfterDelay()
+    {
         if (isCount)
         {
-            StopCoroutine(Timer(timeValSave));
-            StartCoroutine(Timer(timeValSave));
+            foreach (var item in GameController.Instance.match)
+            {
+
+                foreach (var item1 in item.Value)
+                {
+                    if (this.gameObject.name == item1.Value.ID)
+                    {
+                        if (item.Key == "Live")
+                        {
+                            time.text = "LIVE";
+
+                        }
+                        else if (item.Key == "Complete")
+                        {
+                            time.text = "0s";
+
+                        }
+                        else
+                        {
+                            if (gameObject.activeInHierarchy)
+                            {
+                                StopCoroutine(Timer(timeValSave));
+                                StartCoroutine(Timer(timeValSave));
+                                isCount = true;
+                            }
+                        }
+                    }
+                }
+
+            }
 
         }
-
     }
     public void SetDetails(string teamAval, string teamBval, string id, string timeval, string _matchName,int _matchStatusID)
     {
@@ -60,16 +94,49 @@ public class MyMatchData : MonoBehaviour
         TeamB = teamBval;
         matchStatusID = _matchStatusID;
         Debug.Log(_matchStatusID + "%%%%%%%%%%");
+
+        if (this.gameObject.activeInHierarchy)
+        {
+            StartCoroutine(SetFullCountryName());
+        }
+
         if (gameObject.activeInHierarchy)
         {
             Debug.Log(timeval + "%%%%%%%%%%%%%%%%%%%%%%%%%");
-            StopCoroutine(Timer(timeval));
-            StartCoroutine(Timer(timeval));
+            foreach (var item in GameController.Instance.match)
+            {
+
+                foreach (var item1 in item.Value)
+                {
+                    if (this.gameObject.name == item1.Value.ID) 
+                    {
+                        if (item.Key == "Live")
+                        {
+                            time.text = "LIVE";
+                            isCount = true;
+                        }
+                        else if (item.Key == "Complete")
+                        {
+                            time.text = "0s";
+                            isCount = true;
+                        }
+                        else
+                        {
+                            if (gameObject.activeInHierarchy)
+                            {
+                                StopCoroutine(Timer(timeValSave));
+                                StartCoroutine(Timer(timeValSave));
+                                isCount = true;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+
+
         }
-
-        isCount = true;
-
-        StartCoroutine(SetFullCountryName());
     }
 
 
@@ -115,28 +182,45 @@ public class MyMatchData : MonoBehaviour
 
     public void OnClickButton()
     {
-        if((MatchTypeStatus)matchStatusID == MatchTypeStatus.Upcoming)
+        foreach (var item in GameController.Instance.match)
         {
-            UIController.Instance.ContestPanel.ShowMe();
-            StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(int.Parse(ID), TeamA, TeamB, timeFormat));
-            //UIController.Instance.MainMenuScreen.HideMe();
-        }
-        else if((MatchTypeStatus)matchStatusID == MatchTypeStatus.Live)
-        {
-            UIController.Instance.mymatches.ShowMe();
-            GameController.Instance.SubscribeLiveScoreDetails(ID);
-            _My_Matches.Instance.SetDataToMyMatches(TeamA,TeamB,teamAFullName.text,teamBFullName.text,ID);
-           // UIController.Instance.MainMenuScreen.HideMe();
-        }
-        else if ((MatchTypeStatus)matchStatusID == MatchTypeStatus.Complete)
-        {
-            UIController.Instance.mymatches.ShowMe();
-            Debug.Log(ID + "#############################321");
-            GameController.Instance.SubscribeLiveScoreDetails(ID);
-            _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID);
-           // UIController.Instance.MainMenuScreen.HideMe();
-        }
 
+            foreach (var item1 in item.Value)
+            {
+                if (item1.Value.ID == ID)
+
+
+                {
+
+
+                    if ((MatchTypeStatus)matchStatusID == MatchTypeStatus.Upcoming)
+                    {
+                        UIController.Instance.ContestPanel.ShowMe();
+                        StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(ID, TeamA, TeamB, timeFormat));
+
+                        //UIController.Instance.MainMenuScreen.HideMe();
+                    }
+                    if ((MatchTypeStatus)matchStatusID == MatchTypeStatus.Live)
+                    {
+                        UIController.Instance.mymatches.ShowMe();
+                        GameController.Instance.SubscribeLiveScoreDetails(ID);
+                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID, timeFormat);
+
+                        // UIController.Instance.MainMenuScreen.HideMe();
+                    }
+
+                    if ((MatchTypeStatus)matchStatusID == MatchTypeStatus.Complete)
+                    {
+                        UIController.Instance.mymatches.ShowMe();
+                        Debug.Log(ID + "#############################321");
+                        GameController.Instance.SubscribeLiveScoreDetails(ID);
+                        _My_Matches.Instance.SetDataToMyMatches(TeamA, TeamB, teamAFullName.text, teamBFullName.text, ID, timeFormat);
+
+                        // UIController.Instance.MainMenuScreen.HideMe();
+                    }
+                }
+            }
+        }
     }
 
 
@@ -169,7 +253,7 @@ public class MyMatchData : MonoBehaviour
         timeValSave = timeString;
         if (string.IsNullOrWhiteSpace(timeValSave)) yield break;
         string[] formats = { "dd/MM/yyyy HH:mm:ss" };
-        var matchduration = DateTime.Parse(CommonFunctions.Instance.ChangeDateFormat(timeValSave, formats)) - DateTime.Now;
+        var matchduration = DateTime.Parse(timeValSave) - DateTime.Now;
 
         var TimeDifference = matchduration;
         if (TimeDifference.Days * 24 + TimeDifference.Hours <= 0)

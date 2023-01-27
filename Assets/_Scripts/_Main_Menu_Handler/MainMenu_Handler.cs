@@ -8,6 +8,8 @@ using UnityEngine.Rendering;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
+using Firebase.Firestore;
+using Firebase.Extensions;
 
 public class MainMenu_Handler : UIHandler
 {
@@ -27,6 +29,7 @@ public class MainMenu_Handler : UIHandler
     public Transform Slider;
     public GameObject[] point;
     public Ease _ease;
+    FirebaseFirestore db;
     private void Awake()
     {
         Instance = this;
@@ -34,17 +37,43 @@ public class MainMenu_Handler : UIHandler
         togs[1].onValueChanged.AddListener(delegate { OnValueChange(1); });
         togs[2].onValueChanged.AddListener(delegate { OnValueChange(2); });
         togs[3].onValueChanged.AddListener(delegate { OnValueChange(3); });
-        
+        db = FirebaseFirestore.DefaultInstance;
     }
 
     private void Start()
     {
         rect.verticalNormalizedPosition = 1;
+
         GameController.Instance.SubscribeMatchDetails();
         GameController.Instance.SubscribePlayerDetails();
         GameController.Instance.SubscribeMatchPools();
         GameController.Instance.SubscribePlayers();
         GameController.Instance.SubscribeSelectedMatchDetails();
+        FetchName();
+    }
+
+    public void FetchName()
+    {
+        DocumentReference docRef = db.Collection("users").Document(PlayerPrefs.GetString("userId"));
+        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            DocumentSnapshot snapshot = task.Result;
+            if (snapshot.Exists)
+            {
+                Debug.Log(String.Format("Document data for {0} document:", snapshot.Id));
+                Dictionary<string, object> city = snapshot.ToDictionary();
+                foreach (KeyValuePair<string, object> pair in city)
+                {
+                    Debug.Log(city["Name"]);
+                    GameController.Instance.myName = city["Name"].ToString();
+                }
+            }
+            else
+            {
+                Debug.Log(String.Format("Document {0} does not exist!", snapshot.Id));
+            }
+        });
+     
     }
 
     public override void ShowMe()
@@ -55,16 +84,8 @@ public class MainMenu_Handler : UIHandler
         _playerId.text = PlayerPrefs.GetString("userName");
         _playerName.text = PlayerPrefs.GetString("userId");
         togs[0].isOn = true;
-        GameController.Instance.myUserID = PlayerPrefs.GetString("userId");
 
 
-        int[] scores = { 90, 97, 78, 68, 85 };
-        IEnumerable<int> highScoresQuery =
-            from score in scores
-            where score > 80
-            orderby score descending
-            select score;
-        Debug.Log(highScoresQuery.ToString());
     }
 
 
@@ -141,6 +162,7 @@ public class MainMenu_Handler : UIHandler
 
             foreach (var item1 in item.Values)
             {
+              
                 if (togs[toggleindex].isOn)
                 {
                     if (item1.Type == toggleindex)
@@ -151,7 +173,9 @@ public class MainMenu_Handler : UIHandler
                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("HotGameHolder");
                             mprefabObj.transform.SetParent(parentHotTable[toggleindex]);
                             mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.gameObject.name = item1.ID;
                             string timeStringVal = item1.Time;
+                            Debug.Log(item1.ID.ToString() +"*****************");
                             mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeStringVal,"ICC MENS CRICKET");
                             Canvas.ForceUpdateCanvases();
 
@@ -161,7 +185,9 @@ public class MainMenu_Handler : UIHandler
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("UpcomingGameHolder");
                             mprefabObj.transform.SetParent(parentUpComingMatch[toggleindex]);
                             mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.gameObject.name = item1.ID;
                             string timeString = item1.Time;
+                            Debug.Log(item1.ID.ToString() + "*****************");
                             mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString, "ICC MENS CRICKET");
                             Canvas.ForceUpdateCanvases();
                         }

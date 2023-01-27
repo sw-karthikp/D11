@@ -28,7 +28,7 @@ public class captinslectionHandler : MonoBehaviour
 
     public void OnValueChangedCaptain()
     {
-        captainSelection.Instance.CheckForToggle1();
+        captainSelection.Instance.CheckForToggle1(Captain);
         if (Captain.isOn)
         {
             val.isCaptain = true;
@@ -44,7 +44,7 @@ public class captinslectionHandler : MonoBehaviour
 
     public void OnValueChangedViceCaptain()
     {
-        captainSelection.Instance.CheckForToggle2();
+        captainSelection.Instance.CheckForToggle2(ViceCaptian);
         if (ViceCaptian.isOn)
         {
             val.isViceCaptain = true;

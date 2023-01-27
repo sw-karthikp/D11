@@ -11,6 +11,13 @@ public class MyMatchContests : MonoBehaviour
     public string spots;
     public string teamName;
     public string teamCount;
+    public static MyMatchContests Instance;
+
+    private void Awake()
+    {
+        Instance= this;
+    }
+
     private void OnEnable()
     {
         FecthData();
@@ -20,7 +27,7 @@ public class MyMatchContests : MonoBehaviour
     {
         foreach (var item in GameController.Instance.selectedMatches)
         {
-            if(item.Key == GameController.Instance.CurrentMatchID.ToString())
+            if(item.Key == GameController.Instance.CurrentMatchID)
             {
                 foreach (var item1 in item.Value.SelectedPools.Values)
                 {
