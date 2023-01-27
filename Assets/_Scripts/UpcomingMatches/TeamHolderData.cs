@@ -9,7 +9,9 @@ using Firebase.Storage;
 using UnityEngine.Networking;
 using Firebase.Extensions;
 using D11;
-
+using Unity.VisualScripting;
+using System.Net.Http.Headers;
+using System.Globalization;
 
 public class TeamHolderData : MonoBehaviour
 {
@@ -26,11 +28,13 @@ public class TeamHolderData : MonoBehaviour
     public Button Click;
     public Button MyMatchDetails;
     public TMP_Text time;
+    public TMP_Text time1;
     public Image[] Image;
     bool isCount = false;
     public string timeValSave;
     public string timeFormat;
-
+    public Image color1;
+    public Image color2;
     private void Awake()
     {
 
@@ -75,6 +79,7 @@ public class TeamHolderData : MonoBehaviour
                         {
                             if (gameObject.activeInHierarchy)
                             {
+                                Time();
                                 StopCoroutine(Timer(timeValSave));
                                 StartCoroutine(Timer(timeValSave));
                                 isCount = true;
@@ -95,9 +100,8 @@ public class TeamHolderData : MonoBehaviour
         ID = id;
         TeamA = teamAval;
         TeamB = teamBval;
-        Debug.Log(ID + "^^^^^^^^^^");
         StartCoroutine(SetFullCountryName());
-
+        timeFormat = timeval;
         foreach (var item in GameController.Instance.match)
         {
 
@@ -120,17 +124,45 @@ public class TeamHolderData : MonoBehaviour
                     {
                         if (gameObject.activeInHierarchy)
                         {
+                            Time();
                             StopCoroutine(Timer(timeval));
                             StartCoroutine(Timer(timeval));
                             isCount = true;
                         }
+                 
                     }
                 }
             }
 
         }
+     
     }
+    public void Time()
+    {
 
+        if (DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).Day == DateTime.Now.Day)
+        {
+            string time = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).TimeOfDay.ToString();
+            string timeVal = DateTime.Parse(time).ToString("h:mm tt");
+            time1.text = "Today," + " " + timeVal;
+        }
+        else if (DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).Day == DateTime.Today.AddDays(1).Day)
+        {
+            string time = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).TimeOfDay.ToString();
+            string timeVal = DateTime.Parse(time).ToString("h:mm tt");
+            time1.text = "Tomorrow," + " " + timeVal;
+        }
+        else
+        {
+            string time = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).TimeOfDay.ToString();
+            string timeVal = DateTime.Parse(time).ToString("h:mm tt");
+            string time1val = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).DayOfYear.ToString();
+            int month = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).Month;
+            string monthtext = DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(month);
+            string timeVa1l = time1val + " " + monthtext;
+            time1.text = timeVa1l + " " + timeVal;
+        }
+    }
 
     public IEnumerator SetFullCountryName()
     {
@@ -153,7 +185,7 @@ public class TeamHolderData : MonoBehaviour
         {
             yield return new WaitForSeconds(3f);
             FireBaseManager.Instance.isFirstTime = false;
-           
+
         }
         else
         {
@@ -172,9 +204,27 @@ public class TeamHolderData : MonoBehaviour
             }
         }
         UIController.Instance.loading.SetActive(false);
+
+        foreach (var item1 in GameController.Instance.color)
+        {
+
+            if (item1.Key == TeamA)
+            {
+                color1.color = item1.Value;
+            }
+            if (item1.Key == TeamB)
+            {
+                color2.color = item1.Value;
+            }
+
+        }
+     
+       
+       
+        
     }
 
-    public void OnClickButton()
+        public void OnClickButton()
     {
         Debug.Log("called");
         foreach (var item in GameController.Instance.match)

@@ -9,8 +9,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using Firebase.Extensions;
 using System;
-
-
+using Firebase.Firestore;
 
 public class GameController : MonoBehaviour
 {
@@ -51,9 +50,11 @@ public class GameController : MonoBehaviour
 
     [Header("DictionaryDataGetFromRealDb")]
     public LiveMatchScoreCard scoreCard = new();
+    public Dictionary<string, Color> color = new Dictionary<string, Color>() { { "AUS", new Color(0.22f,0.15f,0.8f,1) }, { "IND", new Color(0.8f,0.4f,0.3f,1)},
+        { "PAK", new Color(0,0.3f,0.09f,1) },{ "ENG",new Color(0.8f,0.08f,0.15f,1f) },{ "SA",new Color(0,0,0,0) }};
 
 
-    [Header("Referance")]
+[Header("Referance")]
     public MyMatches mymatches;
 
     DatabaseReference referenceRealDb; 
@@ -341,7 +342,6 @@ public class GameController : MonoBehaviour
     public void DisplayImage(string _fileName, string _teamName)
     {
         countrySpriteImage.Clear();
-        DebugHelper.Log(fileName + "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         storage = FirebaseStorage.DefaultInstance;
         storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
         StorageReference image = storageReference.Child(_fileName);
