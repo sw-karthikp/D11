@@ -33,6 +33,9 @@ public class GameController : SerializedMonoBehaviour
     FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseFirestore firestoredb;
+    public MatchPools currentMatchpool;
+    public Pools currentPools;
+    
 
 
     [Header("ListDataFromRealDb")]
@@ -67,6 +70,7 @@ public class GameController : SerializedMonoBehaviour
     public MyMatches mymatches;
 
     DatabaseReference referenceRealDb; 
+
     private void OnApplicationQuit()
     {
         FirebaseDatabase.DefaultInstance.App.Dispose();
@@ -76,8 +80,8 @@ public class GameController : SerializedMonoBehaviour
     {
         Instance = this;
         Application.targetFrameRate = 120;
-
     }
+
     void Start()
     {
         storage = FirebaseStorage.DefaultInstance;
@@ -497,8 +501,6 @@ public class GameController : SerializedMonoBehaviour
         }
     }
     #endregion
-
-
 
     #region UserDetails
 

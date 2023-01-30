@@ -9,6 +9,7 @@ using static UnityEditor.Progress;
 
 public class MatchPoolType : MonoBehaviour
 {
+    Pools pool;
     public TMP_Text entryFee;
     public string PoolId;
     public string PoolTypeName;
@@ -41,15 +42,19 @@ public class MatchPoolType : MonoBehaviour
     }
     private void Awake()
     {
-        click.onClick.AddListener(() => { UIController.Instance.WinnerLeaderBoard.ShowMe(); PrizeListShow(); });
+        click.onClick.AddListener(() => { 
+            UIController.Instance.WinnerLeaderBoard.ShowMe(); 
+            PrizeListShow();
+            GameController.Instance.currentPools = pool;
+        });
         entryButtonClick.onClick.AddListener(() => { DisplayTeamMembers(); });
     }
 
     
 
-    public void SetValueToPoolObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, Dictionary<string, string>> _leader, int _prizePool, int _slotsFilled, int _totalSlots,string _poolTypeName)
+    public void SetValueToPoolObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, Dictionary<string, string>> _leader, int _prizePool, int _slotsFilled, int _totalSlots,string _poolTypeName,Pools Pool)
     {
-       
+        pool = Pool;
         val1 = _totalSlots;
         val2= _slotsFilled;
         entryFee.text = "<sprite index=2>" +" " +_entryFee.ToString();

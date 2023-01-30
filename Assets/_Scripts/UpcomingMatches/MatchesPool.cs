@@ -13,13 +13,13 @@ public class MatchesPool : MonoBehaviour
     public TMP_Text pooltype;
 
 
-    public void SetValueToObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, Dictionary<string, string>> leader, int _prizePool, int _slotsFilled, int _totalSlots ,string _poolType)
+    public void SetValueToObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, Dictionary<string, string>> leader, int _prizePool, int _slotsFilled, int _totalSlots ,string _poolType,Pools pool)
     {
         pooltype.text = _poolType;
         PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PoolType");
         mprefabObj.transform.SetParent(parent);
         mprefabObj.gameObject.SetActive(true);
         mprefabObj.name = _poolType;
-        mprefabObj.GetComponent<MatchPoolType>().SetValueToPoolObject(_entryFee, _poolId, prize,leader, _prizePool, _slotsFilled, _totalSlots, _poolType);
+        mprefabObj.GetComponent<MatchPoolType>().SetValueToPoolObject(_entryFee, _poolId, prize,leader, _prizePool, _slotsFilled, _totalSlots, _poolType,pool);
     }
 }
