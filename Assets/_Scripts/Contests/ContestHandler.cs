@@ -122,6 +122,7 @@ public class ContestHandler : UIHandler
                     mprefabObj.transform.SetParent(parent);
                     mprefabObj.gameObject.SetActive(true);
                     mprefabObj.name = item1.PoolID.ToString();
+                    Debug.Log(item1.SlotsFilled + "^^^^^" + item1.TotalSlots);
                     mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Entry, item1.PoolID, item1.PrizeList,item1.LeaderBoard, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots, item1.Type);
                     Canvas.ForceUpdateCanvases();
                 }

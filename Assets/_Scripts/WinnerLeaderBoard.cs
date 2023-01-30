@@ -181,18 +181,20 @@ public class WinnerLeaderBoard : UIHandler
     {
         prizePool.text = _prizePool;
         entryAmount.text = "JOIN" +" "+ _entryAmount;
-
         val1slider = _spotsLeft;
         val2slider = _totalsports;
         prizeList = _prizeList;
-        val.minValue = 0;
-        val.maxValue = val2slider;
         Debug.Log(val1slider  +" ####" + val2slider);
-        int valslid = _spotsLeft;
-        val.value = valslid;
+        float valtest = ((float)val1slider / (float)val2slider);
+        Debug.Log(valtest);
+        val.value = valtest;
         spotsLeft.text = (_totalsports - _spotsLeft).ToString() + "spots left";
-        totalSpots.text = val2slider.ToString();
+        totalSpots.text = val2slider.ToString() + " spots";
         leader = _leader;
+        if (_totalsports == _spotsLeft)
+        {
+            spotsLeft.text = "Contest Full";
+        }
     }
 
 

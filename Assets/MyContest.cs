@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,18 +32,21 @@ public class MyContest : MonoBehaviour
 
     public void SetDataToMyContestNEW(string _contestName, string _spotsCount, string _totalspots, string _teamName, string _teamCount, string _joinedTeam, int _poolID)
     {
+        var teamCountval = _teamCount.Split("Team");
+         string Count = teamCountval.Last();
         contestName.text = _contestName;
         totalSpots.text = _totalspots + " spots";
         teamName.text = _teamName;
-        joinedTeam.text = _joinedTeam;
-        teamCount.text = _teamCount;
+        joinedTeam.text = $"Joined with {1} team";
+        teamCount.text = $"T{Count}";
         poolID = _poolID;
         totalslots = int.Parse(_totalspots);
         spotsFilled = int.Parse(_spotsCount);
         slider.value = val2;
         spotsCount.text = (totalslots - spotsFilled) + "spots left";
-        val2 = spotsFilled;
-        slider.value = val2;
-      
+        float val = ((float)spotsFilled / (float)totalslots);
+        slider.value = val;
+
+
     }
 }

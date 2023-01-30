@@ -871,9 +871,9 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3363527941950132086}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 15
-  m_WholeNumbers: 1
-  m_Value: 0
+  m_MaxValue: 1
+  m_WholeNumbers: 0
+  m_Value: 0.173
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1634,7 +1634,7 @@ MonoBehaviour:
   spotsCount: {fileID: 6456312282121891488}
   totalSpots: {fileID: 5386603725104928820}
   teamName: {fileID: 8739131261410911419}
-  teamCount: {fileID: 8739131261410911419}
+  teamCount: {fileID: 2624285101674572189}
   joinedTeam: {fileID: 2624285100994663058}
   slider: {fileID: 166061679703090551}
 --- !u!1 &6456312282054340473

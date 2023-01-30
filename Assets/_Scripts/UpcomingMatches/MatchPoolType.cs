@@ -51,25 +51,25 @@ public class MatchPoolType : MonoBehaviour
     {
        
         val1 = _totalSlots;
+        val2= _slotsFilled;
         entryFee.text = "<sprite index=2>" +" " +_entryFee.ToString();
-      
         prizePool.text = _prizePool.ToString();
-        totalSpots.text = _totalSlots.ToString();
-        silder.minValue = 0;
-        silder.maxValue = _totalSlots;
-      
+        totalSpots.text = _totalSlots.ToString() + " spots"; ;
         PoolId = _poolId.ToString();
         prizeList = prize;
         leader = _leader;
         PoolTypeName = _poolTypeName;
         slotsFilled.text = (_totalSlots - _slotsFilled) + "spots left";
-        val2 = _slotsFilled;
-        silder.value = val2;
+        Debug.Log(_slotsFilled + "####" + _totalSlots);
+        Debug.Log(_slotsFilled / _totalSlots + "$$$$$$$");
+        float val = ((float)_slotsFilled / (float)_totalSlots);
+        silder.value = val;
         if (val2 == _totalSlots)
         {
             entryButtonClick.interactable = false;
             click.interactable = false;
             entryFee.text = "Closed";
+            slotsFilled.text = "Contest Full";
         }
   
  

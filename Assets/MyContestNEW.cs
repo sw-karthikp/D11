@@ -29,6 +29,7 @@ public class MyContestNEW : MonoBehaviour
             {
                 foreach (var item1 in item.Value.SelectedPools.Values)
                 {
+                    teamName = item1.TeamID; teamCount = item1.TeamID;
                     foreach (var item2 in GameController.Instance.matchpool.Values)
                     {
                         if (item.Key == item2.MatchID.ToString())
