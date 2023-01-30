@@ -51,7 +51,7 @@ public class LeaderBoardMyMatchDisplay : UIHandler
     {
         gameObject.SetActive(true);
 
-        toggles[0].isOn = true;
+        toggles[1].isOn = true;
         StartCoroutine(delay());
     }
 

@@ -44,7 +44,8 @@ public class MyMatchContests : MonoBehaviour
                                     PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MyMatchContest");
                                     mprefabObj.transform.SetParent(parent);
                                     mprefabObj.gameObject.SetActive(true);
-                                    mprefabObj.GetComponent<MyContest>().SetDataToMyContest(poolTypeName, spots, totalSlots, teamName, teamCount , teamName);
+                                    mprefabObj.name = item3.PoolID.ToString();
+                                    mprefabObj.GetComponent<MyContest>().SetDataToMyContest(poolTypeName, spots, totalSlots, teamName, teamCount , teamName ,item3.PoolID);
                                 }
                             }
                         }
