@@ -27,6 +27,8 @@ public class WalletManager : UIHandler
     [SerializeField] private TMP_InputField newAmount;
     [SerializeField] private Button plus;
     [SerializeField] private Button minus;
+    [SerializeField] private Button walletButton;
+
 
     [SerializeField] private Tween Slidetween;
     [SerializeField] private float XSlidePos = 1000;
@@ -144,8 +146,10 @@ public class WalletManager : UIHandler
 
         Slidetween = Popup.DOScaleY(0, 0.5f).OnComplete(() =>
         {
+            walletButton.interactable = true;
             Slidetween = null;
             gameObject.SetActive(false);
+
         });
     }
     public override void ShowMe()
@@ -156,7 +160,7 @@ public class WalletManager : UIHandler
             Slidetween.Kill();
 
         Slidetween = Popup.DOScaleY(1f, 0.5f).OnComplete(() => Slidetween = null);
-
+        walletButton.interactable= false;
         LoadUserDetail();
     }
 
