@@ -128,7 +128,7 @@ public class MainMenu_Handler : UIHandler
             //    //    }
             //    //}
             //}
-            if (GameController.Instance.mymatchesGlobalRef != null)
+            if (GameController.Instance.mymatchesGlobalRef != null && GameController.Instance.mymatchesGlobalRef.Count>=1)
             {
                 foreach (var item in GameController.Instance.mymatchesGlobalRef.Values)
                 {
@@ -147,6 +147,10 @@ public class MainMenu_Handler : UIHandler
                         }
                     }
                 }
+            }
+            else
+            {
+                hotGamesObj[_index].SetActive(false);
             }
 
 
