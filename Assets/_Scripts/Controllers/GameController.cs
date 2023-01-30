@@ -46,7 +46,12 @@ public class GameController : SerializedMonoBehaviour
 
     [Header("DictionaryDataGetFromRealDb")]
     public Dictionary<string, MatchID> selectedMatches = new();
-    public Dictionary<string,Dictionary<string,string>> _joinedPlayers = new();
+    public Dictionary<string,Dictionary<string,Dictionary<string,string>>> _joinedPlayers = new();
+
+    [Header("MyMatchesForGlobalReferanceFromDb")]
+    public Dictionary<string, Dictionary<string, MatchStatus>> mymatchesGlobalRef = new Dictionary<string, Dictionary<string, MatchStatus>>();
+
+
 
     [Header("DictionaryDataGetFromRealDb")]
     public LiveMatchScoreCard scoreCard = new();
@@ -264,6 +269,7 @@ public class GameController : SerializedMonoBehaviour
         DebugHelper.Log(args.Snapshot.GetRawJsonValue());
         selectedMatches = JsonConvert.DeserializeObject<Dictionary<string, MatchID>>(val.GetRawJsonValue());
         mymatches.UpdateData();
+        MyMatchData();
     }
 
     #endregion
@@ -437,7 +443,7 @@ public class GameController : SerializedMonoBehaviour
         }
 
         DebugHelper.Log(args.Snapshot.GetRawJsonValue());
-        _joinedPlayers = JsonConvert.DeserializeObject<Dictionary<string,Dictionary<string,string>>>(args.Snapshot.GetRawJsonValue());
+        _joinedPlayers = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(args.Snapshot.GetRawJsonValue());
      
 
     }
@@ -448,9 +454,40 @@ public class GameController : SerializedMonoBehaviour
     public void writeNewUser(string userId,string key1, string key2)
     {
         Dictionary<string,object> boardData = new();
-        boardData.Add(userId,"");
-       // referenceRealDb.Child("MatchPools").Child(key1).Child("Pools").Child(key2).Child("LeaderBoard").UpdateChildrenAsync(boardData);
+        boardData.Add("Name",GameController.Instance.myName);
+        boardData.Add("Value", "");
+        referenceRealDb.Child("MatchPools").Child(key1).Child("Pools").Child(key2).Child("LeaderBoard").Child(GameController.Instance.myUserID).UpdateChildrenAsync(boardData);
         Debug.Log("caleed" + "***********************");
+    }
+    #endregion
+
+    #region GETMYMATCHESSELECTEDDATA
+    public void MyMatchData()
+    {
+        mymatchesGlobalRef.Clear();
+
+        foreach (var item in GameController.Instance.selectedMatches)
+        {
+
+            foreach (var item2 in GameController.Instance.match)
+            {
+                foreach (var item3 in item2.Value)
+                {
+                    if (item3.Value.ID.ToString() == item.Key)
+                    {
+                        if (mymatchesGlobalRef.ContainsKey(item2.Key))
+                        {
+                            mymatchesGlobalRef[item2.Key].Add(item3.Key, item3.Value);
+                        }
+                        else
+                        {
+                            mymatchesGlobalRef.Add(item2.Key, new Dictionary<string, MatchStatus>() { { item3.Key, item3.Value } });
+                        }
+
+                    }
+                }
+            }
+        }
     }
     #endregion
 

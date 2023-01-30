@@ -33,7 +33,7 @@ public class Pools
     public int Entry;
     public int PoolID;
     public Dictionary<string,Prizevalues> PrizeList = new();
-    public Dictionary<string,string> LeaderBoard = new();
+    public Dictionary<string, Dictionary<string, string>> LeaderBoard = new();
     public int PrizePool;
     public int SlotsFilled;
     public int TotalSlots;
@@ -45,8 +45,6 @@ public class Prizevalues
     public string Rank;
     public int Value;
 }
-
-
 
 #endregion
 

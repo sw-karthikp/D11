@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Firebase.Firestore;
 using Firebase.Extensions;
+using static UnityEditor.Progress;
 
 public class MainMenu_Handler : UIHandler
 {
@@ -73,7 +74,7 @@ public class MainMenu_Handler : UIHandler
                 Debug.Log(String.Format("Document {0} does not exist!", snapshot.Id));
             }
         });
-     
+
     }
 
     public override void ShowMe()
@@ -109,30 +110,52 @@ public class MainMenu_Handler : UIHandler
     {
         if (togs[_index].isOn)
         {
-            foreach (var item in GameController.Instance.match.Values)
+            //foreach (var item in GameController.Instance.match.Values)
+            //{
+            //    //foreach (var item1 in item.Values)
+            //    //{
+
+
+            //    //    hotGamesObj[_index].SetActive(false);
+            //    //    if (item1.Type == _index)
+            //    //    {
+            //    //        if (item1.HotGame == true)
+            //    //        {
+            //    //            hotGamesObj[_index].SetActive(true);
+            //    //            break;
+
+            //    //        }
+            //    //    }
+            //    //}
+            //}
+            if (GameController.Instance.mymatchesGlobalRef != null)
             {
-                foreach (var item1 in item.Values)
+                foreach (var item in GameController.Instance.mymatchesGlobalRef.Values)
                 {
-
-
-                    hotGamesObj[_index].SetActive(false);
-                    if (item1.Type == _index)
+                    foreach (var item1 in item.Values)
                     {
-                        if (item1.HotGame == true)
+
+
+                        hotGamesObj[_index].SetActive(false);
+                        if (item1.Type == _index)
                         {
+
                             hotGamesObj[_index].SetActive(true);
                             break;
+
 
                         }
                     }
                 }
             }
 
+
             img[_index].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
             matchTypes[_index].SetActive(true);
             Slider.DOKill();
             Slider.DOMove(point[_index].transform.position, 0.1f).SetEase(_ease);
             SetUpcomingMatchDetails(_index);
+            StartCoroutine(MySelectedMatches(_index));
         }
         else
         {
@@ -143,13 +166,13 @@ public class MainMenu_Handler : UIHandler
         }
     }
 
- 
+
     public void SetUpcomingMatchDetails(int toggleindex)
     {
 
         foreach (Transform child in parentHotTable[toggleindex])
         {
-           
+
             child.gameObject.SetActive(false);
         }
         foreach (Transform child in parentUpComingMatch[toggleindex])
@@ -157,41 +180,98 @@ public class MainMenu_Handler : UIHandler
             child.gameObject.SetActive(false);
         }
 
-        foreach (var item in GameController.Instance.match.Values)
+
+
+      
+
+
+
+
+
+
+        foreach (var item in GameController.Instance.match)
         {
-
-            foreach (var item1 in item.Values)
+            foreach (var item1 in item.Value.Values)
             {
-              
-                if (togs[toggleindex].isOn)
+                if (item.Key == MatchTypeStatus.Upcoming.ToString())
                 {
-                    if (item1.Type == toggleindex)
+                    if (togs[toggleindex].isOn)
                     {
-                        if (item1.HotGame)
+                        if (item1.Type == toggleindex)
                         {
-               
-                           PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("HotGameHolder");
-                            mprefabObj.transform.SetParent(parentHotTable[toggleindex]);
-                            mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.gameObject.name = item1.ID;
-                            string timeStringVal = item1.Time;
-                            Debug.Log(item1.ID.ToString() +"*****************");
-                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeStringVal,"ICC MENS CRICKET");
-                            Canvas.ForceUpdateCanvases();
+                            if (item1.HotGame)
+                            {
 
-                        }
-                        else
-                        {
-                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("UpcomingGameHolder");
-                            mprefabObj.transform.SetParent(parentUpComingMatch[toggleindex]);
-                            mprefabObj.gameObject.SetActive(true);
-                            mprefabObj.gameObject.name = item1.ID;
-                            string timeString = item1.Time;
-                            Debug.Log(item1.ID.ToString() + "*****************");
-                            mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString, "ICC MENS CRICKET");
-                            Canvas.ForceUpdateCanvases();
+
+                                //PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("HotGameHolder");
+                                // mprefabObj.transform.SetParent(parentHotTable[toggleindex]);
+                                // mprefabObj.gameObject.SetActive(true);
+                                // mprefabObj.gameObject.name = item1.ID;
+                                // string timeStringVal = item1.Time;
+                                // Debug.Log(item1.ID.ToString() +"*****************");
+                                // mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeStringVal,"ICC MENS CRICKET");
+                                // Canvas.ForceUpdateCanvases();
+
+                            }
+                            else
+                            {
+                                PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("UpcomingGameHolder");
+                                mprefabObj.transform.SetParent(parentUpComingMatch[toggleindex]);
+                                mprefabObj.gameObject.SetActive(true);
+                                mprefabObj.gameObject.name = item1.ID;
+                                string timeString = item1.Time;
+                                Debug.Log(item1.ID.ToString() + "*****************");
+                                mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString, "ICC MENS CRICKET");
+                                Canvas.ForceUpdateCanvases();
+
+                            }
                         }
                     }
+                }
+            }
+        }
+
+
+       
+    }
+
+    IEnumerator MySelectedMatches(int toggleindex)
+    {
+        yield return new WaitForSeconds(0.3f);
+        foreach (var item2 in GameController.Instance.mymatchesGlobalRef)
+        {
+
+            if (togs[toggleindex].isOn)
+            {
+
+                foreach (var item3 in item2.Value)
+                {
+                    if (item3.Value.Type == toggleindex)
+                    {
+                        PoolItems mprefabObj1 = PoolManager.Instance.GetPoolObject("MyMatchData");
+                        mprefabObj1.transform.SetParent(parentHotTable[toggleindex]);
+                        mprefabObj1.gameObject.SetActive(true);
+                        mprefabObj1.name = item3.Value.ID;
+                        if (item2.Key == "Complete")
+                        {
+                            mprefabObj1.GetComponent<MyMatchData>().SetDetails(item3.Value.TeamA, item3.Value.TeamB, item3.Value.ID.ToString(), item3.Value.Time, "ICC MENS CRICKET", 2);
+
+                        }
+
+                        if (item2.Key == "Live")
+                        {
+                            mprefabObj1.GetComponent<MyMatchData>().SetDetails(item3.Value.TeamA, item3.Value.TeamB, item3.Value.ID.ToString(), item3.Value.Time, "ICC MENS CRICKET", 1);
+
+                        }
+
+                        if (item2.Key == "Upcoming")
+                        {
+                            mprefabObj1.GetComponent<MyMatchData>().SetDetails(item3.Value.TeamA, item3.Value.TeamB, item3.Value.ID.ToString(), item3.Value.Time, "ICC MENS CRICKET", 0);
+
+                        }
+                        Canvas.ForceUpdateCanvases();
+                    }
+
                 }
             }
         }

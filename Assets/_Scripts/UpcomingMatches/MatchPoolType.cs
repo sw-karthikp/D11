@@ -50,21 +50,7 @@ public class MatchPoolType : MonoBehaviour
        
         val1 = _totalSlots;
         entryFee.text = "<sprite index=2>" +" " +_entryFee.ToString();
-        foreach (var item in GameController.Instance._joinedPlayers)
-        {
-            if(item.Key == GameController.Instance.CurrentMatchID)
-            {
-                slotsFilled.text = ( _totalSlots - item.Value.Values.Count) + "spots left" ;
-                val2 = item.Value.Values.Count;
-            }
-
-            if (val2 == _totalSlots)
-            {
-                entryButtonClick.interactable = false;
-                click.interactable = false;
-                entryFee.text = "Closed";
-            }
-        }
+      
         prizePool.text = _prizePool.ToString();
         totalSpots.text = _totalSlots.ToString();
         silder.minValue = 0;
@@ -76,6 +62,25 @@ public class MatchPoolType : MonoBehaviour
         PoolTypeName = _poolTypeName;
     
         Debug.Log(val2 + "@@@@@@@@@@@@" + val1);
+        if(GameController.Instance._joinedPlayers != null)
+        {
+            foreach (var item in GameController.Instance._joinedPlayers)
+            {
+                if (item.Key == GameController.Instance.CurrentMatchID)
+                {
+                    slotsFilled.text = (_totalSlots - item.Value.Values.Count) + "spots left";
+                    val2 = item.Value.Values.Count;
+                }
+
+                if (val2 == _totalSlots)
+                {
+                    entryButtonClick.interactable = false;
+                    click.interactable = false;
+                    entryFee.text = "Closed";
+                }
+            }
+        }
+ 
     }
 
     public void PrizeListShow()
@@ -89,8 +94,9 @@ public class MatchPoolType : MonoBehaviour
     }
     public void DisplayTeamMembers()
     {
+       
+        GameController.Instance.CurrentPoolTypeName = PoolTypeName;
         GameController.Instance.CurrentPoolID = PoolId;
-        GameController.Instance.CurrentPoolTypeName = PoolTypeName; 
         UIController.Instance.SelectMatchTeam.ShowMe();
     }
 }
