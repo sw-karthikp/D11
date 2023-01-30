@@ -130,30 +130,28 @@ public class MainMenu_Handler : UIHandler
             //    //    }
             //    //}
             //}
-            if (GameController.Instance.mymatchesGlobalRef != null && GameController.Instance.mymatchesGlobalRef.Count>=1)
-            {
-                foreach (var item in GameController.Instance.mymatchesGlobalRef.Values)
-                {
-                    foreach (var item1 in item.Values)
-                    {
+            //if (GameController.Instance.mymatchesGlobalRef != null && GameController.Instance.mymatchesGlobalRef.Count>=1)
+            //{
+            //    foreach (var item in GameController.Instance.mymatchesGlobalRef.Values)
+            //    {
+            //        foreach (var item1 in item.Values)
+            //        {
+            //           // hotGamesObj[_index].SetActive(false);
+            //            if (item1.Type == _index)
+            //            {
+
+            //                hotGamesObj[_index].SetActive(true);
+            //                break;
 
 
-                        hotGamesObj[_index].SetActive(false);
-                        if (item1.Type == _index)
-                        {
-
-                            hotGamesObj[_index].SetActive(true);
-                            break;
-
-
-                        }
-                    }
-                }
-            }
-            else
-            {
-                hotGamesObj[_index].SetActive(false);
-            }
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+              
+            //}
 
 
             img[_index].color = new Color(0.7764707f, 0.1058824f, 0.1372549f, 1);
@@ -226,7 +224,6 @@ public class MainMenu_Handler : UIHandler
                                 mprefabObj.gameObject.SetActive(true);
                                 mprefabObj.gameObject.name = item1.ID;
                                 string timeString = item1.Time;
-                                Debug.Log(item1.ID.ToString() + "*****************");
                                 mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString, "ICC MENS CRICKET");
                                 Canvas.ForceUpdateCanvases();
 
@@ -243,7 +240,13 @@ public class MainMenu_Handler : UIHandler
 
     IEnumerator MySelectedMatches(int toggleindex)
     {
-        yield return new WaitForSeconds(0.3f);
+        while(GameController.Instance.mymatchesGlobalRef.Count <= 0)
+        {
+            hotGamesObj[toggleindex].SetActive(false);
+            yield return new WaitForSeconds(0.1f);
+        }
+        hotGamesObj[toggleindex].SetActive(true);
+        //  yield return new WaitForSeconds(0.1f);
         foreach (var item2 in GameController.Instance.mymatchesGlobalRef)
         {
 

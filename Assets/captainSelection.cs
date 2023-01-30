@@ -21,7 +21,9 @@ public class captainSelection : UIHandler
     public TMP_Text contest;
     public static captainSelection Instance;
 
-
+    string slotKey1;
+    string slotKey2;
+    int slotsFilled;
     private void Awake()
     {
         Instance = this;
@@ -95,6 +97,7 @@ public class captainSelection : UIHandler
 
         }
         SetPlayerNameToLeaderBaord();
+        GetKeyForSlotFill();
         SelectedPlayers selectedPlayers = new SelectedPlayers() { Captain = Captain, ViceCaptian = viceCaptain, TeamA = selectedTeamA, TeamB = selectedTeamB };
         SelectedTeam selectedTeam = new SelectedTeam() { Players = selectedPlayers };
         SelectedPoolID selectedPool = new SelectedPoolID() { PoolID = poolId, TeamID = TeamId };
@@ -106,7 +109,8 @@ public class captainSelection : UIHandler
         mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Child($"{TeamId}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedTeam));
         string val1 = GameController.Instance.CurrentMatchID.ToString();
         string val2 = GameController.Instance.CurrentPoolID.ToString();
-        mDatabase.RootReference.Child("JoinedPlayers").Child($"{val1}").Child($"P{val2}").Child(GameController.Instance.myUserID.ToString()).SetValueAsync(GameController.Instance.myData.Name);
+        mDatabase.RootReference.Child("JoinedPlayers").Child($"{val1}").Child($"P{val2}").Child(GameController.Instance.myUserID.ToString()).SetValueAsync(GameController.Instance.myName);
+        mDatabase.RootReference.Child("MatchPools").Child(slotKey1).Child("Pools").Child(slotKey2).Child("SlotsFilled").SetValueAsync(slotsFilled + 1); 
         GameController.Instance.SubscribeSelectedMatchDetails();
         BottomHandler.Instance.ResetScreen();
 
@@ -144,6 +148,26 @@ public class captainSelection : UIHandler
         Debug.Log(firstKey + "^^^^^^^^^^" + secondKey);
 
     }
+
+    public void GetKeyForSlotFill()
+    {
+        foreach (var item in GameController.Instance.matchpool)
+        {
+            if(GameController.Instance.CurrentMatchID == item.Value.MatchID)
+            {
+                slotKey1= item.Key;
+                foreach (var item1 in item.Value.Pools)
+                {
+                    if(GameController.Instance.CurrentPoolID == item1.Value.PoolID.ToString())
+                    {
+                        slotKey2 = item1.Key;
+                        slotsFilled = item1.Value.SlotsFilled;
+                    }
+                }
+            }
+        }
+    }
+
 
     private void OnEnable()
     {

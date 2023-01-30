@@ -12,7 +12,7 @@ public class MyMatchContests : MonoBehaviour
     public string teamName;
     public string teamCount;
     public static MyMatchContests Instance;
-
+    public string totalSlots;
     private void Awake()
     {
         Instance= this;
@@ -44,7 +44,7 @@ public class MyMatchContests : MonoBehaviour
                                     PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MyMatchContest");
                                     mprefabObj.transform.SetParent(parent);
                                     mprefabObj.gameObject.SetActive(true);
-                                    mprefabObj.GetComponent<MyContest>().SetDataToMyContest(poolTypeName, spots, teamName, teamCount);
+                                    mprefabObj.GetComponent<MyContest>().SetDataToMyContest(poolTypeName, spots, totalSlots, teamName, teamCount , teamName);
                                 }
                             }
                         }
