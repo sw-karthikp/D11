@@ -1,21 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 
-public class MyMatchContests : MonoBehaviour
+public class MyContestNEW : MonoBehaviour
 {
     public Transform parent;
     public string poolTypeName;
     public string spots;
     public string teamName;
     public string teamCount;
-    public static MyMatchContests Instance;
+    public static MyContestNEW Instance;
     public string totalSlots;
     private void Awake()
     {
-        Instance= this;
+        Instance = this;
     }
 
     private void OnEnable()
@@ -27,7 +25,7 @@ public class MyMatchContests : MonoBehaviour
     {
         foreach (var item in GameController.Instance.selectedMatches)
         {
-            if(item.Key == GameController.Instance.CurrentMatchID)
+            if (item.Key == GameController.Instance.CurrentMatchID)
             {
                 foreach (var item1 in item.Value.SelectedPools.Values)
                 {
@@ -40,11 +38,13 @@ public class MyMatchContests : MonoBehaviour
                                 if (item1.PoolID == item3.PoolID.ToString())
                                 {
                                     poolTypeName = item3.Type;
+                                    totalSlots = item3.TotalSlots.ToString();
                                     spots = item3.SlotsFilled.ToString();
-                                    PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MyMatchContest");
+                                    PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("ContestNEW");
                                     mprefabObj.transform.SetParent(parent);
                                     mprefabObj.gameObject.SetActive(true);
-                                    mprefabObj.GetComponent<MyContest>().SetDataToMyContest(poolTypeName, spots, totalSlots, teamName, teamCount , teamName);
+                                    mprefabObj.gameObject.name = item3.PoolID.ToString();
+                                    mprefabObj.GetComponent<MyContest>().SetDataToMyContestNEW(poolTypeName, spots, totalSlots, teamName, teamCount , teamName, item3.PoolID);
                                 }
                             }
                         }

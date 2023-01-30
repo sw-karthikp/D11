@@ -177,6 +177,7 @@ public class GameController : SerializedMonoBehaviour
 
     void HandleValueMatchPools(object sender, ValueChangedEventArgs args)
     {
+        matchpool.Clear();
         if (args.DatabaseError != null)
         {
             DebugHelper.LogError(args.DatabaseError.Message + "*************");
@@ -185,6 +186,7 @@ public class GameController : SerializedMonoBehaviour
         DataSnapshot val = args.Snapshot;
         foreach (var item in val.Children)
         {
+         
             matchpool.Add(item.Key, JsonConvert.DeserializeObject<MatchPools>(item.GetRawJsonValue()));
 
         }

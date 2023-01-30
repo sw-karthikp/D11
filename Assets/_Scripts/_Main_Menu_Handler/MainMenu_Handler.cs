@@ -220,7 +220,6 @@ public class MainMenu_Handler : UIHandler
                                 mprefabObj.gameObject.SetActive(true);
                                 mprefabObj.gameObject.name = item1.ID;
                                 string timeString = item1.Time;
-                                Debug.Log(item1.ID.ToString() + "*****************");
                                 mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString, "ICC MENS CRICKET");
                                 Canvas.ForceUpdateCanvases();
 

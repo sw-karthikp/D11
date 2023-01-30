@@ -8,6 +8,7 @@ using Firebase.Firestore;
 using Firebase.Extensions;
 using System;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class WinnerLeaderBoard : UIHandler
 {
@@ -31,7 +32,9 @@ public class WinnerLeaderBoard : UIHandler
     public TMP_Text val2;
     FirebaseFirestore db;
     public Dictionary<string, Prizevalues> prizeList = new Dictionary<string, Prizevalues>();
-    public Dictionary<string, string> leader = new Dictionary<string, string>();
+    public Dictionary<string, Dictionary<string, string>> leader = new ();
+    string name;
+    string value;
     private void Awake()
     {
         Instance = this;
@@ -59,9 +62,12 @@ public class WinnerLeaderBoard : UIHandler
     {
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
-
         swap[0].isOn = true;
-        Invoke("setData1", 0.2f);
+        if(parent.childCount == 0)
+        {
+            Invoke("setData1", 0.2f);
+        }
+       
       
     }
 
@@ -100,7 +106,7 @@ public class WinnerLeaderBoard : UIHandler
         if (swap[1].isOn)
         {
             val1.text = "Name";
-            val2.text = "Points";
+            val2.text = "";
             parentLeader.gameObject.SetActive(true);
             rect.GetComponent<ScrollRect>().content = parentLeader.GetComponent<RectTransform>();
             setData2();
@@ -136,14 +142,34 @@ public class WinnerLeaderBoard : UIHandler
             {
                 foreach (var item2 in item1.Value)
                 {
-                    //if(item.Key == item2.Key)
-                    //{
-                    //    foreach (var item3 in item2.Value)
-                    //    {
-                    //        mprefab.GetComponent<LeaderBoardContainer>().SetLeaderBoard(item3.Key, item3.Value);
-                    //    }
-                     
-                    //}
+                
+
+                    foreach (var item3 in item.Value)
+                    {
+                        var JoinedPooID = item2.Key;
+                        var poolID = JoinedPooID.Split("P");
+                        string poolIDVal = poolID.Last();
+                        Debug.Log(poolIDVal + "%%%%%%%%%%%%%%%%%%%%" + JoinedPooID);
+                        if (GameController.Instance.CurrentPoolID == poolIDVal)
+                        {
+         
+                            if (item3.Key == "Name")
+                            {
+                                name = item3.Value; 
+                            }
+                            if(item3.Key == "Value")
+                            {
+                                value = item3.Value;
+                            }
+                            
+                            
+                              
+                            mprefab.GetComponent<LeaderBoardContainer>().SetLeaderBoard(name, "");
+                            
+
+                        }
+                    }
+                 
                 }
               
             }
@@ -151,7 +177,7 @@ public class WinnerLeaderBoard : UIHandler
         }
     }
 
-    public void GetPrizeList(string poolId, Dictionary<string, Prizevalues> _prizeList, string _prizePool, string _entryAmount, int _spotsLeft, int _totalsports)
+    public void GetPrizeList(string poolId, Dictionary<string, Prizevalues> _prizeList, Dictionary<string, Dictionary<string, string>> _leader, string _prizePool, string _entryAmount, int _spotsLeft, int _totalsports)
     {
         prizePool.text = _prizePool;
         entryAmount.text = "JOIN" +" "+ _entryAmount;
@@ -166,15 +192,10 @@ public class WinnerLeaderBoard : UIHandler
         val.value = valslid;
         spotsLeft.text = (_totalsports - _spotsLeft).ToString() + "spots left";
         totalSpots.text = val2slider.ToString();
-
-    }
-
-
-    public void GetLeaderBoardList(Dictionary<string, string> _leader)
-    {
         leader = _leader;
-
     }
+
+
 
 
 
