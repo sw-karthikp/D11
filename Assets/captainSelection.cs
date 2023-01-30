@@ -109,7 +109,7 @@ public class captainSelection : UIHandler
         mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Child($"{TeamId}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedTeam));
         string val1 = GameController.Instance.CurrentMatchID.ToString();
         string val2 = GameController.Instance.CurrentPoolID.ToString();
-        mDatabase.RootReference.Child("JoinedPlayers").Child($"{val1}").Child($"P{val2}").Child(GameController.Instance.myUserID.ToString()).SetValueAsync(GameController.Instance.myName);
+        mDatabase.RootReference.Child("JoinedPlayers").Child($"{val1}").Child($"P{val2}").Child(GameController.Instance.myUserID.ToString()).SetValueAsync(GameController.Instance.myData.Name);
         mDatabase.RootReference.Child("MatchPools").Child(slotKey1).Child("Pools").Child(slotKey2).Child("SlotsFilled").SetValueAsync(slotsFilled + 1); 
         GameController.Instance.SubscribeSelectedMatchDetails();
         BottomHandler.Instance.ResetScreen();
