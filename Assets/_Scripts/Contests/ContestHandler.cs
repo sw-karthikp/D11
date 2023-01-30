@@ -100,7 +100,7 @@ public class ContestHandler : UIHandler
         yield return null;
          
     }
-
+     public Dictionary<string,string> LeaderBoard = new();
 
     public void OnenableToggleForContest()
     {
@@ -112,7 +112,7 @@ public class ContestHandler : UIHandler
 
         foreach (var item in GameController.Instance.matchpool.Values)
         {
-            Debug.Log("called *****************1");
+            Debug.Log("called *****************1" + item.MatchID);
             if (item.MatchID == GameController.Instance.CurrentMatchID)
             {
                 Debug.Log("called *****************2");
@@ -122,7 +122,7 @@ public class ContestHandler : UIHandler
                     mprefabObj.transform.SetParent(parent);
                     mprefabObj.gameObject.SetActive(true);
                     mprefabObj.name = item1.PoolID.ToString();
-                    mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Entry, item1.PoolID, item1.PrizeList,item1.LeaderBoard, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots, item1.Type);
+                    mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Entry, item1.PoolID, item1.PrizeList, LeaderBoard, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots, item1.Type);
                     Canvas.ForceUpdateCanvases();
                 }
                

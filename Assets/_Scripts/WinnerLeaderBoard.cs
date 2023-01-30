@@ -136,10 +136,14 @@ public class WinnerLeaderBoard : UIHandler
             {
                 foreach (var item2 in item1.Value)
                 {
-                    if(item.Key == item2.Key)
-                    {
-                        mprefab.GetComponent<LeaderBoardContainer>().SetLeaderBoard(item2.Value, item.Value);
-                    }
+                    //if(item.Key == item2.Key)
+                    //{
+                    //    foreach (var item3 in item2.Value)
+                    //    {
+                    //        mprefab.GetComponent<LeaderBoardContainer>().SetLeaderBoard(item3.Key, item3.Value);
+                    //    }
+                     
+                    //}
                 }
               
             }
