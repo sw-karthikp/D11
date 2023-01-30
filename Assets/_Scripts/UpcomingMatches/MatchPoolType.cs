@@ -43,38 +43,49 @@ public class MatchPoolType : MonoBehaviour
         entryButtonClick.onClick.AddListener(() => { DisplayTeamMembers(); });
     }
 
+    
+
     public void SetValueToPoolObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, string> _leader, int _prizePool, int _slotsFilled, int _totalSlots,string _poolTypeName)
     {
        
         val1 = _totalSlots;
-        val2 = _slotsFilled;
-        int val = val1 - val2;
         entryFee.text = "<sprite index=2>" +" " +_entryFee.ToString();
+        foreach (var item in GameController.Instance._joinedPlayers)
+        {
+            if(item.Key == GameController.Instance.CurrentMatchID)
+            {
+                slotsFilled.text = ( _totalSlots - item.Value.Values.Count) + "spots left" ;
+                val2 = item.Value.Values.Count;
+            }
+
+            if (val2 == _totalSlots)
+            {
+                entryButtonClick.interactable = false;
+                click.interactable = false;
+                entryFee.text = "Closed";
+            }
+        }
         prizePool.text = _prizePool.ToString();
-        slotsFilled.text = val.ToString() + " spots left";
         totalSpots.text = _totalSlots.ToString();
         silder.minValue = 0;
         silder.maxValue = _totalSlots;
-        silder.value = _slotsFilled;
+        silder.value = val2;
         PoolId = _poolId.ToString();
         prizeList = prize;
         leader = _leader;
         PoolTypeName = _poolTypeName;
-        if(silder.value == _totalSlots)
-        {
-            entryButtonClick.interactable = false;
-            click.interactable = false;
-            entryFee.text = "Closed";
-        }
+    
+        Debug.Log(val2 + "@@@@@@@@@@@@" + val1);
     }
 
     public void PrizeListShow()
     {
+        Debug.Log(val2 + " #####" + val1);
         WinnerLeaderBoard.Instance.GetPrizeList(PoolId, prizeList, prizePool.text,entryFee.text, val2, val1);
     }
     public void LeaderListShow()
     {
-        WinnerLeaderBoard.Instance.GetLeaderBoardList(PoolId, leader, prizePool.text, entryFee.text, val2, val1);
+        WinnerLeaderBoard.Instance.GetLeaderBoardList(leader);
     }
     public void DisplayTeamMembers()
     {

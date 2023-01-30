@@ -11,7 +11,7 @@ using Firebase.Extensions;
 using System;
 using Firebase.Firestore;
 
-public class GameController : MonoBehaviour
+public class GameController : SerializedMonoBehaviour
 {
     public static GameController Instance;
 
@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour
     [Header("DictionaryDataGetFromRealDb")]
     public LiveMatchScoreCard scoreCard = new();
     public Dictionary<string, Color> color = new Dictionary<string, Color>() { { "AUS", new Color(0.22f,0.15f,0.8f,1) }, { "IND", new Color(0.8f,0.4f,0.3f,1)},
-        { "PAK", new Color(0,0.3f,0.09f,1) },{ "ENG",new Color(0.8f,0.08f,0.15f,1f) },{ "SA",new Color(0,0,0,0) }};
+        { "PAK", new Color(0,0.3f,0.09f,1) },{ "ENG",new Color(0.8f,0.08f,0.15f,1f) }};
 
 
 [Header("Referance")]
@@ -267,8 +267,6 @@ public class GameController : MonoBehaviour
     }
 
     #endregion
-
-  
 
     #region LIVEMATCHSCORE
     public void SubscribeLiveScoreDetails(string _matchID)

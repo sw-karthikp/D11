@@ -151,20 +151,22 @@ public class WinnerLeaderBoard : UIHandler
     {
         prizePool.text = _prizePool;
         entryAmount.text = "JOIN" +" "+ _entryAmount;
+
         val1slider = _spotsLeft;
         val2slider = _totalsports;
         prizeList = _prizeList;
         val.minValue = 0;
         val.maxValue = val2slider;
-        int valslid =  val2slider - val1slider;
+        Debug.Log(val1slider  +" ####" + val2slider);
+        int valslid = _spotsLeft;
         val.value = valslid;
-        spotsLeft.text = valslid.ToString() + " spots left";
+        spotsLeft.text = (_totalsports - _spotsLeft).ToString() + "spots left";
         totalSpots.text = val2slider.ToString();
 
     }
 
 
-    public void GetLeaderBoardList(string poolId, Dictionary<string, string> _leader, string _prizePool, string _entryAmount, int  _spotsLeft, int  _totalsports)
+    public void GetLeaderBoardList(Dictionary<string, string> _leader)
     {
         leader = _leader;
 
