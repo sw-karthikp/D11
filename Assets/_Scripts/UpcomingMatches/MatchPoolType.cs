@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 using static GameController;
+using static UnityEditor.Progress;
 
 public class MatchPoolType : MonoBehaviour
 {
@@ -61,35 +62,16 @@ public class MatchPoolType : MonoBehaviour
         prizeList = prize;
         leader = _leader;
         PoolTypeName = _poolTypeName;
-
-        if(GameController.Instance._joinedPlayers.Count >= 1)
+        slotsFilled.text = (_totalSlots - _slotsFilled) + "spots left";
+        val2 = _slotsFilled;
+        silder.value = val2;
+        if (val2 == _totalSlots)
         {
-            foreach (var item in GameController.Instance._joinedPlayers)
-            {
-                if (item.Key == GameController.Instance.CurrentMatchID)
-                {
-                    foreach (var poolID in item.Value)
-                    {
-                 
-                        
-                            slotsFilled.text = (_totalSlots - item.Value.Values.Count) + "spots left";
-                            val2 = poolID.Value.Count;
-                            silder.value = val2;
-                            if (val2 == _totalSlots)
-                            {
-                                entryButtonClick.interactable = false;
-                                click.interactable = false;
-                                entryFee.text = "Closed";
-                            }
-                        
-                  
-                    }
-
-                }
-
-               
-            }
+            entryButtonClick.interactable = false;
+            click.interactable = false;
+            entryFee.text = "Closed";
         }
+  
  
     }
 

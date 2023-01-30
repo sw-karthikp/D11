@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Progress;
+
 public class MyContest : MonoBehaviour
 {
     public TMP_Text contestName;
@@ -15,6 +17,7 @@ public class MyContest : MonoBehaviour
     int poolID;
     int val2;
     int totalslots;
+    int spotsFilled;
     public void SetDataToMyContest(string _contestName ,string _spotsCount, string _totalspots , string _teamName,string _teamCount ,string _joinedTeam)
     {
         contestName.text= _contestName;
@@ -35,23 +38,11 @@ public class MyContest : MonoBehaviour
         teamCount.text = _teamCount;
         poolID = _poolID;
         totalslots = int.Parse(_totalspots);
-        if (GameController.Instance._joinedPlayers.Count >= 1)
-        {
-            foreach (var item in GameController.Instance._joinedPlayers)
-            {
-                if (item.Key == GameController.Instance.CurrentMatchID)
-                {
-                  
-                    val2 = item.Value.Values.Count;
-                    slider.value = val2;
-                    spotsCount.text = (totalslots - item.Value.Values.Count) + "spots left";
-                    val2 = item.Value.Values.Count;
-                    slider.value = val2;
-           
-                }
-
-
-            }
-        }
+        spotsFilled = int.Parse(_spotsCount);
+        slider.value = val2;
+        spotsCount.text = (totalslots - spotsFilled) + "spots left";
+        val2 = spotsFilled;
+        slider.value = val2;
+      
     }
 }
