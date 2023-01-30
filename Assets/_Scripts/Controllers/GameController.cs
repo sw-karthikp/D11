@@ -15,9 +15,12 @@ public class GameController : SerializedMonoBehaviour
 {
     public static GameController Instance;
 
+    [Header("CurrentUserDetails")]
+    public UserDetails myData;
+
     [Header("CurrentUserID")]
     public string myUserID;
-    public string myName;
+     // public string myName;
 
     [Header("CurrentMatchData")]
     public string CurrentTeamA;
@@ -29,6 +32,7 @@ public class GameController : SerializedMonoBehaviour
     string fileName;
     FirebaseStorage storage;
     StorageReference storageReference;
+    FirebaseFirestore firestoredb;
 
 
     [Header("ListDataFromRealDb")]
@@ -80,6 +84,7 @@ public class GameController : SerializedMonoBehaviour
         storageReference = storage.GetReferenceFromUrl("gs://sw-d11.appspot.com");
         referenceRealDb = FirebaseDatabase.DefaultInstance.RootReference;
         countrySpriteImage = new Dictionary<string, Sprite>();
+        firestoredb = FirebaseFirestore.DefaultInstance;
     }
 
     #region TEAM
@@ -177,6 +182,7 @@ public class GameController : SerializedMonoBehaviour
 
     void HandleValueMatchPools(object sender, ValueChangedEventArgs args)
     {
+        matchpool.Clear();
         if (args.DatabaseError != null)
         {
             DebugHelper.LogError(args.DatabaseError.Message + "*************");
@@ -454,7 +460,7 @@ public class GameController : SerializedMonoBehaviour
     public void writeNewUser(string userId,string key1, string key2)
     {
         Dictionary<string,object> boardData = new();
-        boardData.Add("Name",GameController.Instance.myName);
+        boardData.Add("Name",GameController.Instance.myData.Name);
         boardData.Add("Value", "");
         referenceRealDb.Child("MatchPools").Child(key1).Child("Pools").Child(key2).Child("LeaderBoard").Child(GameController.Instance.myUserID).UpdateChildrenAsync(boardData);
         Debug.Log("caleed" + "***********************");
@@ -488,6 +494,34 @@ public class GameController : SerializedMonoBehaviour
                 }
             }
         }
+    }
+    #endregion
+
+
+
+    #region UserDetails
+
+
+
+    public void GetUserDetails()
+    {
+        if (string.IsNullOrWhiteSpace(GameController.Instance.myUserID)) return;
+        
+        DocumentReference docRef = firestoredb.Collection("users").Document(GameController.Instance.myUserID);
+        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        {
+            DocumentSnapshot snapshot = task.Result;
+            Debug.Log($"<color=blue>{task.Result}</color>");
+            if (snapshot.Exists)
+            {
+               myData = snapshot.ConvertTo<UserDetails>();
+              
+            }
+            else
+            {
+                Debug.Log(String.Format("Document {0} does not exist!", snapshot.Id));
+            }
+        });
     }
     #endregion
 

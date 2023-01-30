@@ -87,6 +87,12 @@ public class WalletManager : UIHandler
                             break;
                         }
 
+                    case "AmountAdded":
+                        {
+                            newAddedAmount.text = data.Value.ToString();
+                            break;
+                        }
+
                     default:
                         {
                             Debug.LogError("Data is not matched...");

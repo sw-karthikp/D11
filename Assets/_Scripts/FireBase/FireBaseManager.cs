@@ -112,7 +112,7 @@ public class FireBaseManager : MonoBehaviour
     bool signedIn =false;
     public void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
-        signedIn = PlayerPrefs.GetInt("signedIn",1) == 0 ? false :true ;
+        signedIn = PlayerPrefs.GetInt("signedIn",0) == 0 ? false :true ;
         if (auth.CurrentUser != user)
         {
  
@@ -199,14 +199,14 @@ public class FireBaseManager : MonoBehaviour
                 UIController.Instance.Loginscreen.HideMe();
                 UIController.Instance.RegisterScreen.HideMe();
                 GameController.Instance.myUserID = user.UserId;
-                GameController.Instance.myName = user.DisplayName;
+                GameController.Instance.myData.Name = user.DisplayName;
 
             }
             else
             {
 
                 GameController.Instance.myUserID = user.UserId;
-                GameController.Instance.myName = user.DisplayName;
+                GameController.Instance.myData.Name = user.DisplayName;
                 UIController.Instance.loading.SetActive(true);
                 PlayerPrefs.SetInt("signedIn", 1);
                 UIController.Instance.MainMenuScreen.ShowMe();
@@ -214,6 +214,8 @@ public class FireBaseManager : MonoBehaviour
                 UIController.Instance.RegisterScreen.HideMe();
             
             }
+
+            GameController.Instance.GetUserDetails();
         }
     }
 
@@ -306,7 +308,7 @@ public class FireBaseManager : MonoBehaviour
                 UIController.Instance.loading.SetActive(true);
                 PlayerPrefs.SetInt("signedIn", 1);
                 GameController.Instance.myUserID = user.UserId;
-                GameController.Instance.myName = user.DisplayName;
+                GameController.Instance.myData.Name = user.DisplayName;
         
                 //UIController.Instance.LoadingScreen.HideMe();
                 UIController.Instance.MainMenuScreen.ShowMe();
@@ -340,14 +342,23 @@ public class FireBaseManager : MonoBehaviour
         //Debug.Log(userId);
         DocumentReference docRef = db.Collection("users").Document(FireBaseManager.Instance.user.UserId);
 
-        Dictionary<string, object> userData = new Dictionary<string, object>
+        UserDetails userdetail = new UserDetails();
+        userdetail.Name = FireBaseManager.Instance.user.DisplayName;
+        userdetail.Wallet = new Wallet()
         {
-            { "Name" , FireBaseManager.Instance.user.DisplayName },
-            { "Amount" , 100},
-            { "Bonus", 100 }
+            bonusAmount = 100,
+            amount = 100
         };
 
-        docRef.SetAsync(userData).ContinueWithOnMainThread(task =>
+
+        //Dictionary<string, object> userData = new Dictionary<string, object>
+        //{
+        //    { "Name" , FireBaseManager.Instance.user.DisplayName },
+        //    { "Amount" , 100},
+        //    { "Bonus", 100 }
+        //};
+
+        docRef.SetAsync(userdetail.ToDictionary()).ContinueWithOnMainThread(task =>
         {
             if (task.IsCanceled)
             {
@@ -360,11 +371,16 @@ public class FireBaseManager : MonoBehaviour
                 Debug.Log("Something wrong.... " + task.Exception);
                 return;
             }
-
+            GameController.Instance.GetUserDetails();
             Debug.Log("Successfully wallet created....");
         });
     }
 
+
+
+    #region UserDetails
+
+    #endregion
 }
 
 

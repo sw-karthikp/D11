@@ -50,7 +50,7 @@ public class MainMenu_Handler : UIHandler
         GameController.Instance.SubscribeMatchPools();
         GameController.Instance.SubscribePlayers();
         GameController.Instance.SubscribeSelectedMatchDetails();
-        FetchName();
+       // FetchName();
     }
 
     public void FetchName()
@@ -65,9 +65,11 @@ public class MainMenu_Handler : UIHandler
                 Dictionary<string, object> city = snapshot.ToDictionary();
                 foreach (KeyValuePair<string, object> pair in city)
                 {
-                    Debug.Log(city["Name"]);
-                    GameController.Instance.myName = city["Name"].ToString();
+                    Debug.Log(pair.Key);
+                   // GameController.Instance.myName = city["Name"].ToString();
                 }
+                //    GameController.Instance.myData = snapshot.ConvertTo<UserDetails>();
+
             }
             else
             {

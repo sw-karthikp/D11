@@ -1,3 +1,4 @@
+using Firebase.Firestore;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
@@ -234,4 +235,56 @@ public enum PlayerRoleType
     AllArounder,
     WicketKeeper
 }
+#endregion
+
+#region User
+
+
+[Serializable]
+[FirestoreData]
+public class UserDetails
+{
+    [FirestoreProperty]
+    public string Name { get; set; }
+    [FirestoreProperty]
+    public Wallet Wallet { get; set; }
+
+
+    public Dictionary<string,object> ToDictionary()
+    {
+        Dictionary<string, object> obj = new Dictionary<string, object>();
+        obj["Name"] = Name;
+        obj["Wallet"] = Wallet.ToDictionary();
+
+        return obj;
+    }
+
+}
+
+[Serializable]
+[FirestoreData]
+public class Wallet
+{
+    [FirestoreProperty]
+    public float amount { get; set; }
+    [FirestoreProperty]
+    public float bonusAmount { get; set; }
+    [FirestoreProperty]
+    public float addedAmount { get; set; }
+    [FirestoreProperty]
+    public float winningAmount { get; set; }
+
+    public Dictionary<string, object> ToDictionary()
+    {
+        Dictionary<string, object> obj = new Dictionary<string, object>();
+        obj["amount"] = amount;
+        obj["bonusAmount"] = bonusAmount;
+        obj["addedAmount"] = addedAmount;
+        obj["winningAmount"] = winningAmount;
+        return obj;
+
+
+    }
+}
+
 #endregion
