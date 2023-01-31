@@ -10,19 +10,23 @@ public class WinnerMyContest : MonoBehaviour
     // Start is called before the first frame update
     private void OnEnable()
     {
-        //foreach (var item in GameController.Instance.matchpool)
-        //{
-        //   if( item.Value.MatchID == GameController.Instance.CurrentMatchID)
-        //    {
-        //        for
-        //    }
-        //}
-        //if(GameController.Instance.CurrentPoolID == )
+        foreach (var item in GameController.Instance.matchpool)
+        {
+            if (item.Value.MatchID == GameController.Instance.CurrentMatchID)
+            {
+                foreach (var item1 in item.Value.Pools.Values)
+                {
+                    if (GameController.Instance.CurrentPoolID == item1.PoolID)
+                    {
+                        Debug.Log(item1.Type + "###" + item1.TotalSlots.ToString());
+                        practiceName.text =  item1.Type;
+                        spots.text = item1.TotalSlots.ToString(); 
+                    }
 
-        //TO do 
-        practiceName.text = "";
-        spots.text = "";
-        
+                }
+              
+             }
+        }
     }
 
 

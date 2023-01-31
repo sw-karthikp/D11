@@ -119,24 +119,24 @@ public class FireBaseManager : MonoBehaviour
   
             user = auth.CurrentUser;
 
-            if (signedIn)
-            {
-                DebugHelper.Log($"Signed In : {user.UserId}");
-                GameController.Instance.myUserID = user.UserId;
-                PlayerPrefs.SetString("userId", user.UserId);
-                UIController.Instance.MainMenuScreen.ShowMe();
-                UIController.Instance.Loginscreen.HideMe();
-                UIController.Instance.RegisterScreen.HideMe();
-                UIController.Instance.loading.SetActive(true);
-            }
-            else
-            {
-                DebugHelper.Log("Signed Out");
-                UIController.Instance.MainMenuScreen.HideMe();
-                UIController.Instance.Loginscreen.HideMe();
-                UIController.Instance.RegisterScreen.HideMe();
+            //if (signedIn)
+            //{
+            //    DebugHelper.Log($"Signed In : {user.UserId}");
+            //    GameController.Instance.myUserID = user.UserId;
+            //    PlayerPrefs.SetString("userId", user.UserId);
+            //    UIController.Instance.MainMenuScreen.ShowMe();
+            //    UIController.Instance.Loginscreen.HideMe();
+            //    UIController.Instance.RegisterScreen.HideMe();
+            //    UIController.Instance.loading.SetActive(true);
+            //}
+            //else
+            //{
+            //    DebugHelper.Log("Signed Out");
+            //    UIController.Instance.MainMenuScreen.HideMe();
+            //    UIController.Instance.Loginscreen.HideMe();
+            //    UIController.Instance.RegisterScreen.HideMe();
        
-            }
+            //}
         }
 
 

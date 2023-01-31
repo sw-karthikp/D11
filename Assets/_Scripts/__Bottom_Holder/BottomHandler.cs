@@ -21,9 +21,8 @@ public class BottomHandler : MonoBehaviour
 
     public void ResetScreen()
     {
-        UIController.Instance.ContestPanel.HideMe();
+        UIController.Instance.ContestPanel.ShowMe();
         UIController.Instance.SelectMatchTeam.HideMe();
-        togs[1].isOn = true;
     }
 
     public void ResetToggle()

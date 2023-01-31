@@ -135,6 +135,12 @@ public class MyMatchData : MonoBehaviour
                 }
             }
         }
+
+        foreach (var item in GameController.Instance.selectedMatches.Values)
+        {
+          Team.text =  item.SelectedTeam.Count.ToString();
+            Contest.text = item.SelectedPools.Count.ToString();
+        }
     }
 
     public void Time()

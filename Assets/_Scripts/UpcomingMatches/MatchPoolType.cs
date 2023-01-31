@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
@@ -24,6 +25,12 @@ public class MatchPoolType : MonoBehaviour
     public Dictionary<string, Dictionary<string, string>> leader = new();
     int val1;
     int val2;
+    public GameObject prizePoolText;
+    public TMP_Text practice;
+    public GameObject rupee;
+    public GameObject amount;
+    public GameObject Trophy;
+    public TMP_Text Firstst;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,14 +65,35 @@ public class MatchPoolType : MonoBehaviour
         pool = Pool;
         val1 = _totalSlots;
         val2= _slotsFilled;
-        if (_entryFee != 0)
-            entryFee.text = "<sprite index=2>" + " " + _entryFee.ToString();
-        else
-            entryFee.text = "Free";
-       prizePool.text = _prizePool.ToString();
-        totalSpots.text = _totalSlots.ToString() + " spots"; ;
-        PoolId = _poolId.ToString();
         prizeList = prize;
+        PoolId = _poolId.ToString();
+        if (_entryFee != 0)
+        {
+            rupee.SetActive(true);
+            amount.SetActive(true);
+            Trophy.SetActive(true);
+            prizePoolText.SetActive(true);
+            practice.gameObject.SetActive(false);
+            Firstst.text = "<sprite index=0>" + " " + SetPrizevalue();
+
+            prizePool.text = _prizePool.ToString();
+            entryFee.text = "<sprite index=2>" + " " + _entryFee.ToString();
+        }
+        else
+        {
+            practice.gameObject.SetActive(true);
+            prizePoolText.SetActive(false);
+             practice.text = "Practice Contest";
+            entryFee.text = "Free";
+            rupee.SetActive(false);
+            Trophy.SetActive(false);
+            amount.SetActive(false);
+            Firstst.text = "Glory awaits!";
+        }  
+            
+        totalSpots.text = _totalSlots.ToString() + " spots"; ;
+   
+    
         leader = _leader;
         PoolTypeName = _poolTypeName;
         slotsFilled.text = (_totalSlots - _slotsFilled) + "spots left";
@@ -97,5 +125,30 @@ public class MatchPoolType : MonoBehaviour
         GameController.Instance.CurrentPoolTypeName = PoolTypeName;
         GameController.Instance.CurrentPoolID = PoolId;
         UIController.Instance.SelectMatchTeam.ShowMe();
+    }
+    string rank;
+    public string SetPrizevalue()
+    {
+
+        foreach (var item in prizeList)
+        {
+            Debug.Log(item.Key + "@@@@@@@@@");
+            var val = item.Key.Split("p");
+            var valid = val.Last();
+            Debug.Log(valid + "^^^^^^^^^" + PoolId);
+       
+            {
+               if(item.Value.Rank == "1")
+                {
+                    rank = item.Value.Value.ToString();
+                    Debug.Log("$$$$$" + rank);
+                }
+               
+       
+                
+            }
+        }
+        
+        return rank;
     }
 }

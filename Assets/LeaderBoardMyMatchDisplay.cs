@@ -163,7 +163,7 @@ public class LeaderBoardMyMatchDisplay : UIHandler
             }
         }
 
-        contestCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Contests ({ReturnContestCount()})" : "My Contests";
+        //contestCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Contests ({ReturnContestCount()})" : "My Contests";
 
     }
 

@@ -2,6 +2,7 @@ using Firebase.Database;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,6 +21,7 @@ public class ContestHandler : UIHandler
     public string TeamB;
     public string MatchIDVal;
     public TMP_Text contestCount;
+    public TMP_Text teamCount;
     public TMP_Text contestText;
 
 
@@ -44,6 +46,8 @@ public class ContestHandler : UIHandler
     }
 
 
+    
+
     public override void HideMe()
     {
         UIController.Instance.RemoveFromOpenPages(this);
@@ -62,10 +66,14 @@ public class ContestHandler : UIHandler
 
     }
 
+    private void OnDisable()
+    {
+        GameController.Instance.OnMatchPoolChanged -= OnenableToggleForContest;
+    }
 
     private void OnEnable()
     {
-
+        GameController.Instance.OnMatchPoolChanged += OnenableToggleForContest;
         viewAllPoolMatches.SetActive(false);
         viewTypePoolMatches.SetActive(true);
     }
@@ -151,8 +159,17 @@ public class ContestHandler : UIHandler
         }
         LayoutRebuilder.ForceRebuildLayoutImmediate(parent.transform as RectTransform);
         contestCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Contests ({ReturnContestCount()})" : "My Contests";
+        teamCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Teams ({ReturnTeamCount()})" : "My Teams";
+
+
     }
 
+    public string  ReturnTeamCount()
+    {
+        int count = 0;
+        count = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedTeam.Count;
+        return count.ToString();
+    }
     public string ReturnContestCount()
     {
         int count = 0;

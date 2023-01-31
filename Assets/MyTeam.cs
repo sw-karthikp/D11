@@ -20,6 +20,8 @@ public class MyTeam : MonoBehaviour
     string capID;
     string vcCapID;
     public Dictionary<string, List<string>> selectedPlayers = new Dictionary<string, List<string>>();
+    string TeamACount;
+    string TeamBCount;
     private void OnEnable()
     {
         FetchAdditionalData1();
@@ -126,6 +128,35 @@ public class MyTeam : MonoBehaviour
                             TeamName = team.Value.TeamID;
                             /////////////////////////R
                             Debug.Log(item.Key);
+
+                                foreach (var item3 in GameController.Instance.selectedMatches)
+                                {
+                                    if(GameController.Instance.CurrentMatchID == item3.Key)
+                                    {
+                                        foreach (var item4 in item3.Value.SelectedTeam)
+                                        {
+                                            if(item4.Key == TeamName)
+                                            {
+                                                TeamACount = item4.Value.Players.TeamA.players.Count.ToString();
+                                                TeamBCount = item4.Value.Players.TeamB.players.Count.ToString();
+                                                Debug.Log(TeamACount + "2232" + TeamBCount);
+                                            }
+                                        }
+
+                                        //foreach (var item5 in GameController.Instance.matchpool)
+                                        //{
+                                        //      foreach(var item6 in item5.Value.Stats)
+                                        //    {
+                                        //        foreach (var item7 in val)
+                                        //        {
+                                        //            item7.Value.
+                                        //        }
+                                        //    }
+                                        //}
+                                    }
+                                }
+
+
                             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MyMatchesMyTeam");
                             mprefabObj.transform.SetParent(parent);
                             mprefabObj.gameObject.SetActive(true);

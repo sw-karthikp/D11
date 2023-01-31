@@ -161,10 +161,17 @@ public class _My_Matches : UIHandler
         }
 
         contestCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Contests ({ReturnContestCount()})" : "My Contests";
-
+        teamCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Teams ({ReturnTeamCount()})" : "My Teams";
     }
 
-   
+
+    public string ReturnTeamCount()
+    {
+        int count = 0;
+        count = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedTeam.Count;
+        return count.ToString();
+    }
+
     public string ReturnContestCount()
     {
         int count = 0;

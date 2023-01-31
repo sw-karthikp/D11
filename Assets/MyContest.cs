@@ -16,7 +16,7 @@ public class MyContest : MonoBehaviour
     public TMP_Text rank;
     public TMP_Text joinedTeam;
     public  Slider slider;
-    string poolID;
+    public string poolID;
     int val2;
     int totalslots;
     int spotsFilled;
@@ -25,7 +25,7 @@ public class MyContest : MonoBehaviour
 
     private void Awake()
     {
-        onclick.onClick.AddListener(()=> { UIController.Instance.myLeadeBoardVal.ShowMe(); });
+        onclick.onClick.AddListener(()=> { UIController.Instance.myLeadeBoardVal.ShowMe(); SetPoolID(); });
     }
 
     public void SetDataToMyContest(string _contestName ,string _spotsCount, string _totalspots , string _teamName,string _teamCount ,string _joinedTeam, string _poolID)
@@ -39,7 +39,11 @@ public class MyContest : MonoBehaviour
         float val = ((float)spotsFilled / (float)totalslots);
         slider.value = val;
         poolID = _poolID;
-        GameController.Instance.CurrentPoolID = _poolID.ToString();
+       
+    }
+    public void SetPoolID()
+    {
+        GameController.Instance.CurrentPoolID = poolID;
     }
 
     public void SetDataToMyContestNEW(string _contestName, string _spotsCount, string _totalspots, string _teamName, string _teamCount, string _joinedTeam, string _poolID)
