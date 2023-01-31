@@ -42,23 +42,27 @@ public class MatchPoolType : MonoBehaviour
     }
     private void Awake()
     {
-        click.onClick.AddListener(() => { 
+        click.onClick.AddListener(() => {
+            GameController.Instance.currentPools = pool;
             UIController.Instance.WinnerLeaderBoard.ShowMe(); 
             PrizeListShow();
-            GameController.Instance.currentPools = pool;
+           
         });
         entryButtonClick.onClick.AddListener(() => { DisplayTeamMembers(); });
     }
 
     
 
-    public void SetValueToPoolObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, Dictionary<string, string>> _leader, int _prizePool, int _slotsFilled, int _totalSlots,string _poolTypeName,Pools Pool)
+    public void SetValueToPoolObject(int _entryFee, string _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, Dictionary<string, string>> _leader, int _prizePool, int _slotsFilled, int _totalSlots,string _poolTypeName,Pools Pool,bool intractable)
     {
         pool = Pool;
         val1 = _totalSlots;
         val2= _slotsFilled;
-        entryFee.text = "<sprite index=2>" +" " +_entryFee.ToString();
-        prizePool.text = _prizePool.ToString();
+        if (_entryFee != 0)
+            entryFee.text = "<sprite index=2>" + " " + _entryFee.ToString();
+        else
+            entryFee.text = "Free";
+       prizePool.text = _prizePool.ToString();
         totalSpots.text = _totalSlots.ToString() + " spots"; ;
         PoolId = _poolId.ToString();
         prizeList = prize;
@@ -69,6 +73,7 @@ public class MatchPoolType : MonoBehaviour
         Debug.Log(_slotsFilled / _totalSlots + "$$$$$$$");
         float val = ((float)_slotsFilled / (float)_totalSlots);
         silder.value = val;
+        entryButtonClick.interactable = intractable;
         if (val2 == _totalSlots)
         {
             entryButtonClick.interactable = false;
@@ -83,7 +88,7 @@ public class MatchPoolType : MonoBehaviour
     public void PrizeListShow()
     {
 
-        WinnerLeaderBoard.Instance.GetPrizeList(PoolId, prizeList,leader, prizePool.text,entryFee.text, val2, val1);
+        WinnerLeaderBoard.Instance.GetPrizeList(PoolId, prizeList,leader, prizePool.text,entryFee.text, val2, val1, entryButtonClick.interactable);
         GameController.Instance.CurrentPoolID = PoolId;
     }
     public void DisplayTeamMembers()

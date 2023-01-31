@@ -248,6 +248,7 @@ public class TeamHolderData : MonoBehaviour
                     {
                         Debug.Log("called **");
                         UIController.Instance.ContestPanel.ShowMe();
+
                         StartCoroutine(ContestHandler.Instance.SetUpcomingMatchPoolDetails(ID, TeamA, TeamB, valTimeSend));
                         return;
                     }

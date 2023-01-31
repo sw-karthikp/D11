@@ -37,6 +37,9 @@ public class _My_Matches : UIHandler
     
     public string matchID;
 
+
+    public LeaderBoardMyMatchDisplay leaderboardmymatch;
+
     private void Awake()
     {
         Instance= this;
@@ -54,7 +57,13 @@ public class _My_Matches : UIHandler
         StartCoroutine(delay());
     }
 
-  IEnumerator delay()
+    private void OnEnable()
+    {
+        Total1();
+        Total2();
+    }
+
+    IEnumerator delay()
     {
         yield return new WaitForSeconds(0.2f);
         if (MyMatchContests.Instance.parent.childCount == 0)
@@ -71,7 +80,7 @@ public class _My_Matches : UIHandler
     }
     public override void OnBack()
     {
-       
+      // HideMe();
     }
 
     public void OnValueChange(int _index)
@@ -107,6 +116,7 @@ public class _My_Matches : UIHandler
     }
     public void SetDataToMyMatches(string _teamA,string _teamB,string _teamAFullName,string _teamBFullName ,string _id ,string time)
     {
+        leaderboardmymatch.SetDataToMyMatches(_teamA,_teamB,_teamAFullName,_teamBFullName,_id,time);
         GameController.Instance.CurrentTeamA = _teamA;
         GameController.Instance.CurrentTeamB = _teamB;
         GameController.Instance.CurrentMatchID = _id;
@@ -158,25 +168,18 @@ public class _My_Matches : UIHandler
     public string ReturnContestCount()
     {
         int count = 0;
+
+        //string key = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID.ToString()].SelectedPools.First(x =>x.Value.PoolID ==GameController.Instance.CurrentPoolID).Key
+        //count = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID.ToString()].SelectedPools[k
+        Debug.Log("Setting Date");
         foreach (var item in GameController.Instance.selectedMatches)
         {
             if (item.Key == GameController.Instance.CurrentMatchID.ToString())
             {
                 foreach (var item1 in item.Value.SelectedPools.Values)
                 {
-                    foreach (var item2 in GameController.Instance.matchpool.Values)
-                    {
-                        if (item.Key == item2.MatchID.ToString())
-                        {
-                            foreach (var item3 in item2.Pools.Values)
-                            {
-                                if (item1.PoolID == item3.PoolID.ToString())
-                                {
-                                    count++;
-                                }
-                            }
-                        }
-                    }
+                    
+                        count++;
                 }
             }
         }

@@ -85,7 +85,8 @@ public class ContestHandler : UIHandler
 
 
     public IEnumerator SetUpcomingMatchPoolDetails(string MatchId, string teamA, string teamB, string _timeduration)
-    {       
+    {
+        //yield return new WaitForSeconds(Time.deltaTime);
         MatchIDVal = MatchId.ToString();
         TeamA = teamA;
         TeamB = teamB;
@@ -110,54 +111,85 @@ public class ContestHandler : UIHandler
             child.gameObject.SetActive(false);
         }
 
+        Dictionary < string,Dictionary<string, Pools>> currentPools = new();
+
+        Debug.Log("CurrentpooolCount");
+
         foreach (var item in GameController.Instance.matchpool.Values)
         {
             Debug.Log("called *****************1" + item.MatchID);
             if (item.MatchID == GameController.Instance.CurrentMatchID)
             {
                 Debug.Log("called *****************2");
-                foreach (var item1 in item.Pools.Values)
+                foreach (var item1 in item.Pools)
                 {
-                    PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchPools");
-                    mprefabObj.transform.SetParent(parent);
-                    mprefabObj.gameObject.SetActive(true);
-                    mprefabObj.name = item1.PoolID.ToString();
-                    Debug.Log(item1.SlotsFilled + "^^^^^" + item1.TotalSlots);
-                    mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Entry, item1.PoolID, item1.PrizeList,item1.LeaderBoard, item1.PrizePool, item1.SlotsFilled, item1.TotalSlots, item1.Type,item1);
-                    Canvas.ForceUpdateCanvases();
-                }
-               
-            }
-            LayoutRebuilder.ForceRebuildLayoutImmediate(parent.transform as RectTransform);
+                    if(currentPools.ContainsKey(item1.Value.Type))
+                    {
+                        currentPools[item1.Value.Type].Add(item1.Key, item1.Value) ;
+                    }
+                    else
+                    {
+                        currentPools.Add(item1.Value.Type, new Dictionary<string, Pools>() { { item1.Key, item1.Value } });
+                    }
+                }               
+            }            
         }
+
+        Debug.Log("CurrentpooolCount" + currentPools.Count);
+
+
+        foreach (var item in currentPools)
+        {
+            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MatchPools");
+            mprefabObj.transform.SetParent(parent);
+            mprefabObj.gameObject.SetActive(true);
+            mprefabObj.name = item.Key;
+            //Debug.Log(item1.Value.SlotsFilled + "^^^^^" + item1.Value.TotalSlots);
+            //mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item1.Value.Entry, item1.Value.PoolID, item1.Value.PrizeList,item1.Value.LeaderBoard, item1.Value.PrizePool, item1.Value.SlotsFilled, item1.Value.TotalSlots, item1.Value.Type,item1.Value);
+            mprefabObj.GetComponent<MatchesPool>().SetValueToObject(item.Value,item.Key);
+            Canvas.ForceUpdateCanvases();
+        }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parent.transform as RectTransform);
         contestCount.text = GameController.Instance.selectedMatches.Count > 0 ? $"My Contests ({ReturnContestCount()})" : "My Contests";
     }
 
     public string ReturnContestCount()
     {
         int count = 0;
-        foreach (var item in GameController.Instance.selectedMatches)
+
+        try
         {
-            if (item.Key == GameController.Instance.CurrentMatchID.ToString())
-            {
-                foreach (var item1 in item.Value.SelectedPools.Values)
-                {
-                    foreach (var item2 in GameController.Instance.matchpool.Values)
-                    {
-                        if (item.Key == item2.MatchID.ToString())
-                        {
-                            foreach (var item3 in item2.Pools.Values)
-                            {
-                                if (item1.PoolID == item3.PoolID.ToString())
-                                {
-                                    count++;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            count = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedPools.Count;
+            
         }
+        catch (Exception e)
+        {
+
+        }
+
+
+        //foreach (var item in GameController.Instance.selectedMatches)
+        //{
+        //    if (item.Key == GameController.Instance.CurrentMatchID.ToString())
+        //    {
+        //        foreach (var item1 in item.Value.SelectedPools.Values)
+        //        {
+        //            foreach (var item2 in GameController.Instance.matchpool.Values)
+        //            {
+        //                if (item.Key == item2.MatchID.ToString())
+        //                {
+        //                    foreach (var item3 in item2.Pools.Values)
+        //                    {
+        //                        if (item1.PoolID == item3.PoolID.ToString())
+        //                        {
+        //                            count++;
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
         return count.ToString();
     }
 

@@ -32,7 +32,7 @@ public class WinnerLeaderBoard : UIHandler
     public TMP_Text val2;
     FirebaseFirestore db;
     public Dictionary<string, Prizevalues> prizeList = new Dictionary<string, Prizevalues>();
-    public Dictionary<string, Dictionary<string, string>> leader = new ();
+    public Dictionary<string, Dictionary<string, string>> leader = new();
     string name;
     string value;
     private void Awake()
@@ -63,15 +63,15 @@ public class WinnerLeaderBoard : UIHandler
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
         swap[0].isOn = true;
-        if(parent.childCount == 0)
+        if (parent.childCount == 0)
         {
             Invoke("setData1", 0.2f);
         }
-       
-      
+
+
     }
 
-      
+
 
     public override void OnBack()
     {
@@ -79,7 +79,7 @@ public class WinnerLeaderBoard : UIHandler
     }
     private void OnEnable()
     {
-       
+
     }
     public void OnClickWinner()
     {
@@ -126,7 +126,7 @@ public class WinnerLeaderBoard : UIHandler
     {
         foreach (var item in prizeList.Values)
         {
-       
+
             GameObject mprefab = Instantiate(childWinner, parent);
 
             mprefab.GetComponent<WinnerContainer>().setRank(item.Rank, item.Value.ToString());
@@ -136,13 +136,13 @@ public class WinnerLeaderBoard : UIHandler
     {
         foreach (var item in leader)
         {
-       
+
             GameObject mprefab = Instantiate(childLeaderBoard, parentLeader);
             foreach (var item1 in GameController.Instance._joinedPlayers)
             {
                 foreach (var item2 in item1.Value)
                 {
-                
+
 
                     foreach (var item3 in item.Value)
                     {
@@ -152,39 +152,43 @@ public class WinnerLeaderBoard : UIHandler
                         Debug.Log(poolIDVal + "%%%%%%%%%%%%%%%%%%%%" + JoinedPooID);
                         if (GameController.Instance.CurrentPoolID == poolIDVal)
                         {
-         
+
                             if (item3.Key == "Name")
                             {
-                                name = item3.Value; 
+                                name = item3.Value;
                             }
-                            if(item3.Key == "Value")
+                            if (item3.Key == "Value")
                             {
                                 value = item3.Value;
                             }
-                            
-                            
-                              
+
+
+
                             mprefab.GetComponent<LeaderBoardContainer>().SetLeaderBoard(name, "");
-                            
+
 
                         }
                     }
-                 
+
                 }
-              
+
             }
-           
+
         }
     }
 
-    public void GetPrizeList(string poolId, Dictionary<string, Prizevalues> _prizeList, Dictionary<string, Dictionary<string, string>> _leader, string _prizePool, string _entryAmount, int _spotsLeft, int _totalsports)
+    public void GetPrizeList(string poolId, Dictionary<string, Prizevalues> _prizeList, Dictionary<string, Dictionary<string, string>> _leader, string _prizePool, string _entryAmount, int _spotsLeft, int _totalsports, bool intractable)
     {
         prizePool.text = _prizePool;
-        entryAmount.text = "JOIN" +" "+ _entryAmount;
+        if (_entryAmount != "0")
+            entryAmount.text = "JOIN" + " " + _entryAmount;
+        else
+            entryAmount.text = "Free";
+        entryAmount.transform.parent.gameObject.GetComponent<Button>().interactable = intractable;
         val1slider = _spotsLeft;
         val2slider = _totalsports;
         prizeList = _prizeList;
-        Debug.Log(val1slider  +" ####" + val2slider);
+        Debug.Log(val1slider + " ####" + val2slider);
         float valtest = ((float)val1slider / (float)val2slider);
         Debug.Log(valtest);
         val.value = valtest;

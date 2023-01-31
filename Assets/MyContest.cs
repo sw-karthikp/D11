@@ -13,9 +13,10 @@ public class MyContest : MonoBehaviour
     public TMP_Text totalSpots;
     public TMP_Text teamName;
     public TMP_Text teamCount;
+    public TMP_Text rank;
     public TMP_Text joinedTeam;
     public  Slider slider;
-    int poolID;
+    string poolID;
     int val2;
     int totalslots;
     int spotsFilled;
@@ -27,20 +28,21 @@ public class MyContest : MonoBehaviour
         onclick.onClick.AddListener(()=> { UIController.Instance.myLeadeBoardVal.ShowMe(); });
     }
 
-    public void SetDataToMyContest(string _contestName ,string _spotsCount, string _totalspots , string _teamName,string _teamCount ,string _joinedTeam, int _poolID)
+    public void SetDataToMyContest(string _contestName ,string _spotsCount, string _totalspots , string _teamName,string _teamCount ,string _joinedTeam, string _poolID)
     {
         contestName.text= _contestName;
         spotsCount.text= _spotsCount;
         totalSpots.text= _totalspots;
         teamName.text= _teamName;
         joinedTeam.text= _joinedTeam;
-        teamCount.text= _teamCount;
-        slider.value = int.Parse(spotsCount.text);
+        teamName.text= $"T{_teamCount}";
+        float val = ((float)spotsFilled / (float)totalslots);
+        slider.value = val;
         poolID = _poolID;
         GameController.Instance.CurrentPoolID = _poolID.ToString();
     }
 
-    public void SetDataToMyContestNEW(string _contestName, string _spotsCount, string _totalspots, string _teamName, string _teamCount, string _joinedTeam, int _poolID)
+    public void SetDataToMyContestNEW(string _contestName, string _spotsCount, string _totalspots, string _teamName, string _teamCount, string _joinedTeam, string _poolID)
     {
         var teamCountval = _teamCount.Split("Team");
          string Count = teamCountval.Last();

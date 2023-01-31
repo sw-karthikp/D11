@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using static GameController;
+using System.Linq;
+using System;
 
 public class MatchesPool : MonoBehaviour
 {
@@ -12,14 +14,27 @@ public class MatchesPool : MonoBehaviour
     public Transform parent;
     public TMP_Text pooltype;
 
-
-    public void SetValueToObject(int _entryFee, int _poolId, Dictionary<string, Prizevalues> prize, Dictionary<string, Dictionary<string, string>> leader, int _prizePool, int _slotsFilled, int _totalSlots ,string _poolType,Pools pool)
+    public void SetValueToObject(Dictionary<string,Pools> pools,string _PoolType)
     {
-        pooltype.text = _poolType;
-        PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PoolType");
-        mprefabObj.transform.SetParent(parent);
-        mprefabObj.gameObject.SetActive(true);
-        mprefabObj.name = _poolType;
-        mprefabObj.GetComponent<MatchPoolType>().SetValueToPoolObject(_entryFee, _poolId, prize,leader, _prizePool, _slotsFilled, _totalSlots, _poolType,pool);
+        pooltype.text = _PoolType;
+
+        foreach (var item in pools.Values)
+        {
+            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PoolType");
+            mprefabObj.transform.SetParent(parent);
+            mprefabObj.gameObject.SetActive(true);
+            mprefabObj.name = item.Type;
+            bool check = false;
+            try
+            {
+                SelectdPoolID intractable = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedPools.Values.First(x => x.PoolID == item.PoolID.ToString());
+            }
+            catch(Exception e)
+            {
+                check = true;
+            }
+            
+            mprefabObj.GetComponent<MatchPoolType>().SetValueToPoolObject(item.Entry, item.PoolID, item.PrizeList, item.LeaderBoard, item.PrizePool, item.SlotsFilled, item.TotalSlots, item.Type, item, check);
+        }
     }
 }

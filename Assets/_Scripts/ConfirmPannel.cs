@@ -13,13 +13,13 @@ public class ConfirmPannel : UIHandler
     public RectTransform PanelBg;
     public void AddAmountTo50()
     {
-        amountDisplay.text = "50";
+       // amountDisplay.text = "50";
         Debug.Log("Add 50 in amount input");
     }
 
     public void AddAmountTo100()
     {
-        amountDisplay.text = "100";
+       //amountDisplay.text = "100";
         Debug.Log("Add 100 in amount input");
     }
 
@@ -33,6 +33,7 @@ public class ConfirmPannel : UIHandler
         PanelBg.DOAnchorPosY(0,0.5f).From();
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
+        CurrentBalance.text = GameController.Instance.myData.Wallet.amount.ToString();
     }
 
     public override void OnBack()

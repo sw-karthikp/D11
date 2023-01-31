@@ -23,12 +23,14 @@ public class WalletManager : UIHandler
     [SerializeField] private TMP_InputField userName;
     [SerializeField] private TMP_Text amount;
     [SerializeField] private TMP_Text newAddedAmount;
+    [SerializeField] private TMP_Text winningAmount;
     [SerializeField] private TMP_Text bonusAdded;
     [SerializeField] private TMP_InputField newAmount;
     [SerializeField] private Button plus;
     [SerializeField] private Button minus;
     [SerializeField] private Button walletButton;
-
+    [SerializeField] private TMP_Text walletAmount;
+    [SerializeField] private Toggle fifty, hundered;
 
     [SerializeField] private Tween Slidetween;
     [SerializeField] private float XSlidePos = 1000;
@@ -44,12 +46,42 @@ public class WalletManager : UIHandler
     private void Awake()
     {
         instance = this;
-
         db = FirebaseFirestore.DefaultInstance;
-
-
     }
 
+
+    private void OnEnable()
+    {
+        GameController.Instance.OnUserDataUpdated += LoadData;
+    }
+
+    private void OnDisable()
+    {
+        GameController.Instance.OnUserDataUpdated -= LoadData;
+    }
+
+    public void LoadData()
+    {
+        Wallet wallet = GameController.Instance.myData.Wallet;
+        amount.text = wallet.amount.ToString();
+        bonusAdded.text = wallet.bonusAmount.ToString();
+        newAddedAmount.text = wallet.addedAmount.ToString();
+        winningAmount.text = wallet.winningAmount.ToString();
+    }
+
+    public void OnValueChnage(string value)
+    {
+        fifty.isOn = value == "50";
+        hundered.isOn = value == "100";
+        int valuetoAdd = Mathf.Clamp(int.Parse(value), 0, 1000000);
+        newAmount.text = valuetoAdd.ToString();
+        walletAmount.text = $"ADD <sprite=2>{valuetoAdd}";
+    }
+
+    public void OnAddAmount()
+    {
+        GameController.Instance.AddAmount(int.Parse(newAmount.text));
+    }
 
 
     public void LoadUserDetail()
@@ -167,15 +199,14 @@ public class WalletManager : UIHandler
 
         Slidetween = Popup.DOScaleY(1f, 0.5f).OnComplete(() => Slidetween = null);
         walletButton.interactable= false;
-        LoadUserDetail();
+        //  LoadUserDetail();
+        LoadData();
     }
 
 
 
     public override void OnBack()
     {
-
-
         HideMe();
     }
 }

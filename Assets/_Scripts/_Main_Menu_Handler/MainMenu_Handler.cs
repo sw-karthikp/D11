@@ -240,12 +240,27 @@ public class MainMenu_Handler : UIHandler
 
     IEnumerator MySelectedMatches(int toggleindex)
     {
-        while(GameController.Instance.mymatchesGlobalRef.Count <= 0)
+        //yield return new WaitForSeconds(Time.deltaTime);
+        while (GameController.Instance.mymatchesGlobalRef.Count <= 0)
         {
-            hotGamesObj[toggleindex].SetActive(false);
+
             yield return new WaitForSeconds(0.1f);
         }
-        hotGamesObj[toggleindex].SetActive(true);
+        hotGamesObj[toggleindex].SetActive(false);
+        foreach (var item in GameController.Instance.mymatchesGlobalRef)
+        {
+            foreach (var item2 in item.Value)
+            {
+                if(item2.Value.Type == toggleindex)
+                {
+                    hotGamesObj[toggleindex].SetActive(true);
+                    break;
+                }
+            }
+        }
+
+
+       
         //  yield return new WaitForSeconds(0.1f);
         foreach (var item2 in GameController.Instance.mymatchesGlobalRef)
         {

@@ -17,7 +17,7 @@ public class PlayerDisplay : MonoBehaviour
         playerName.text = name;
         Cp.SetActive(cp);
         Vvcp.SetActive(Vcp);
-        pic.sprite= _pic;
+        //pic.sprite= _pic;
     }
 
 }

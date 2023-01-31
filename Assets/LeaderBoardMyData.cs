@@ -17,9 +17,10 @@ public class LeaderBoardMyData : MonoBehaviour
     {
         playerName.text = _playerName;
         teamCount.text = $"T{_teamCount}";
-       // points.text = _points.ToString();
-        rank.text = _rank.ToString();
-        if(_playerID == GameController.Instance.myUserID)
+        if(!string.IsNullOrWhiteSpace(_points))
+            points.text = _points;
+        rank.text = "#"+_rank.ToString();
+        if(_playerName == GameController.Instance.myData.Name)
         {
             this.GetComponent<Image>().color = val1;
 

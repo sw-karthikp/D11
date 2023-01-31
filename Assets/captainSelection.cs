@@ -21,6 +21,8 @@ public class captainSelection : UIHandler
     public TMP_Text contest;
     public static captainSelection Instance;
 
+    public ConfrmationHandler conformHandler;
+
     string slotKey1;
     string slotKey2;
     int slotsFilled;
@@ -51,7 +53,8 @@ public class captainSelection : UIHandler
 
     }
 
-    public void onClickSave()
+
+    public void SaveData()
     {
         string json = JsonConvert.SerializeObject(MatchSelection.Instance.playersForTeam, Formatting.None, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
 
@@ -110,10 +113,18 @@ public class captainSelection : UIHandler
         string val1 = GameController.Instance.CurrentMatchID.ToString();
         string val2 = GameController.Instance.CurrentPoolID.ToString();
         mDatabase.RootReference.Child("JoinedPlayers").Child($"{val1}").Child($"P{val2}").Child(GameController.Instance.myUserID.ToString()).SetValueAsync(GameController.Instance.myData.Name);
-        mDatabase.RootReference.Child("MatchPools").Child(slotKey1).Child("Pools").Child(slotKey2).Child("SlotsFilled").SetValueAsync(slotsFilled + 1); 
+        mDatabase.RootReference.Child("MatchPools").Child(slotKey1).Child("Pools").Child(slotKey2).Child("SlotsFilled").SetValueAsync(slotsFilled + 1);
         GameController.Instance.SubscribeSelectedMatchDetails();
         BottomHandler.Instance.ResetScreen();
+    }
 
+
+    public void onClickSave()
+    {
+        SaveData();
+        HideMe();
+
+        //conformHandler.ShowMe();
     }
 
 
@@ -200,6 +211,7 @@ public class captainSelection : UIHandler
                 mprefab.GetComponent<captinslectionHandler>().Setval(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i]);
                 togscaptain.Add(mprefab.GetComponent<captinslectionHandler>().Captain);
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
+                Canvas.ForceUpdateCanvases();
 
             }
             else if (MatchSelection.Instance.playersForTeam[i].type == 1)
@@ -221,7 +233,7 @@ public class captainSelection : UIHandler
                 mprefab.GetComponent<captinslectionHandler>().Setval(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i]);
                 togscaptain.Add(mprefab.GetComponent<captinslectionHandler>().Captain);
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
-
+                Canvas.ForceUpdateCanvases();
             }
             else if (MatchSelection.Instance.playersForTeam[i].type == 2)
             {
@@ -242,7 +254,7 @@ public class captainSelection : UIHandler
                 mprefab.GetComponent<captinslectionHandler>().Setval(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i]);
                 togscaptain.Add(mprefab.GetComponent<captinslectionHandler>().Captain);
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
-
+                Canvas.ForceUpdateCanvases();
             }
             else if (MatchSelection.Instance.playersForTeam[i].type == 3)
             {
@@ -263,9 +275,10 @@ public class captainSelection : UIHandler
                 mprefab.GetComponent<captinslectionHandler>().Setval(MatchSelection.Instance.playersForTeam[i].playerName, MatchSelection.Instance.playersForTeam[i]);
                 togscaptain.Add(mprefab.GetComponent<captinslectionHandler>().Captain);
                 togsvcaptain.Add(mprefab.GetComponent<captinslectionHandler>().ViceCaptian);
-
+                Canvas.ForceUpdateCanvases();
             }
         }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(parent[0].transform.parent.GetComponent<RectTransform>());
     }
 
 

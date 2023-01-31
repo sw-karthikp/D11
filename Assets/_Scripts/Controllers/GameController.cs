@@ -35,6 +35,7 @@ public class GameController : SerializedMonoBehaviour
     FirebaseFirestore firestoredb;
     public MatchPools currentMatchpool;
     public Pools currentPools;
+    public Action OnMatchPoolChanged,OnUserDataUpdated;
     
 
 
@@ -192,6 +193,7 @@ public class GameController : SerializedMonoBehaviour
             DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
+
         DataSnapshot val = args.Snapshot;
         foreach (var item in val.Children)
         {
@@ -199,6 +201,7 @@ public class GameController : SerializedMonoBehaviour
             matchpool.Add(item.Key, JsonConvert.DeserializeObject<MatchPools>(item.GetRawJsonValue()));
 
         }
+        OnMatchPoolChanged?.Invoke();
     }
 
     #endregion
@@ -288,15 +291,17 @@ public class GameController : SerializedMonoBehaviour
     #region LIVEMATCHSCORE
     public void SubscribeLiveScoreDetails(string _matchID)
     {
+        string id = _matchID;
         FirebaseDatabase.DefaultInstance
-                 .GetReference($"LiveMatchScoreCard/{_matchID}")
+                 .GetReference($"LiveMatchScoreCard/{id}")
                  .ValueChanged += HandleLiveScoreMatch;
     }
 
     public void UnSubscribeLiveScoreDetails(string _matchID)
     {
+        string id = _matchID;
         FirebaseDatabase.DefaultInstance
-      .GetReference($"LiveMatchScoreCard/{_matchID}")
+      .GetReference($"LiveMatchScoreCard/{id}")
       .ValueChanged -= HandleLiveScoreMatch;
         scoreCard = null;
     }
@@ -310,12 +315,16 @@ public class GameController : SerializedMonoBehaviour
             return;
         }
         DataSnapshot val = args.Snapshot;
-
-        scoreCard = JsonConvert.DeserializeObject<LiveMatchScoreCard>(val.GetRawJsonValue());
-        ScoreCardPanel.Instance.InstantDataInnings1();
-        ScoreCardPanel.Instance.InstantDataInnings2();
-        _My_Matches.Instance.Total1();
-        _My_Matches.Instance.Total2();
+        if (val.GetRawJsonValue() != null)
+        {
+            scoreCard = JsonConvert.DeserializeObject<LiveMatchScoreCard>(val.GetRawJsonValue());
+            //ScoreCardPanel.Instance.InstantDataInnings1();
+            //ScoreCardPanel.Instance.InstantDataInnings2();
+           
+                _My_Matches.Instance.Total1();
+                _My_Matches.Instance.Total2();
+            
+        }
     }
 
     #endregion
@@ -511,14 +520,14 @@ public class GameController : SerializedMonoBehaviour
         if (string.IsNullOrWhiteSpace(GameController.Instance.myUserID)) return;
         
         DocumentReference docRef = firestoredb.Collection("users").Document(GameController.Instance.myUserID);
-        docRef.GetSnapshotAsync().ContinueWithOnMainThread(task =>
+        docRef.Listen(snapshot =>
         {
-            DocumentSnapshot snapshot = task.Result;
-            Debug.Log($"<color=blue>{task.Result}</color>");
+            //DocumentSnapshot snapshot = task.Result;
+            //Debug.Log($"<color=blue>{snapshot}</color>");
             if (snapshot.Exists)
             {
                myData = snapshot.ConvertTo<UserDetails>();
-              
+               OnUserDataUpdated?.Invoke();
             }
             else
             {
@@ -526,6 +535,45 @@ public class GameController : SerializedMonoBehaviour
             }
         });
     }
+
+
+    public void AddAmount(int amount)
+    {
+
+        //public float amount { get; set; }
+        //public float bonusAmount { get; set; }
+        //public float addedAmount { get; set; }
+        //public float winningAmount { get; set; }
+
+        DocumentReference docRef = firestoredb.Collection("users").Document($"{GameController.Instance.myUserID}");
+        Dictionary<string, object> obj = new();
+        GameController.Instance.myData.Wallet.amount += amount;
+        GameController.Instance.myData.Wallet.addedAmount += amount;
+        
+
+
+        docRef.UpdateAsync("Wallet",GameController.Instance.myData.Wallet.ToDictionary()).ContinueWithOnMainThread(task =>
+        {
+            
+        });
+     }
+
+    public void SubtractAmount(int amount)
+    {
+        DocumentReference docRef = firestoredb.Collection("users").Document($"{GameController.Instance.myUserID}");
+        Dictionary<string, object> obj = new();
+        GameController.Instance.myData.Wallet.amount -= amount;        
+        obj["amount"] = GameController.Instance.myData.Wallet.amount;
+
+        docRef.UpdateAsync("Wallet", GameController.Instance.myData.Wallet.ToDictionary()).ContinueWithOnMainThread(task =>
+        {
+
+        });
+    }
+
+
+
+
     #endregion
 
 }

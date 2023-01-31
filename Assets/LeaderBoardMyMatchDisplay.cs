@@ -51,8 +51,14 @@ public class LeaderBoardMyMatchDisplay : UIHandler
     {
         gameObject.SetActive(true);
 
+        foreach (var item in toggles)
+        {
+            item.isOn = false;
+        }
+
         toggles[1].isOn = true;
         StartCoroutine(delay());
+       
     }
 
     IEnumerator delay()
@@ -64,11 +70,17 @@ public class LeaderBoardMyMatchDisplay : UIHandler
         }
 
     }
+
+    private void OnEnable()
+    {
+        Total1();
+        Total2();
+    }
     public override void HideMe()
     {
-        GameController.Instance.UnSubscribeLiveScoreDetails(matchID);
+       // GameController.Instance.UnSubscribeLiveScoreDetails(matchID);
         gameObject.SetActive(false);
-        GameController.Instance.CurrentMatchID = "";
+       // GameController.Instance.CurrentMatchID = "";
     }
     public override void OnBack()
     {
@@ -159,29 +171,23 @@ public class LeaderBoardMyMatchDisplay : UIHandler
     public string ReturnContestCount()
     {
         int count = 0;
+
+        //string key = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID.ToString()].SelectedPools.First(x =>x.Value.PoolID ==GameController.Instance.CurrentPoolID).Key
+        //count = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID.ToString()].SelectedPools[k
+        Debug.Log("Setting Date");
         foreach (var item in GameController.Instance.selectedMatches)
         {
             if (item.Key == GameController.Instance.CurrentMatchID.ToString())
             {
                 foreach (var item1 in item.Value.SelectedPools.Values)
                 {
-                    foreach (var item2 in GameController.Instance.matchpool.Values)
-                    {
-                        if (item.Key == item2.MatchID.ToString())
-                        {
-                            foreach (var item3 in item2.Pools.Values)
-                            {
-                                if (item1.PoolID == item3.PoolID.ToString())
-                                {
-                                    count++;
-                                }
-                            }
-                        }
-                    }
+
+                    count++;
                 }
             }
         }
         return count.ToString();
     }
+
 
 }

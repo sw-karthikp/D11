@@ -39,8 +39,8 @@ public class ScoreCardPanel : MonoBehaviour
     public Image arrowA;
     public Image arrowB;
 
-    bool isOnA = true;
-    bool isOnB = true;
+    bool isOnA = false;
+    bool isOnB = false;
 
 
     private void Awake()
@@ -62,6 +62,8 @@ public class ScoreCardPanel : MonoBehaviour
         ScoreATeam.text = "-";
         OverBText.text = "(overs)";
         ScoreBTeam.text = "-";
+        //InstantDataInnings1();
+        //InstantDataInnings2();
     }
 
     public void GetData()
@@ -72,12 +74,12 @@ public class ScoreCardPanel : MonoBehaviour
 
     public void OnClickExpandA()
     {
-        if (isOnA)
+        if (!isOnA)
         {
             teamAExpandBatters.SetActive(true);
             teamAExpandBowlers.SetActive(true);
             arrowA.transform.DORotate(new Vector3(0, 0, 90), 0.1f);
-            isOnA = false;
+            isOnA = true;
             InstantDataInnings1();
         }
         else
@@ -85,20 +87,20 @@ public class ScoreCardPanel : MonoBehaviour
             teamAExpandBatters.SetActive(false);
             teamAExpandBowlers.SetActive(false);
             arrowA.transform.DORotate(new Vector3(0, 0, -90), 0.1f);
-            isOnA = true;
+            isOnA = false;
         }
-
+        Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(parentABatter.transform as RectTransform);
         LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
     }
     public void OnClickExpandB()
     {
-        if (isOnB)
+        if (!isOnB)
         {
             teamBExpandBatters.SetActive(true);
             teamBExpandBowlers.SetActive(true);
             arrowB.transform.DORotate(new Vector3(0, 0, 90), 0.1f);
-            isOnB = false;
+            isOnB = true;
             InstantDataInnings2();
         }
         else
@@ -106,10 +108,10 @@ public class ScoreCardPanel : MonoBehaviour
             teamBExpandBatters.SetActive(false);
             teamBExpandBowlers.SetActive(false);
             arrowB.transform.DORotate(new Vector3(0, 0, -90), 0.1f);
-            isOnB = true;
+            isOnB = false;
         }
-      
-    
+
+        Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(parentBBatter.transform as RectTransform);
         LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
     }
@@ -127,6 +129,7 @@ public class ScoreCardPanel : MonoBehaviour
         {
             child.gameObject.SetActive(false);
         }
+
         foreach (var item1 in GameController.Instance.scoreCard.MatchDetails.First(x => x.Key == "Innings1").Value.Batting.Score)
         {
             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PlayerScoreBatter");
@@ -152,7 +155,7 @@ public class ScoreCardPanel : MonoBehaviour
         {
             if(item.Key == "Innings1")
             {
-                OverAText.text = item.Value.InningsOvers.ToString();
+                OverAText.text = $"({item.Value.InningsOvers} Overs)";
                 ScoreATeam.text = item.Value.InningsRuns.ToString();
 
 }
@@ -205,7 +208,7 @@ public class ScoreCardPanel : MonoBehaviour
         {
             if (item.Key == "Innings2")
             {
-                OverBText.text = item.Value.InningsOvers.ToString();
+                OverBText.text = $"({item.Value.InningsOvers} Overs)";
                 ScoreBTeam.text = item.Value.InningsRuns.ToString();
          
             }

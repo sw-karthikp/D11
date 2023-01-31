@@ -32,7 +32,7 @@ public class MatchPools
 public class Pools
 {
     public int Entry;
-    public int PoolID;
+    public string PoolID;
     public Dictionary<string,Prizevalues> PrizeList = new();
     public Dictionary<string, Dictionary<string, string>> LeaderBoard = new();
     public int PrizePool;
@@ -110,7 +110,7 @@ public class PlayerSelectedForMatch
     public int type;
     public bool isCaptain;
     public bool isViceCaptain;
-    public Sprite playerPic;
+  //  public Sprite playerPic;
 }
 
 #endregion
@@ -180,6 +180,7 @@ public class LiveMatchScoreCard
     public string TossWon;
 }
 [Serializable]
+
 public class InningsDetails 
 { 
     public ScoreLive Batting = new();

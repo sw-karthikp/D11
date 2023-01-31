@@ -21,9 +21,9 @@ public class ConfrmationHandler : UIHandler
         bonusAmountAddedValue = (Mathf.Floor(Mathf.Clamp(bonusToAdd, 0, bonusToAdd)));
         amountToPayValue = totalEntry - bonusAmountAddedValue;
 
-        amountNeeded.text = totalEntry.ToString();
-        bonusAmountAdded.text = bonusAmountAddedValue.ToString();
-        amountToPay.text = amountToPayValue.ToString();
+        amountNeeded.text = "<sprite=0> <size=42>"+totalEntry.ToString();
+        bonusAmountAdded.text = "-<sprite=0> <size=42>" + bonusAmountAddedValue.ToString();
+        amountToPay.text = "<sprite=0> <size=42>" + amountToPayValue.ToString();
 
     }
 

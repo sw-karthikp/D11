@@ -2318,6 +2318,9 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
+  amountNeeded: {fileID: 0}
+  bonusAmountAdded: {fileID: 0}
+  amountToPay: {fileID: 0}
 --- !u!1 &933232980163257426
 GameObject:
   m_ObjectHideFlags: 0
