@@ -537,7 +537,7 @@ public class GameController : SerializedMonoBehaviour
     }
 
 
-    public void AddAmount(int amount)
+    public void AddAmount(int amount, int bonusAmount = 0, Action Onsuccess = null, Action onFailure = null)
     {
 
         //public float amount { get; set; }
@@ -546,33 +546,50 @@ public class GameController : SerializedMonoBehaviour
         //public float winningAmount { get; set; }
 
         DocumentReference docRef = firestoredb.Collection("users").Document($"{GameController.Instance.myUserID}");
-        Dictionary<string, object> obj = new();
-        GameController.Instance.myData.Wallet.amount += amount;
+       // Dictionary<string, object> obj = new();
+        GameController.Instance.myData.Wallet.amount += (amount);
         GameController.Instance.myData.Wallet.addedAmount += amount;
-        
+        GameController.Instance.myData.Wallet.bonusAmount += bonusAmount;
 
 
         docRef.UpdateAsync("Wallet",GameController.Instance.myData.Wallet.ToDictionary()).ContinueWithOnMainThread(task =>
         {
-            
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                onFailure?.Invoke();
+            }
+            else
+            {
+                Onsuccess?.Invoke();
+            }
         });
      }
 
-    public void SubtractAmount(int amount)
+    public void SubtractAmount(int amount,int bonusAmount =0,Action Onsuccess = null,Action onFailure = null)
     {
         DocumentReference docRef = firestoredb.Collection("users").Document($"{GameController.Instance.myUserID}");
-        Dictionary<string, object> obj = new();
-        GameController.Instance.myData.Wallet.amount -= amount;        
-        obj["amount"] = GameController.Instance.myData.Wallet.amount;
+
+        GameController.Instance.myData.Wallet.amount -= (amount + bonusAmount);
+        GameController.Instance.myData.Wallet.addedAmount -= amount;
+        GameController.Instance.myData.Wallet.bonusAmount -= bonusAmount;
 
         docRef.UpdateAsync("Wallet", GameController.Instance.myData.Wallet.ToDictionary()).ContinueWithOnMainThread(task =>
         {
-
+            if(task.IsFaulted || task.IsCanceled)
+            {
+                onFailure?.Invoke();
+            }
+            else
+            {
+                Onsuccess?.Invoke();
+            }
         });
     }
 
+    public void ShowLowbalanceScreen()
+    {
 
-
+    }
 
     #endregion
 

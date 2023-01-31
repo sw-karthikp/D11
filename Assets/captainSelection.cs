@@ -121,10 +121,10 @@ public class captainSelection : UIHandler
 
     public void onClickSave()
     {
-        SaveData();
-        HideMe();
+        //SaveData();
+        //HideMe();
 
-        //conformHandler.ShowMe();
+        conformHandler.ShowMe();
     }
 
 
