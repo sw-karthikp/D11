@@ -11,7 +11,7 @@ using Firebase.Extensions;
 using System;
 using Firebase.Firestore;
 
-public class GameController : SerializedMonoBehaviour
+public class GameController : MonoBehaviour 
 {
     public static GameController Instance;
 
@@ -36,7 +36,7 @@ public class GameController : SerializedMonoBehaviour
     public MatchPools currentMatchpool;
     public Pools currentPools;
     public Action OnMatchPoolChanged,OnUserDataUpdated;
-    
+
 
 
     [Header("ListDataFromRealDb")]
@@ -455,7 +455,7 @@ public class GameController : SerializedMonoBehaviour
 
     void JoinedPlayerValueChanged(object sender, ValueChangedEventArgs args)
     {
-
+        //DebugHelper.Log(args.DatabaseError.ToString());
         if (args.DatabaseError != null)
         {
             DebugHelper.LogError(args.DatabaseError.Message + "*************");

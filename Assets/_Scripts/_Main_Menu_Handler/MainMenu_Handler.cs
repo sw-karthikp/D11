@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Firebase.Firestore;
 using Firebase.Extensions;
-using static UnityEditor.Progress;
+
 
 public class MainMenu_Handler : UIHandler
 {
@@ -241,12 +241,13 @@ public class MainMenu_Handler : UIHandler
     IEnumerator MySelectedMatches(int toggleindex)
     {
         //yield return new WaitForSeconds(Time.deltaTime);
+        hotGamesObj[toggleindex].SetActive(false);
         while (GameController.Instance.mymatchesGlobalRef.Count <= 0)
         {
 
             yield return new WaitForSeconds(0.1f);
         }
-        hotGamesObj[toggleindex].SetActive(false);
+       
         foreach (var item in GameController.Instance.mymatchesGlobalRef)
         {
             foreach (var item2 in item.Value)

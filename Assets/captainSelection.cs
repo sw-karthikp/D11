@@ -20,7 +20,6 @@ public class captainSelection : UIHandler
     public List<Toggle> togsvcaptain;
     public TMP_Text contest;
     public static captainSelection Instance;
-
     public ConfrmationHandler conformHandler;
 
     string slotKey1;
@@ -39,6 +38,7 @@ public class captainSelection : UIHandler
             togscaptain[i].isOn = false;
             togsvcaptain[i].isOn = false;
         }
+
     }
 
     public override void OnBack()
@@ -64,8 +64,8 @@ public class captainSelection : UIHandler
         SelectedTeamPlayers selectedTeamA = new SelectedTeamPlayers() { TeamName = GameController.Instance.CurrentTeamA };
         SelectedTeamPlayers selectedTeamB = new SelectedTeamPlayers() { TeamName = GameController.Instance.CurrentTeamB };
         FirebaseDatabase mDatabase = FirebaseDatabase.DefaultInstance;
-        string Captain = "";
-        string viceCaptain = "";
+        string Captain = teamAplayers.Players.First().Value.ID;
+        string viceCaptain = teamAplayers.Players.Last().Value.ID;
         string TeamId = "Team" + (GameController.Instance.selectedMatches.Count > 0 ? GameController.Instance.selectedMatches.ContainsKey(GameController.Instance.CurrentMatchID.ToString()) ? GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID.ToString()].SelectedTeam.Count + 1 : 1 : 1);
         string poolId = GameController.Instance.CurrentPoolID;
         selectedTeamA.players.Clear();
@@ -189,6 +189,8 @@ public class captainSelection : UIHandler
 
     public void DisplayValue()
     {
+        togscaptain.Clear();
+        togsvcaptain.Clear();
         for (int i = 0; i < MatchSelection.Instance.playersForTeam.Count; i++)
         {
             if (MatchSelection.Instance.playersForTeam[i].type == 0)
@@ -289,7 +291,6 @@ public class captainSelection : UIHandler
             if (toggle != togscaptain[i] && toggle.isOn)
                 togscaptain[i].isOn = false;
         }
-
     }
     public void CheckForToggle2(Toggle toggle)
     {

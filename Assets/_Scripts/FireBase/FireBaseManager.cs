@@ -112,7 +112,7 @@ public class FireBaseManager : MonoBehaviour
     bool signedIn =false;
     public void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
-        signedIn = PlayerPrefs.GetInt("signedIn",0) == 0 ? false :true ;
+        //signedIn = PlayerPrefs.GetInt("signedIn",1) == 0 ? false :true ;
         if (auth.CurrentUser != user)
         {
  
@@ -135,7 +135,7 @@ public class FireBaseManager : MonoBehaviour
             //    UIController.Instance.MainMenuScreen.HideMe();
             //    UIController.Instance.Loginscreen.HideMe();
             //    UIController.Instance.RegisterScreen.HideMe();
-       
+
             //}
         }
 

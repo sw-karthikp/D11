@@ -64,7 +64,7 @@ public class ConfrmationHandler : UIHandler
 
     public void OnJoinClicked()
     {
-        if (GameController.Instance.myData.Wallet.amount >= amountToPayValue)
+        if (GameController.Instance.myData.Wallet.addedAmount >= amountToPayValue)
         {
             GameController.Instance.SubtractAmount((int)amountToPayValue,(int)bonusAmountAddedValue,(() =>
             {

@@ -110,7 +110,7 @@ public class PlayerSelectedForMatch
     public int type;
     public bool isCaptain;
     public bool isViceCaptain;
-  //  public Sprite playerPic;
+    public Sprite playerPic;
 }
 
 #endregion

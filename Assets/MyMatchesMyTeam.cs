@@ -4,19 +4,24 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
-
+using System.Drawing;
 
 public class MyMatchesMyTeam : MonoBehaviour
 {
     [Header("TextVariables")]
     public TMP_Text teamName;
     public TMP_Text points;
+    public GameObject pointsText;
     public TMP_Text wk;
     public TMP_Text bat;
     public TMP_Text ar;
     public TMP_Text bowl;
     public TMP_Text captain;
     public TMP_Text viceCaptain;
+    public TMP_Text TeamA;
+    public TMP_Text TeamB;
+    public TMP_Text TeamAName;
+    public TMP_Text TeamBName;
 
     [Header("ID")]
     public string capID;
@@ -38,11 +43,11 @@ public class MyMatchesMyTeam : MonoBehaviour
         click.onClick.AddListener(() => { OnClickMyTeams(); });
     }
 
-    public void SetData(string _teamName,string _points,string _wk,string _bat,string _ar, string _bowl ,string _captain ,string _viceCaptain ,Dictionary<string,List<string>> _teams,string _capID,string _viceCapID)
+    public void SetData(string _teamName,string _points,string _wk,string _bat,string _ar, string _bowl ,string _captain ,string _viceCaptain ,Dictionary<string,List<string>> _teams,string _capID,string _viceCapID ,string TeamACount ,string TeamBCount , string _TeamAName, string _TeamBName)
     {
         Teams.Clear();
         teamName.text = _teamName;
-        points.text = _points;
+     
         wk.text = _wk;
         bat.text = _bat;
         ar.text = _ar;
@@ -66,6 +71,53 @@ public class MyMatchesMyTeam : MonoBehaviour
             }
           
         }
+
+        foreach (var item in GameController.Instance.match)
+        {
+            foreach (var item1 in item.Value.Values)
+            {
+                if(item1.ID == GameController.Instance.CurrentMatchID)
+                {
+                    if(item.Key == "Complete")
+                    {
+                        TeamA.gameObject.SetActive(false);
+                        TeamB.gameObject.SetActive(false);
+                        TeamAName.gameObject.SetActive(false);
+                        TeamBName.gameObject.SetActive(false);
+                        points.gameObject.SetActive(true);
+                        pointsText.SetActive(true);
+                        points.text = _points;
+        
+                    }
+                    else if(item.Key == "Live")
+                    {
+                        TeamA.gameObject.SetActive(false);
+                        TeamB.gameObject.SetActive(false);
+                        TeamAName.gameObject.SetActive(false);
+                        TeamBName.gameObject.SetActive(false);
+                        points.gameObject.SetActive(true);
+                        pointsText.SetActive(true);
+                        points.text = _points;
+              
+                    }
+                    else if(item.Key == "Upcoming")
+                    {
+                        points.gameObject.SetActive(false);
+                        pointsText.SetActive(false);
+                        TeamA.gameObject.SetActive(true);
+                        TeamB.gameObject.SetActive(true);
+                        TeamAName.gameObject.SetActive(true);
+                        TeamBName.gameObject.SetActive(true);
+                        TeamA.text = TeamACount;
+                        TeamAName.text = _TeamAName;
+                        TeamBName.text = _TeamBName;
+                        TeamB.text = TeamBCount;
+                    }
+
+                }
+            }
+        }
+
 
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 using static GameController;
-using static UnityEditor.Progress;
+
 
 public class MatchPoolType : MonoBehaviour
 {
@@ -96,7 +96,7 @@ public class MatchPoolType : MonoBehaviour
     
         leader = _leader;
         PoolTypeName = _poolTypeName;
-        slotsFilled.text = (_totalSlots - _slotsFilled) + "spots left";
+        slotsFilled.text = (_totalSlots - _slotsFilled) + " spots left";
         Debug.Log(_slotsFilled + "####" + _totalSlots);
         Debug.Log(_slotsFilled / _totalSlots + "$$$$$$$");
         float val = ((float)_slotsFilled / (float)_totalSlots);

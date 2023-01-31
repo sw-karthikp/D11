@@ -62,6 +62,13 @@ public class MatchSelection : UIHandler
     {
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
+        for (int i = 0; i < parent.Length; i++)
+        {
+            foreach (Transform Child in parent[i])
+            {
+                Destroy(Child.gameObject);
+            }
+        }
         selectedplayerCount.text = "0";
         CreditsLeft.text = "100";
         for (int i = 0; i < Sprite_Swap.Instance.objects.Length; i++)
@@ -69,6 +76,7 @@ public class MatchSelection : UIHandler
             Sprite_Swap.Instance.objects[i].sprite = Sprite_Swap.Instance.Spritecolor[1];
         }
         PlayerSelectionToggle(0, 3);
+        next.interactable = false;
     }
 
     public override void OnBack()

@@ -58,7 +58,7 @@ public class PlayerDetails : MonoBehaviour
         newMatch.countryName = countryName.text;
         newMatch.points = Fpoint.text;
         newMatch.type = type;
-      //  newMatch.playerPic = _profilePic.sprite;
+        newMatch.playerPic = _profilePic.sprite;
         if (tog.isOn)
         {
             if (MatchSelection.Instance.playersForTeam.Find(x => x.playerName == newMatch.playerName) == null)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class MyContestNEW : MonoBehaviour
 {
@@ -18,6 +19,14 @@ public class MyContestNEW : MonoBehaviour
 
     private void OnEnable()
     {
+        //foreach (var item in GameController.Instance.selectedMatches)
+        //{
+        //   if(item.Key == GameController.Instance.CurrentMatchID)
+        //    {
+                
+        //    }
+        //}
+
         FecthData();
     }
 

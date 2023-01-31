@@ -168,7 +168,13 @@ public class _My_Matches : UIHandler
     public string ReturnTeamCount()
     {
         int count = 0;
-        count = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedTeam.Count;
+        foreach (var item in GameController.Instance.selectedMatches)
+        {
+            if (item.Key == GameController.Instance.CurrentMatchID)
+            {
+                count = item.Value.SelectedTeam.Count;
+            }
+        }
         return count.ToString();
     }
 

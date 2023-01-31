@@ -16,7 +16,10 @@ public class WinnerLeaderBoard : UIHandler
     public static WinnerLeaderBoard Instance;
 
     public TMP_Text prizePool;
+    public TMP_Text prizepoolTxt;
     public TMP_Text entryAmount;
+    public TMP_Text Rupee;
+    public TMP_Text PracticeText;
     public TMP_Text spotsLeft;
     public TMP_Text totalSpots;
     public Slider val;
@@ -35,6 +38,8 @@ public class WinnerLeaderBoard : UIHandler
     public Dictionary<string, Dictionary<string, string>> leader = new();
     string name;
     string value;
+    public bool  isclick1 =true;
+   public   bool isclick2 = true;
     private void Awake()
     {
         Instance = this;
@@ -66,11 +71,33 @@ public class WinnerLeaderBoard : UIHandler
         if (parent.childCount == 0)
         {
             Invoke("setData1", 0.2f);
+           
         }
 
+       
+        isclick1 = true;
+        isclick2 = true;
+        Invoke("setPractice", 0.1f);
 
     }
 
+    public void setPractice()
+    {
+        if (GameController.Instance.CurrentPoolID == "6")
+        {
+            prizePool.gameObject.SetActive(false);
+            Rupee.gameObject.SetActive(false);
+            prizepoolTxt.gameObject.SetActive(false);
+            PracticeText.gameObject.SetActive(true);
+        }
+        else
+        {
+            prizePool.gameObject.SetActive(true);
+            Rupee.gameObject.SetActive(true);
+            prizepoolTxt.gameObject.SetActive(true);
+            PracticeText.gameObject.SetActive(false);
+        }
+    }
 
 
     public override void OnBack()
@@ -79,17 +106,19 @@ public class WinnerLeaderBoard : UIHandler
     }
     private void OnEnable()
     {
-
+     
+     
     }
     public void OnClickWinner()
     {
-        if (swap[0].isOn)
+        if (swap[0].isOn && isclick1)
         {
             val1.text = "Rank";
             val2.text = "Entry";
             parent.gameObject.SetActive(true);
             rect.GetComponent<ScrollRect>().content = parent.GetComponent<RectTransform>();
             setData1();
+            isclick1= false;
         }
         else
         {
@@ -99,17 +128,19 @@ public class WinnerLeaderBoard : UIHandler
 
             }
             parent.gameObject.SetActive(false);
+            isclick1 = true;
         }
     }
     public void OnClickLeader()
     {
-        if (swap[1].isOn)
+        if (swap[1].isOn && isclick2)
         {
             val1.text = "Name";
             val2.text = "";
             parentLeader.gameObject.SetActive(true);
             rect.GetComponent<ScrollRect>().content = parentLeader.GetComponent<RectTransform>();
             setData2();
+            isclick2= false;
         }
         else
         {
@@ -119,11 +150,14 @@ public class WinnerLeaderBoard : UIHandler
 
             }
             parentLeader.gameObject.SetActive(false);
+            isclick2 = true;
         }
     }
 
     public void setData1()
     {
+  
+
         foreach (var item in prizeList.Values)
         {
 
@@ -181,9 +215,16 @@ public class WinnerLeaderBoard : UIHandler
     {
         prizePool.text = _prizePool;
         if (_entryAmount != "0")
+        {
             entryAmount.text = "JOIN" + " " + _entryAmount;
+
+        }
         else
-            entryAmount.text = "Free";
+        {
+            entryAmount.text = "";
+       
+        }
+           
         entryAmount.transform.parent.gameObject.GetComponent<Button>().interactable = intractable;
         val1slider = _spotsLeft;
         val2slider = _totalsports;
