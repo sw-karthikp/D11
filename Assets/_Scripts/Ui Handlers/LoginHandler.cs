@@ -13,8 +13,17 @@ public class LoginHandler : UIHandler
     public RectTransform BG;
     public GameObject loadingtxt;
     public GameObject loadingAnim;
+    public Sprite[] pics;
+    public Image register;
+    public TMP_Text registerTxt;
 
-    public static LoginHandler Instance; 
+    public static LoginHandler Instance;
+
+    private void Awake()
+    {
+        _emailId.onEndEdit.AddListener(delegate { spriteswap(); });
+        _passWord.onEndEdit.AddListener(delegate { spriteswap(); });
+    }
     public override void HideMe()
     {       
         UIController.Instance.RemoveFromOpenPages(this);
@@ -57,6 +66,19 @@ public class LoginHandler : UIHandler
         StartCoroutine(FireBaseManager.Instance.LoginLogic(_emailId.text, _passWord.text, errorTxt,loadingtxt.gameObject,loadingAnim.gameObject));
 
     
+    }
+    public void spriteswap()
+    {
+        if ( string.IsNullOrWhiteSpace(_emailId.text) || string.IsNullOrWhiteSpace(_passWord.text) )
+        {
+            register.sprite = pics[0];
+            registerTxt.color = Color.grey;
+        }
+        else
+        {
+            register.sprite = pics[1];
+            registerTxt.color = Color.white;
+        }
     }
     public IEnumerator clear()
     {

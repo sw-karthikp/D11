@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.UI;
 public class RegisterHandler : UIHandler
 {
 
@@ -15,10 +16,19 @@ public class RegisterHandler : UIHandler
     public GameObject loadingtxt;
     public GameObject loadingAnim;
     public static RegisterHandler Instance;
+    public Sprite[] pics;
+    public Image register;
+    public TMP_Text registerTxt;
 
     private void Awake()
     {
         Instance= this;
+        _userName.onEndEdit.AddListener(delegate { spriteswap(); });
+        _emailId.onEndEdit.AddListener(delegate { spriteswap(); });
+        _passWord.onEndEdit.AddListener(delegate { spriteswap(); });
+        _mobileNumber.onEndEdit.AddListener(delegate { spriteswap(); });
+
+
     }
     public override void HideMe()
     {
@@ -80,6 +90,20 @@ public class RegisterHandler : UIHandler
 
         StartCoroutine(FireBaseManager.Instance.RegisterLogic(_userName.text, _emailId.text, _passWord.text, _mobileNumber.text,errorTxt, loadingtxt.gameObject, loadingAnim.gameObject));      
         
+    }
+
+    public void spriteswap()
+    {
+        if(string.IsNullOrWhiteSpace(_userName.text) || string.IsNullOrWhiteSpace(_emailId.text) || string.IsNullOrWhiteSpace(_passWord.text) || string.IsNullOrWhiteSpace(_mobileNumber.text))
+        {
+            register.sprite = pics[0];
+            registerTxt.color = Color.grey;
+        }
+        else
+        {
+            register.sprite = pics[1];
+            registerTxt.color = Color.white;
+        }
     }
 
     public IEnumerator clear()
