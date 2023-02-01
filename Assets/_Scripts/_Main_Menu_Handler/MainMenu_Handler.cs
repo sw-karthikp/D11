@@ -27,6 +27,7 @@ public class MainMenu_Handler : UIHandler
     public Toggle[] togs;
     public Image[] img;
     public GameObject[] hotGamesObj;
+    public GameObject[] hotGamesObjPIC;
     public Transform Slider;
     public GameObject[] point;
     public Ease _ease;
@@ -243,6 +244,7 @@ public class MainMenu_Handler : UIHandler
     {
         //yield return new WaitForSeconds(Time.deltaTime);
         hotGamesObj[toggleindex].SetActive(false);
+        hotGamesObjPIC[toggleindex].SetActive(false);
         while (GameController.Instance.mymatchesGlobalRef.Count <= 0)
         {
 
@@ -256,6 +258,7 @@ public class MainMenu_Handler : UIHandler
                 if(item2.Value.Type == toggleindex)
                 {
                     hotGamesObj[toggleindex].SetActive(true);
+                    hotGamesObjPIC[toggleindex].SetActive(true);
                     break;
                 }
             }

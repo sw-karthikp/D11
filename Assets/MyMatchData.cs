@@ -187,7 +187,7 @@ public class MyMatchData : MonoBehaviour
 
         if (FireBaseManager.Instance.isFirstTime)
         {
-            yield return new WaitForSeconds(1.2f);
+            yield return new WaitForSeconds(0.1f);
             FireBaseManager.Instance.isFirstTime = false;
         }
         else
@@ -195,15 +195,15 @@ public class MyMatchData : MonoBehaviour
             yield return new WaitForSeconds(0);
         }
 
-        foreach (var item1 in GameController.Instance.countrySpriteImage)
+        foreach (var item1 in GameController.Instance.countryPic)
         {
             if (teamA.text == item1.Key)
             {
-                Image[0].sprite = item1.Value;
+                Image[0].sprite = item1.pic;
             }
             else if (teamB.text == item1.Key)
             {
-                Image[1].sprite = item1.Value;
+                Image[1].sprite = item1.pic;
             }
         }
 

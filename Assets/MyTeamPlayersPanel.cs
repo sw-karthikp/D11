@@ -159,13 +159,25 @@ public class MyTeamPlayersPanel : UIHandler
                         isViceCap = myPlayers.ToString() == captain ? true : false;
                         if (item2 == item1.ID)
                         {
-                            foreach (var sprite in GameController.Instance.playerSpriteImage)
+                            //foreach (var sprite in GameController.Instance.playerSpriteImage)
+                            //{
+                            //    if (item2 == sprite.Key)
+                            //    {
+                            //        SetPlayerDetailsValues(item1.Type, item1.Name, isCap, isViceCap, sprite.Value);
+                            //    }
+                            //}
+
+
+                            foreach (var item3 in GameController.Instance.playerPic)
                             {
-                                if (item2 == sprite.Key)
+
+                                if (item2 == item3.Key)
                                 {
-                                    SetPlayerDetailsValues(item1.Type, item1.Name, isCap, isViceCap, sprite.Value);
+                                    SetPlayerDetailsValues(item1.Type, item1.Name, isCap, isViceCap, item3.pic);
                                 }
+
                             }
+
                         }
                     }
                 }

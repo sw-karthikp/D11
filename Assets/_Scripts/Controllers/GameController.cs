@@ -237,8 +237,8 @@ public class GameController : MonoBehaviour
 
         string val = args.Snapshot.GetRawJsonValue();
         players = JsonConvert.DeserializeObject<List<Player>>(val);
-        FetchData();
-        FetchDataPlayerPic();
+        //FetchData();
+        //FetchDataPlayerPic();
         SubscribeJoinedPlayerDetails();
     }
 

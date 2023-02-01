@@ -26,7 +26,7 @@ public class captinslectionHandler : MonoBehaviour
     {
         _name.text = playerName;
         val = Data;
-        playerPic.sprite = GameController.Instance.playerSpriteImage.First(x => x.Key == Data.PlayerID).Value;
+        playerPic.sprite = GameController.Instance.playerPic.First(x => x.Key == Data.PlayerID).pic;
     }
 
     public void OnValueChangedCaptain()

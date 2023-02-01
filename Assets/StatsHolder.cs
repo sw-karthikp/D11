@@ -82,16 +82,23 @@ public class StatsHolder : MonoBehaviour
                         }
                     }
 
-                    foreach (var sprite in GameController.Instance.playerSpriteImage)
+                    //foreach (var sprite in GameController.Instance.playerSpriteImage)
+                    //{
+                    //    if (item1.Key == sprite.Key)
+                    //    {
+                    //        pic = sprite.Value;
+                    //    }
+
+                    //}
+                    foreach (var item3 in GameController.Instance.playerPic)
                     {
-                        if (item1.Key == sprite.Key)
+                        if (item1.Key == item3.Key)
                         {
-                            pic = sprite.Value;
+                            pic = item3.pic;
                         }
 
                     }
 
-                   
 
                     PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PlayerStats");
                     mprefabObj.transform.SetParent(parent);
@@ -99,26 +106,20 @@ public class StatsHolder : MonoBehaviour
                     mprefabObj.name = item1.Key.ToString();
                     obj.Add(mprefabObj.gameObject);
                     mprefabObj.GetComponent<playerStats>().playerStatsVal(playerName, countryName, item1.Value.ToString(), pic,selectedPlayer);
-                    objects.Add(mprefabObj.gameObject);
-                    val.Add(item1.Value);
-                    
+                    //objects.Add(mprefabObj.gameObject);
+                    ////val.Add(item1.Value);
+                    ////int valint = mprefabObj.transform.GetSiblingIndex();
+                    ////val.Add(valint);
+                    ////val.Reverse();
+
 
                 }
             }
         }
 
-        Sort();
+        
     }
-    public void Sort()
-    {
-        val.Sort();
-        Debug.Log(val.ToArray().ToString());
-
-        for (int i = 0; i < val.Count; i++)
-        {
-            obj[i].transform.SetSiblingIndex(i);
-        }
-    }
+  
   
 }
 

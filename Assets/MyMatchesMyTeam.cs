@@ -58,18 +58,33 @@ public class MyMatchesMyTeam : MonoBehaviour
         capID = _capID;
         viceCapID= _viceCapID;
 
-        foreach (var item in GameController.Instance.playerSpriteImage)
+        //foreach (var item in GameController.Instance.playerSpriteImage)
+        //{
+        //    if(item.Key == _capID)
+        //    {
+        //        captainPic.sprite = item.Value;
+        //    }
+
+        //    if(item.Key == _viceCapID)
+        //    {
+        //        ViceCaptainPic.sprite = item.Value;
+        //    }
+          
+        //}
+
+        foreach (var item2 in GameController.Instance.playerPic)
         {
-            if(item.Key == _capID)
+
+            if (item2.Key == _capID)
             {
-                captainPic.sprite = item.Value;
+                captainPic.sprite = item2.pic;
             }
 
-            if(item.Key == _viceCapID)
+            if (item2.Key == _viceCapID)
             {
-                ViceCaptainPic.sprite = item.Value;
+                ViceCaptainPic.sprite = item2.pic;
             }
-          
+
         }
 
         foreach (var item in GameController.Instance.match)

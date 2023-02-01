@@ -58,7 +58,7 @@ namespace D11
 			{
 				ScrollRect.horizontalNormalizedPosition = horizontalNormalizedPosition;
 
-				Debug.Log(ScrollRect.horizontalNormalizedPosition);
+				//Debug.Log(ScrollRect.horizontalNormalizedPosition);
 				_lerp = false;
 			}
             

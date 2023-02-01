@@ -102,8 +102,8 @@ public class MatchSelection : UIHandler
         tog[3].isOn = false;
         togGroup.allowSwitchOff = false;
         parent[0].gameObject.SetActive(true);
-        teamA.sprite = GameController.Instance.countrySpriteImage[TeamA.text];
-        teamB.sprite = GameController.Instance.countrySpriteImage[TeamB.text];
+        teamA.sprite = GameController.Instance.countryPic.Find(x=>x.Key == TeamA.text).pic;//   GameController.Instance.countrySpriteImage[TeamA.text];
+        teamB.sprite = GameController.Instance.countryPic.Find(x => x.Key == TeamB.text).pic; ;
 
     }
 
@@ -182,16 +182,28 @@ public class MatchSelection : UIHandler
                             mprefabObj.name = item1.Value.Name;
                             // mprefabObj.transform.SetParent(parent[_index]);
                             //mprefabObj.gameObject.SetActive(true);
-                            foreach (var item2 in GameController.Instance.playerSpriteImage)
+                            //foreach (var item2 in GameController.Instance.playerSpriteImage)
+                            //{
+                            //    foreach (var sprite in GameController.Instance.playerSpriteImage.Values)
+                            //    {
+                            //        if (item1.Value.ID == item2.Key)
+                            //        {
+                            //            playerPic = item2.Value;
+                            //        }
+                            //    }
+                            //}
+
+                            foreach (var item2 in GameController.Instance.playerPic)
                             {
-                                foreach (var sprite in GameController.Instance.playerSpriteImage.Values)
-                                {
+                               
+                                
                                     if (item1.Value.ID == item2.Key)
                                     {
-                                        playerPic = item2.Value;
+                                        playerPic = item2.pic;
                                     }
-                                }
+                                
                             }
+
                             mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.ID,item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
 
                         }
@@ -219,15 +231,27 @@ public class MatchSelection : UIHandler
                             mprefabObj.name = item1.Value.Name;
                             //mprefabObj.transform.SetParent(parent[_index]);
                             //mprefabObj.gameObject.SetActive(true);
-                            foreach (var item2 in GameController.Instance.playerSpriteImage)
+                            //foreach (var item2 in GameController.Instance.playerSpriteImage)
+                            //{
+                            //    foreach (var sprite in GameController.Instance.playerSpriteImage.Values)
+                            //    {
+                            //        if (item1.Value.ID == item2.Key)
+                            //        {
+                            //            playerPic = item2.Value;
+                            //        }
+                            //    }
+                            //}
+
+
+                            foreach (var item2 in GameController.Instance.playerPic)
                             {
-                                foreach (var sprite in GameController.Instance.playerSpriteImage.Values)
+
+
+                                if (item1.Value.ID == item2.Key)
                                 {
-                                    if (item1.Value.ID == item2.Key)
-                                    {
-                                        playerPic = item2.Value;
-                                    }
+                                    playerPic = item2.pic;
                                 }
+
                             }
                             mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.ID, item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
                         }
