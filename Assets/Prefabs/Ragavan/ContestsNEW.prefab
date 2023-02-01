@@ -104,11 +104,11 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 2eda7228b655f174ebab9fcedbe40640, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 1
-  m_FillAmount: 1
+  m_FillMethod: 0
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -873,7 +873,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.173
+  m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1636,8 +1636,10 @@ MonoBehaviour:
   totalSpots: {fileID: 5386603725104928820}
   teamName: {fileID: 8739131261410911419}
   teamCount: {fileID: 2624285101674572189}
+  rank: {fileID: 0}
   joinedTeam: {fileID: 2624285100994663058}
   slider: {fileID: 166061679703090551}
+  poolID: 
   onclick: {fileID: 5111466971906136981}
   onclick1: {fileID: 7522219740828932350}
 --- !u!1 &6456312282054340473

@@ -41,7 +41,11 @@ public class RegisterHandler : UIHandler
        this.gameObject.SetActive(true);
         BG.DOAnchorPosX(0, 0.5f);
     }
-  
+
+    private void OnEnable()
+    {
+        loadingAnim.SetActive(false);
+    }
     public override void OnBack()
     {
         BG.DOAnchorPosX(1450, 0.5f).OnComplete(() => gameObject.SetActive(false));

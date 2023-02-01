@@ -21,6 +21,7 @@ public class LoginHandler : UIHandler
 
     private void Awake()
     {
+        Instance = this;
         _emailId.onEndEdit.AddListener(delegate { spriteswap(); });
         _passWord.onEndEdit.AddListener(delegate { spriteswap(); });
     }
@@ -28,7 +29,11 @@ public class LoginHandler : UIHandler
     {       
         UIController.Instance.RemoveFromOpenPages(this);
         gameObject.SetActive(false);
-    }  
+    }
+    private void OnEnable()
+    {
+        loadingAnim.SetActive(false);
+    }
     public override void ShowMe()
     {
       

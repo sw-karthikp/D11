@@ -226,6 +226,7 @@ public class MainMenu_Handler : UIHandler
                                 string timeString = item1.Time;
                                 mprefabObj.gameObject.GetComponent<TeamHolderData>().SetDetails(item1.TeamA, item1.TeamB, item1.ID.ToString(), timeString, "ICC MENS CRICKET");
                                 Canvas.ForceUpdateCanvases();
+                                LayoutRebuilder.ForceRebuildLayoutImmediate(parentUpComingMatch[toggleindex].GetComponent<RectTransform>());
 
                             }
                         }
@@ -295,6 +296,7 @@ public class MainMenu_Handler : UIHandler
 
                         }
                         Canvas.ForceUpdateCanvases();
+                        LayoutRebuilder.ForceRebuildLayoutImmediate(parentHotTable[toggleindex].GetComponent<RectTransform>());
                     }
 
                 }

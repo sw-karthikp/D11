@@ -63,12 +63,16 @@ public class GameController : MonoBehaviour
 
     [Header("DictionaryDataGetFromRealDb")]
     public LiveMatchScoreCard scoreCard = new();
-    public Dictionary<string, Color> color = new Dictionary<string, Color>() { { "AUS", new Color(0.22f,0.15f,0.8f,1) }, { "IND", new Color(0.8f,0.4f,0.3f,1)},
-        { "PAK", new Color(0,0.3f,0.09f,1) },{ "ENG",new Color(0.8f,0.08f,0.15f,1f) }};
+    public Dictionary<string, Color> color = new Dictionary<string, Color>() { { "AUS", new Color(0.62f,0.85f,1f,1) }, { "IND", new Color(1f,0.89f,0.61f,1)},
+        { "PAK", new Color(0.32f,0.65f,0.52f,1) },{ "ENG",new Color(0.92f,0.34f,0.40f,1f) }};
 
-
-[Header("Referance")]
+    [Header("Referance")]
     public MyMatches mymatches;
+
+
+    public List<CountryPic> countryPic;
+
+    public List<PlayerPic> playerPic;
 
     DatabaseReference referenceRealDb; 
 

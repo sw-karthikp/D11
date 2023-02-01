@@ -15,8 +15,8 @@ public class StatsHolder : MonoBehaviour
     public Button sort;
     public List<GameObject> objects= new List<GameObject>();
     Dictionary<string, float> value = new();
-
-
+    public List<float> val;
+    public List<GameObject> obj;
     private void Awake()
     {
         sort.onClick.AddListener(() => { OnSort(); });
@@ -36,9 +36,24 @@ public class StatsHolder : MonoBehaviour
                  
         //}
     }
-
+    string teamId;
     public void SetStatsVal()
     {
+
+
+        //foreach (var item in GameController.Instance.selectedMatches)
+        //{
+        //    if(GameController.Instance.CurrentMatchID == item.Key)
+        //    {
+        //        foreach (var item1 in item.Value.SelectedPools)
+        //        {
+        //            if(item1.Value.PoolID == GameController.Instance.CurrentPoolID)
+        //            {
+        //                teamId =   item1.Value.TeamID;
+        //            }
+        //        }
+        //    }
+        //}
         string teamId = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedPools.First(x => (x.Value.PoolID == GameController.Instance.CurrentPoolID)).Value.TeamID;
         SelectedTeamID teamVal = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedTeam.First(x => x.Key == teamId).Value;
 
@@ -82,10 +97,29 @@ public class StatsHolder : MonoBehaviour
                     mprefabObj.transform.SetParent(parent);
                     mprefabObj.gameObject.SetActive(true);
                     mprefabObj.name = item1.Key.ToString();
+                    obj.Add(mprefabObj.gameObject);
                     mprefabObj.GetComponent<playerStats>().playerStatsVal(playerName, countryName, item1.Value.ToString(), pic,selectedPlayer);
                     objects.Add(mprefabObj.gameObject);
+                    val.Add(item1.Value);
+                    
+
                 }
             }
         }
+
+        Sort();
     }
+    public void Sort()
+    {
+        val.Sort();
+        Debug.Log(val.ToArray().ToString());
+
+        for (int i = 0; i < val.Count; i++)
+        {
+            obj[i].transform.SetSiblingIndex(i);
+        }
+    }
+  
 }
+
+

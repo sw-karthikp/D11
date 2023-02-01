@@ -290,15 +290,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 24 pts
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: df3234d2c34212a4ea9d34a96a7899a3, type: 2}
-  m_sharedMaterial: {fileID: -5671230920259987744, guid: df3234d2c34212a4ea9d34a96a7899a3, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 346bd30494b29ad4d99a92374f5da36a, type: 2}
+  m_sharedMaterial: {fileID: 4158817523102428909, guid: 346bd30494b29ad4d99a92374f5da36a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4290361785
-  m_fontColor: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
+    rgba: 4287269514
+  m_fontColor: {r: 0.5411765, g: 0.5411765, b: 0.5411765, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -479,8 +479,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 33, y: -45}
-  m_SizeDelta: {x: 35, y: 35}
+  m_AnchoredPosition: {x: 36.4, y: -43.3}
+  m_SizeDelta: {x: 47, y: 48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4474112650150456424
 CanvasRenderer:
@@ -666,6 +666,7 @@ MonoBehaviour:
     isCaptain: 0
     isViceCaptain: 0
     playerPic: {fileID: 0}
+  playerPic: {fileID: 4474112650626709020}
 --- !u!114 &2301129623538634074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -860,7 +861,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 028fac10329ea924abe06ba178c46e38, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 83b0f0be245ceea48bc8ed95598ddc00, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1283,7 +1284,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7f9756c25e04cf54ba695a1347f217a6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 79b9afed66fd1434eae89adbe241ddd7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

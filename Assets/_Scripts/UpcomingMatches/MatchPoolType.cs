@@ -11,6 +11,7 @@ using static GameController;
 public class MatchPoolType : MonoBehaviour
 {
     Pools pool;
+    public GameObject[] obj;
     public TMP_Text entryFee;
     public string PoolId;
     public string PoolTypeName;
@@ -78,6 +79,8 @@ public class MatchPoolType : MonoBehaviour
 
             prizePool.text = _prizePool.ToString();
             entryFee.text = "<sprite index=2>" + " " + _entryFee.ToString();
+            obj[0].SetActive(true);
+            obj[1].SetActive(false);
         }
         else
         {
@@ -88,7 +91,8 @@ public class MatchPoolType : MonoBehaviour
             rupee.SetActive(false);
             Trophy.SetActive(false);
             amount.SetActive(false);
-            Firstst.text = "Glory awaits!";
+            obj[0].SetActive(false);
+            obj[1].SetActive(true);
         }  
             
         totalSpots.text = _totalSlots.ToString() + " spots"; ;

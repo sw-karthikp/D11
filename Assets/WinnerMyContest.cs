@@ -52,6 +52,15 @@ public class WinnerMyContest : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        foreach (Transform item in parent)
+        {
+            Destroy(item.gameObject);
+        }
+    }
+
+
     public void setData1()
     {
         foreach (var item in prizeList.Values)

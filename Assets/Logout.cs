@@ -2,23 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class Logout : UIHandler
 {
 
     public Button goBackHome;
     public Button logoutNow;
+    public GameObject move;
+    public Ease ease;
 
     private void Awake()
     {
-        goBackHome.onClick.AddListener(() => { OnclickGoBackHome(); });
-        logoutNow.onClick.AddListener(() => { OnclickLogoutButton(); });
+        goBackHome.onClick.AddListener(() => { OnclickLogoutButton(); });
+        logoutNow.onClick.AddListener(() => {  OnclickGoBackHome(); });
     }
 
     public override void HideMe()
     {
-        AdminUIController.Instance.RemoveFromOpenPages(this);
+        UIController.Instance.RemoveFromOpenPages(this);
         gameObject.SetActive(false);
+        move.GetComponent<RectTransform>().DOAnchorPos(new Vector3(0f, -706, 0f), 0.2f).SetEase(ease);
     }
 
     public override void OnBack()
@@ -28,23 +32,22 @@ public class Logout : UIHandler
 
     public override void ShowMe()
     {
-        AdminUIController.Instance.AddToOpenPages(this);
+        UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
+        move.GetComponent<RectTransform>().DOAnchorPos(new Vector3(0f, 439.5f, 0f), 0.2f).SetEase(ease);
     }
 
 
     public  void OnclickGoBackHome()
     {
-        MainMenuController.Instance.mainMenuToggleGroup.allowSwitchOff = true;
-        MainMenuController.Instance.mainMenuTogs[0].isOn= true;
-        MainMenuController.Instance.mainMenuToggleGroup.allowSwitchOff= false;
+        HideMe();
     }
 
     public void OnclickLogoutButton()
     {
-        AdminAuthManager.Instance.SignOutuser();
-        AdminUIController.Instance.MainMenuScreen.HideMe();
-        AdminUIController.Instance.Loginscreen.ShowMe();
+        FireBaseManager.Instance.SignOutuser();
+        UIController.Instance.MainMenuScreen.HideMe();
+        UIController.Instance.Loginscreen.ShowMe();
     }
 
 }

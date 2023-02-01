@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using static MatchSelection;
+using System.Linq;
 
 public class captinslectionHandler : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class captinslectionHandler : MonoBehaviour
     public Toggle Captain;
     public Toggle ViceCaptian;
     public PlayerSelectedForMatch val;
+    public Image playerPic;
 
 
     private void Awake()
@@ -24,6 +26,7 @@ public class captinslectionHandler : MonoBehaviour
     {
         _name.text = playerName;
         val = Data;
+        playerPic.sprite = GameController.Instance.playerSpriteImage.First(x => x.Key == Data.PlayerID).Value;
     }
 
     public void OnValueChangedCaptain()

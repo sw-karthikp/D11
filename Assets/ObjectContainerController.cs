@@ -289,3 +289,17 @@ public class Wallet
 }
 
 #endregion
+
+[Serializable]
+public class PlayerPic
+{
+    public string Key;
+    public Sprite pic;
+}
+
+[Serializable]
+public class CountryPic
+{
+    public string Key;
+    public Sprite pic;
+}
