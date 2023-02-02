@@ -56,8 +56,8 @@ public class LeaderBoardMyMatchDisplay : UIHandler
             item.isOn = false;
         }
 
-        toggles[1].isOn = true;
-        StartCoroutine(delay());
+       
+      //  StartCoroutine(delay());
        
     }
 

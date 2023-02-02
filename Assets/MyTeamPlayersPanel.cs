@@ -147,16 +147,13 @@ public class MyTeamPlayersPanel : UIHandler
         {
             foreach (var item1 in item.Players.Values)
             {
-                foreach (var myPlayers in _myteams.Values)
+                foreach (var myPlayers in _myteams)
                 {
-                    playerCount.text = myPlayers.Count.ToString();
-                    foreach (var item2 in myPlayers)
+                    playerCount.text = myPlayers.Value.Count.ToString();
+                    foreach (var item2 in myPlayers.Value)
                     {
                        
-                        bool isCap;
-                        bool isViceCap;
-                        isCap = myPlayers.ToString() == captain ? true : false;
-                        isViceCap = myPlayers.ToString() == captain ? true : false;
+  
                         if (item2 == item1.ID)
                         {
                             //foreach (var sprite in GameController.Instance.playerSpriteImage)
@@ -166,7 +163,10 @@ public class MyTeamPlayersPanel : UIHandler
                             //        SetPlayerDetailsValues(item1.Type, item1.Name, isCap, isViceCap, sprite.Value);
                             //    }
                             //}
-
+                            bool isCap;
+                            bool isViceCap;
+                            isCap = item2.ToString() == captain ? true : false;
+                            isViceCap = item2.ToString() == viceCaptain ? true : false;
 
                             foreach (var item3 in GameController.Instance.playerPic)
                             {
@@ -194,8 +194,9 @@ public class MyTeamPlayersPanel : UIHandler
             PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("Player");
             mprefabObj.transform.SetParent(parent[0]);
             mprefabObj.gameObject.SetActive(true);
+            Debug.Log(_isCap + "$#" + _isViceCap);
             mprefabObj.GetComponent<PlayerDisplay>().SetPlayerDetails(_playerName, _isCap, _isViceCap, _pic);
-            Debug.Log("Called ************ $$$ **" + _type);
+         
 
         }
         if (_type == 1)
@@ -204,7 +205,7 @@ public class MyTeamPlayersPanel : UIHandler
             mprefabObj.transform.SetParent(parent[1]);
             mprefabObj.gameObject.SetActive(true);
             mprefabObj.GetComponent<PlayerDisplay>().SetPlayerDetails(_playerName, _isCap, _isViceCap, _pic);
-            Debug.Log("Called ************ $$$ **" + _type);
+            Debug.Log(_isCap + "$#" + _isViceCap);
 
         }
 
@@ -214,8 +215,7 @@ public class MyTeamPlayersPanel : UIHandler
             mprefabObj.transform.SetParent(parent[2]);
             mprefabObj.gameObject.SetActive(true);
             mprefabObj.GetComponent<PlayerDisplay>().SetPlayerDetails(_playerName, _isCap, _isViceCap, _pic);
-
-            Debug.Log("Called ************ $$$ **" + _type);
+            Debug.Log(_isCap + "$#" + _isViceCap);
         }
         if (_type == 3)
         {
@@ -223,7 +223,7 @@ public class MyTeamPlayersPanel : UIHandler
             mprefabObj.transform.SetParent(parent[3]);
             mprefabObj.gameObject.SetActive(true);
             mprefabObj.GetComponent<PlayerDisplay>().SetPlayerDetails(_playerName, _isCap, _isViceCap, _pic);
-            Debug.Log("Called ************ $$$ **" + _type);
+            Debug.Log(_isCap + "$#" + _isViceCap);
         }
 
     }

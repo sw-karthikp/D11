@@ -136,10 +136,15 @@ public class MyMatchData : MonoBehaviour
             }
         }
 
-        foreach (var item in GameController.Instance.selectedMatches.Values)
+        foreach (var item in GameController.Instance.selectedMatches)
         {
-          Team.text =  item.SelectedTeam.Count.ToString();
-            Contest.text = item.SelectedPools.Count.ToString();
+            if(ID == item.Key)
+            {
+                Team.text = item.Value.SelectedTeam.Keys.Count.ToString();
+                Contest.text = item.Value.SelectedPools.Keys.Count.ToString();
+            }
+            
+           
         }
     }
 

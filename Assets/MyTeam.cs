@@ -37,6 +37,9 @@ public class MyTeam : MonoBehaviour
     {
         selectedPlayers.Clear();
         Points = 0;
+
+
+
         foreach (var item1 in GameController.Instance.selectedMatches)
         {
             if (item1.Key == GameController.Instance.CurrentMatchID.ToString())
@@ -134,108 +137,113 @@ public class MyTeam : MonoBehaviour
                                 /////////////////////////R
                                 Debug.Log(item.Key);
 
+                            }
 
-
-
-                                foreach (var item3 in GameController.Instance.selectedMatches)
+                            List<string> selectedPlayers = new List<string>();
+                            string capName ="";
+                            string vcCapname = "";
+                            foreach (var item3 in GameController.Instance.selectedMatches)
+                            {
+                                if (GameController.Instance.CurrentMatchID == item3.Key)
                                 {
-                                    if (GameController.Instance.CurrentMatchID == item3.Key)
+                                    foreach (var item4 in item3.Value.SelectedTeam)
                                     {
-                                        foreach (var item4 in item3.Value.SelectedTeam)
+                                        if (item4.Key == TeamName)
                                         {
-                                            if (item4.Key == TeamName)
-                                            {
-                                                TeamACount = item4.Value.Players.TeamA.players.Count.ToString();
-                                                TeamBCount = item4.Value.Players.TeamB.players.Count.ToString();
-                                                TeamAName = item4.Value.Players.TeamA.TeamName;
-                                                TeamBName = item4.Value.Players.TeamB.TeamName;
-                                                Debug.Log(TeamACount + "%%%%%%%%%%%" + TeamBCount);
-                                            }
+                                            selectedPlayers = selectedPlayers.Concat(item4.Value.Players.TeamA.players).ToList();
+                                            selectedPlayers = selectedPlayers.Concat(item4.Value.Players.TeamB.players).ToList();
+                                            TeamACount = item4.Value.Players.TeamA.players.Count.ToString();
+                                            TeamBCount = item4.Value.Players.TeamB.players.Count.ToString();
+                                            TeamAName = item4.Value.Players.TeamA.TeamName;
+                                            TeamBName = item4.Value.Players.TeamB.TeamName;
+                                            capName = item4.Value.Players.Captain;
+                                            vcCapname = item4.Value.Players.ViceCaptian;
+                                            Debug.Log(TeamACount + "%%%%%%%%%%%" + TeamBCount+ "%%%%%%"+selectedPlayers.Count);
+
                                         }
                                     }
                                 }
-
-                                Points = 0;
-
-                                foreach (var item5 in GameController.Instance.matchpool)
-                                {
-                                    if (item1.Key == GameController.Instance.CurrentMatchID.ToString())
-                                    {
-
-
-                                        foreach (var item6 in item5.Value.Stats)
-                                        {
-
-                                            try
-                                            {
-                                                SelectedTeamID players = item1.Value.SelectedTeam.Values.First(x => x.Players.TeamA.players.Contains(item6.Key));
-                                                Points += item6.Value;
-                                            }
-                                            catch (Exception e)
-                                            {
-
-                                            }
-
-
-                                            try
-                                            {
-                                                SelectedTeamID players = item1.Value.SelectedTeam.Values.First(x => x.Players.TeamB.players.Contains(item6.Key));
-                                                Points += item6.Value;
-                                            }
-                                            catch (Exception e)
-                                            {
-
-                                            }
-
-
-
-
-
-
-
-                                            // foreach (var item8 in item1.Value.SelectedTeam.Values)
-                                            // {
-                                            //   foreach (var item9 in item8.Players.TeamA.players)
-                                            //  {
-                                            //if (item6.Key == item9)
-                                            //        {
-                                            //            Points += item6.Value;
-                                            //            Debug.Log(Points + "%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                            //        }
-                                            //    //}
-                                            //   // foreach (var item10 in item8.Players.TeamB.players)
-                                            //   // {
-                                            //        if (item6.Key == item10)
-                                            //        {
-                                            //    Points += item6.Value;
-                                            //    Debug.Log(Points + "%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                            //}
-                                            // }
-
-
-
-                                        }
-
-                                    }
-
-                                }
-                                Debug.Log(Points + "%%%%%%%%%%%%%");
-
-                                PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MyMatchesMyTeam");
-                                mprefabObj.transform.SetParent(parent);
-                                mprefabObj.gameObject.SetActive(true);
-                                mprefabObj.gameObject.name = TeamName;
-                                mprefabObj.GetComponent<MyMatchesMyTeam>().SetData(TeamName,"20", wkSt, batSt, arSt, bowlSt, captainSt, vcCaptainSt, val, capID, vcCapID, TeamACount, TeamBCount, TeamAName, TeamBName);
                             }
 
 
+                            MatchPools pools = GameController.Instance.matchpool.First(x => x.Value.MatchID == GameController.Instance.CurrentMatchID).Value;
+
+                            float values = 0;
+
+
+                            foreach (var itemN in selectedPlayers)
+                            {
+                                if (pools.Stats.ContainsKey(itemN))
+                                {
+                                    if (capName == itemN) values += (pools.Stats[itemN] * 2);
+                                    else if (vcCapname == itemN) values += (pools.Stats[itemN] * 1.5f);
+                                    else
+                                        values += pools.Stats[itemN];
+
+                                }
+                            }
+
+
+
+
+
+
+
+                            //foreach (var item4 in GameController.Instance.matchpool)
+                            //{
+                            //    if (item4.Value.MatchID == GameController.Instance.CurrentMatchID)
+                            //    {
+                            //        Dictionary<string, float> stats = item4.Value.Stats;
+                            //        List<KeyValuePair<string, float>> myList = stats.ToList();
+                            //        foreach (var item7 in myList)
+                            //        {
+
+                            //            bool selectedPlayer = false;
+                            //            foreach (var teamList in teams)
+                            //            {
+                            //                foreach (var players in GameController.Instance.players)
+                            //                {
+
+                            //                    foreach (var playersVal in players.Players.Values)
+                            //                    {
+
+                            //                        if (teamList == playersVal.ID)
+                            //                        {
+                            //                            Debug.Log(teamList + "$$$$$$$$$$$$$$$");
+
+                            //                            selectedPlayer =  .Players.TeamA.players.Contains(teamList) || teamVal.Players.TeamB.players.Contains(teamList);
+
+                            //                        }
+                            //                        Debug.Log(selectedPlayer + "^^^^^^^^^^");
+                            //                    }
+                            //                }
+                            //            }
+
+                            //            if (selectedPlayer)
+                            //            {
+                            //                Debug.Log(item7.Value + "#########");
+                            //                Points += item7.Value;
+                            //            }
+                            //        }
+                            //    }
+                            //}
+
+
+
+
+                            Debug.Log(values + "%%%%%%%%%%%%%");
+
+                            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("MyMatchesMyTeam");
+                            mprefabObj.transform.SetParent(parent);
+                            mprefabObj.gameObject.SetActive(true);
+                            mprefabObj.gameObject.name = TeamName;
+                            mprefabObj.GetComponent<MyMatchesMyTeam>().SetData(TeamName, values.ToString(), wkSt, batSt, arSt, bowlSt, captainSt, vcCaptainSt, val, capID, vcCapID, TeamACount, TeamBCount, TeamAName, TeamBName);
                         }
                     }
                 }
             }
         }
+    }  
 
-
-    }
 }
 

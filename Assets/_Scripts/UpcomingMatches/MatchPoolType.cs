@@ -87,7 +87,7 @@ public class MatchPoolType : MonoBehaviour
             practice.gameObject.SetActive(true);
             prizePoolText.SetActive(false);
              practice.text = "Practice Contest";
-            entryFee.text = "Free";
+            entryFee.text = "JOIN";
             rupee.SetActive(false);
             Trophy.SetActive(false);
             amount.SetActive(false);
@@ -109,8 +109,8 @@ public class MatchPoolType : MonoBehaviour
         if (val2 == _totalSlots)
         {
             entryButtonClick.interactable = false;
-            click.interactable = false;
-            entryFee.text = "Closed";
+            
+            entryFee.text = "CLOSED";
             slotsFilled.text = "Contest Full";
         }
   

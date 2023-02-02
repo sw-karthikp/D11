@@ -71,6 +71,17 @@ public class ConfirmPannel : UIHandler
         walletAmount.text = $"ADD <sprite=2>{valuetoAdd}";
     }
 
+    public void OnvalueChange50(string value)
+    {
+        walletAmount.text = $"ADD <sprite=2>{value}";
+        newAmount.text = value;
+    }
+    public void OnvalueChange100(string value)
+    {
+        walletAmount.text = $"ADD <sprite=2>{value}";
+        newAmount.text = value;
+    }
+
     public void OnAddAmount()
     {
         GameController.Instance.AddAmount(valuetoAdd,0,() => 

@@ -28,7 +28,7 @@ public class FireBaseManager : MonoBehaviour
         db = FirebaseFirestore.DefaultInstance;
         isFirstTime = true;
         auth = FirebaseAuth.DefaultInstance;
-      
+        StartCoroutine(CheckAutoLogin());
     }
 
 
@@ -79,6 +79,7 @@ public class FireBaseManager : MonoBehaviour
 
     private IEnumerator CheckAutoLogin()
     {
+        user = auth.CurrentUser;
         yield return new WaitForEndOfFrame();
 
         if (user != null)
@@ -96,22 +97,22 @@ public class FireBaseManager : MonoBehaviour
         {
             Debug.Log("AutoLogin Success");
 
-          
-                //UIController.Instance.MainMenuScreen.ShowMe();
-                //UIController.Instance.Loginscreen.HideMe();
-                //UIController.Instance.RegisterScreen.HideMe();
-                // UIController.Instance.loading.SetActive(true);
 
+            UIController.Instance.MainMenuScreen.ShowMe();
+            UIController.Instance.Loginscreen.HideMe();
+            UIController.Instance.RegisterScreen.HideMe();
+            UIController.Instance.loading.SetActive(true);
+            GameController.Instance.myUserID = user.UserId;
 
-
+            GameController.Instance.GetUserDetails();
         }
         else
         {
-            //UIController.Instance.LoadingScreen.HideMe();
-          //  UIController.Instance.Loginscreen.ShowMe();
+            UIController.Instance.loading.SetActive(false);
+            UIController.Instance.Loginscreen.ShowMe();
         }
     }
-    bool signedIn =false;
+    bool  signedIn =false;
     public void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
         //signedIn = PlayerPrefs.GetInt("signedIn",1) == 0 ? false :true ;

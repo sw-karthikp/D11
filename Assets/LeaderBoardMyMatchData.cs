@@ -75,46 +75,5 @@ public class LeaderBoardMyMatchData : MonoBehaviour
     {
         GameController.Instance.OnMatchPoolChanged += RefreshData;
         RefreshData();
-
-
-
-
-        //foreach (var item in GameController.Instance.matchpool)
-        //{
-        //    if(GameController.Instance.CurrentMatchID == item.Value.MatchID)
-        //    {
-        //        foreach (var item1 in item.Value.Pools.Values)
-        //        {
-        //           if(GameController.Instance.CurrentPoolID == item1.PoolID.ToString())
-        //            {
-        //                playerCount.text = $"All Teams ({item1.LeaderBoard.Count})";
-        //                foreach (var item2 in item1.LeaderBoard)
-        //                {
-        //                    PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("LeaderBoard");
-        //                    mprefabObj.transform.SetParent(Parent);
-        //                    mprefabObj.gameObject.SetActive(true);
-
-        //                    foreach (var item3 in item2.Value)
-        //                    {
-        //                        if (item3.Key == "Name")
-        //                        {
-        //                            _name = item3.Value;
-        //                        }
-        //                        if (item3.Key == "Value")
-        //                        {
-        //                            _value = item3.Value;
-        //                        }
-        //                        mprefabObj.gameObject.name = item3.Value;
-        //                        mprefabObj.gameObject.GetComponent<LeaderBoardMyData>().SetData(_name, 1, _value, "",item2.Key);
-        //                        Canvas.ForceUpdateCanvases();
-        //                    }
-        //                }
-        //            }
-
-
-        //        }
-        //    }
-
-        //}
     }
 }

@@ -81,10 +81,12 @@ public class WalletManager : UIHandler
     public void OnvalueChange50(string value)
     {
         walletAmount.text = $"ADD <sprite=2>{value}";
+        newAmount.text = value;
     }
     public void OnvalueChange100(string value)
     {
         walletAmount.text = $"ADD <sprite=2>{value}";
+        newAmount.text = value;
     }
 
 

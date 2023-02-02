@@ -214,17 +214,21 @@ public class WinnerLeaderBoard : UIHandler
     public void GetPrizeList(string poolId, Dictionary<string, Prizevalues> _prizeList, Dictionary<string, Dictionary<string, string>> _leader, string _prizePool, string _entryAmount, int _spotsLeft, int _totalsports, bool intractable)
     {
         prizePool.text = _prizePool;
-        if (_entryAmount != "0")
+        if (_entryAmount == "JOIN")
         {
-            entryAmount.text = "JOIN" + " " + _entryAmount;
 
+            entryAmount.text = "JOIN";
+        }
+        else if(_entryAmount == "CLOSED")
+        {
+
+            entryAmount.text = "CLOSED";
         }
         else
         {
-            entryAmount.text = "";
-       
+            entryAmount.text = "JOIN" + " " + _entryAmount;
         }
-           
+       
         entryAmount.transform.parent.gameObject.GetComponent<Button>().interactable = intractable;
         val1slider = _spotsLeft;
         val2slider = _totalsports;

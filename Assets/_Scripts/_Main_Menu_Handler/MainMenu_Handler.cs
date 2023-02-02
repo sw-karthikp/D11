@@ -88,7 +88,7 @@ public class MainMenu_Handler : UIHandler
         GameController.Instance.SubscribeSelectedMatchDetails();
         _playerId.text = PlayerPrefs.GetString("userName");
         _playerName.text = PlayerPrefs.GetString("userId");
-        togs[0].isOn = true;
+        //togs[0].isOn = true;
 
 
     }
@@ -176,11 +176,6 @@ public class MainMenu_Handler : UIHandler
     public void SetUpcomingMatchDetails(int toggleindex)
     {
 
-        foreach (Transform child in parentHotTable[toggleindex])
-        {
-
-            child.gameObject.SetActive(false);
-        }
         foreach (Transform child in parentUpComingMatch[toggleindex])
         {
             child.gameObject.SetActive(false);
@@ -243,6 +238,12 @@ public class MainMenu_Handler : UIHandler
 
     IEnumerator MySelectedMatches(int toggleindex)
     {
+        foreach (Transform child in parentHotTable[toggleindex])
+        {
+
+            child.gameObject.SetActive(false);
+        }
+
         //yield return new WaitForSeconds(Time.deltaTime);
         hotGamesObj[toggleindex].SetActive(false);
         hotGamesObjPIC[toggleindex].SetActive(false);
