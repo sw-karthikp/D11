@@ -78,6 +78,16 @@ public class WalletManager : UIHandler
         walletAmount.text = $"ADD <sprite=2>{valuetoAdd}";
     }
 
+    public void OnvalueChange50(string value)
+    {
+        walletAmount.text = $"ADD <sprite=2>{value}";
+    }
+    public void OnvalueChange100(string value)
+    {
+        walletAmount.text = $"ADD <sprite=2>{value}";
+    }
+
+
     public void OnAddAmount()
     {
         GameController.Instance.AddAmount(int.Parse(newAmount.text));

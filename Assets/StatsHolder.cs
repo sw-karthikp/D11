@@ -63,22 +63,32 @@ public class StatsHolder : MonoBehaviour
         {
             if (item.Value.MatchID == GameController.Instance.CurrentMatchID)
             {
-                foreach (var item1 in item.Value.Stats)
+                Dictionary<string, float> stats = item.Value.Stats;
+                List<KeyValuePair<string, float>> myList = stats.ToList();
+                myList.Sort(
+                        delegate (KeyValuePair<string, float> pair1,
+                        KeyValuePair<string, float> pair2)
+                        {
+                            return pair1.Value.CompareTo(pair2.Value);
+                        }
+                    );
+                myList.Reverse();
+                foreach (var item1 in myList)
                 {
                     bool selectedPlayer = false;
 
                     foreach (var players in GameController.Instance.players)
                     {
-                       
+
                         foreach (var playersVal in players.Players.Values)
                         {
-                            if(item1.Key == playersVal.ID)
+                            if (item1.Key == playersVal.ID)
                             {
                                 playerName = playersVal.Name;
                                 countryName = players.TeamName;
                                 selectedPlayer = teamVal.Players.TeamA.players.Contains(item1.Key) || teamVal.Players.TeamB.players.Contains(item1.Key);
                             }
-                           
+
                         }
                     }
 
@@ -105,7 +115,7 @@ public class StatsHolder : MonoBehaviour
                     mprefabObj.gameObject.SetActive(true);
                     mprefabObj.name = item1.Key.ToString();
                     obj.Add(mprefabObj.gameObject);
-                    mprefabObj.GetComponent<playerStats>().playerStatsVal(playerName, countryName, item1.Value.ToString(), pic,selectedPlayer);
+                    mprefabObj.GetComponent<playerStats>().playerStatsVal(playerName, countryName, item1.Value.ToString(), pic, selectedPlayer);
                     //objects.Add(mprefabObj.gameObject);
                     ////val.Add(item1.Value);
                     ////int valint = mprefabObj.transform.GetSiblingIndex();
@@ -117,10 +127,10 @@ public class StatsHolder : MonoBehaviour
             }
         }
 
-        
+
     }
-  
-  
+
+
 }
 
 

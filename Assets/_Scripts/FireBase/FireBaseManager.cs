@@ -192,22 +192,22 @@ public class FireBaseManager : MonoBehaviour
         }
         else
         {
+            user = auth.CurrentUser;
 
-         
-            if (user.IsEmailVerified)
-            {
-                UIController.Instance.loading.SetActive(true);
-                UIController.Instance.MainMenuScreen.ShowMe();
-                UIController.Instance.Loginscreen.HideMe();
-                UIController.Instance.RegisterScreen.HideMe();
-                GameController.Instance.myUserID = user.UserId;
-                GameController.Instance.myData.Name = user.DisplayName;
+            //if (user.IsEmailVerified)
+            //{
+            //    UIController.Instance.loading.SetActive(true);
+            //    UIController.Instance.MainMenuScreen.ShowMe();
+            //    UIController.Instance.Loginscreen.HideMe();
+            //    UIController.Instance.RegisterScreen.HideMe();
+            //    GameController.Instance.myUserID = user.UserId;
+            //    GameController.Instance.myData.Name = user.DisplayName;
 
-            }
-            else
-            {
+            //}
+            //else
 
-                GameController.Instance.myUserID = user.UserId;
+
+            GameController.Instance.myUserID = user.UserId;
                 GameController.Instance.myData.Name = user.DisplayName;
                 UIController.Instance.loading.SetActive(true);
                 PlayerPrefs.SetInt("signedIn", 1);
@@ -215,7 +215,7 @@ public class FireBaseManager : MonoBehaviour
                 UIController.Instance.Loginscreen.HideMe();
                 UIController.Instance.RegisterScreen.HideMe();
             
-            }
+            
 
             GameController.Instance.GetUserDetails();
         }
