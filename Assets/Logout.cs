@@ -46,6 +46,7 @@ public class Logout : UIHandler
     public void OnclickLogoutButton()
     {
         FireBaseManager.Instance.SignOutuser();
+        HideMe();
         UIController.Instance.MainMenuScreen.HideMe();
         UIController.Instance.Loginscreen.ShowMe();
     }

@@ -46,11 +46,7 @@ public class MainMenu_Handler : UIHandler
     {
         rect.verticalNormalizedPosition = 1;
 
-        GameController.Instance.SubscribeMatchDetails();
-        GameController.Instance.SubscribePlayerDetails();
-        GameController.Instance.SubscribeMatchPools();
-        GameController.Instance.SubscribePlayers();
-        GameController.Instance.SubscribeSelectedMatchDetails();
+ 
        // FetchName();
     }
 
@@ -82,9 +78,14 @@ public class MainMenu_Handler : UIHandler
 
     public override void ShowMe()
     {
+
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
-
+        GameController.Instance.SubscribeMatchDetails();
+        GameController.Instance.SubscribePlayerDetails();
+        GameController.Instance.SubscribeMatchPools();
+        GameController.Instance.SubscribePlayers();
+        GameController.Instance.SubscribeSelectedMatchDetails();
         _playerId.text = PlayerPrefs.GetString("userName");
         _playerName.text = PlayerPrefs.GetString("userId");
         togs[0].isOn = true;

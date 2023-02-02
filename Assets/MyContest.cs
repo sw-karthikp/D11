@@ -22,10 +22,21 @@ public class MyContest : MonoBehaviour
     int spotsFilled;
     public Button onclick;
     public Button onclick1;
+    public Dictionary<string, Prizevalues> prizeList = new();
+    public Dictionary<string, Dictionary<string, string>> leader = new();
+    string pool;
+    string entryfee;
 
     private void Awake()
     {
         onclick.onClick.AddListener(()=> { UIController.Instance.myLeadeBoardVal.ShowMe(); SetPoolID(); });
+        onclick1.onClick.AddListener(() => {
+    
+            UIController.Instance.WinnerLeaderBoard.ShowMe();
+            SetPoolID();
+            PrizeListShow();
+
+        });
     }
 
     public void SetDataToMyContest(string _contestName ,string _spotsCount, string _totalspots , string _teamName,string _teamCount ,string _joinedTeam, string _poolID)
@@ -46,8 +57,16 @@ public class MyContest : MonoBehaviour
         GameController.Instance.CurrentPoolID = poolID;
     }
 
-    public void SetDataToMyContestNEW(string _contestName, string _spotsCount, string _totalspots, string _teamName, string _teamCount, string _joinedTeam, string _poolID)
+    int Tspots;
+    int Spots;
+    bool check;
+    public void SetDataToMyContestNEW(int _entryFee, string _contestName, string _spotsCount, int _prizePool, Dictionary<string, Prizevalues> prize, Dictionary<string, Dictionary<string, string>> _leader, string _totalspots, string _teamName, string _teamCount, string _joinedTeam, string _poolID ,bool _check)
     {
+        prizeList = prize;
+        leader = _leader;
+        pool = _prizePool.ToString();
+        entryfee = _entryFee.ToString();
+        check = _check;
         var teamCountval = _teamCount.Split("Team");
          string Count = teamCountval.Last();
         contestName.text = _contestName;
@@ -57,6 +76,7 @@ public class MyContest : MonoBehaviour
         teamCount.text = $"T{Count}";
         poolID = _poolID;
         totalslots = int.Parse(_totalspots);
+     
         spotsFilled = int.Parse(_spotsCount);
         slider.value = val2;
         spotsCount.text = (totalslots - spotsFilled) + "spots left";
@@ -64,5 +84,11 @@ public class MyContest : MonoBehaviour
         slider.value = val;
 
 
+    }
+    public void PrizeListShow()
+    {
+
+        WinnerLeaderBoard.Instance.GetPrizeList(poolID, prizeList, leader, pool, entryfee, val2, spotsFilled, check);
+        //GameController.Instance.CurrentPoolID = PoolId;
     }
 }

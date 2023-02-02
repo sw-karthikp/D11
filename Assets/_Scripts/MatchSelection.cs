@@ -62,13 +62,8 @@ public class MatchSelection : UIHandler
     {
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
-        for (int i = 0; i < parent.Length; i++)
-        {
-            foreach (Transform Child in parent[i])
-            {
-                Destroy(Child.gameObject);
-            }
-        }
+        playersForTeam.Clear();
+  
         selectedplayerCount.text = "0";
         CreditsLeft.text = "100";
         for (int i = 0; i < Sprite_Swap.Instance.objects.Length; i++)
@@ -76,9 +71,10 @@ public class MatchSelection : UIHandler
             Sprite_Swap.Instance.objects[i].sprite = Sprite_Swap.Instance.Spritecolor[1];
         }
         PlayerSelectionToggle(0, 3);
+      
         next.interactable = false;
     }
-
+  
     public override void OnBack()
     {
 
@@ -95,13 +91,14 @@ public class MatchSelection : UIHandler
         TeamA.text = GameController.Instance.CurrentTeamA;
         TeamB.text = GameController.Instance.CurrentTeamB;
         timeDuration.text = GameController.Instance.CurrentMatchTimeDuration;
-        togGroup.allowSwitchOff = true;
+      //  togGroup.allowSwitchOff = true;
         tog[0].isOn = true;
-        tog[1].isOn = false;
-        tog[2].isOn = false;
-        tog[3].isOn = false;
-        togGroup.allowSwitchOff = false;
+        //tog[1].isOn = false;
+        //tog[2].isOn = false;
+        //tog[3].isOn = false;
+       // togGroup.allowSwitchOff = false;
         parent[0].gameObject.SetActive(true);
+      
         teamA.sprite = GameController.Instance.countryPic.Find(x=>x.Key == TeamA.text).pic;//   GameController.Instance.countrySpriteImage[TeamA.text];
         teamB.sprite = GameController.Instance.countryPic.Find(x => x.Key == TeamB.text).pic; ;
 

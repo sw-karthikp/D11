@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using UnityEngine.UI;
+using Firebase.Auth;
+
 public class RegisterHandler : UIHandler
 {
 
@@ -19,6 +21,7 @@ public class RegisterHandler : UIHandler
     public Sprite[] pics;
     public Image register;
     public TMP_Text registerTxt;
+
 
     private void Awake()
     {
@@ -45,6 +48,13 @@ public class RegisterHandler : UIHandler
     private void OnEnable()
     {
         loadingAnim.SetActive(false);
+        loadingtxt.SetActive(true);
+        _userName.text= string.Empty;
+        _emailId.text= string.Empty;
+        _passWord.text= string.Empty;
+        _mobileNumber.text= string.Empty;
+
+
     }
     public override void OnBack()
     {

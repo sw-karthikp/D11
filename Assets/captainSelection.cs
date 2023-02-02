@@ -39,6 +39,8 @@ public class captainSelection : UIHandler
             togsvcaptain[i].isOn = false;
         }
 
+    
+
     }
 
     public override void OnBack()
@@ -50,7 +52,13 @@ public class captainSelection : UIHandler
     {
         UIController.Instance.RemoveFromOpenPages(this);
         gameObject.SetActive(false);
-
+        for (int i = 0; i < parent.Length; i++)
+        {
+            foreach (Transform child in parent[i])
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 
 
@@ -182,6 +190,8 @@ public class captainSelection : UIHandler
 
     private void OnEnable()
     {
+        togscaptain.Clear();
+        togsvcaptain.Clear();
         DisplayValue();
         contest.text = GameController.Instance.CurrentMatchTimeDuration;
     }
@@ -189,8 +199,7 @@ public class captainSelection : UIHandler
 
     public void DisplayValue()
     {
-        togscaptain.Clear();
-        togsvcaptain.Clear();
+       
         for (int i = 0; i < MatchSelection.Instance.playersForTeam.Count; i++)
         {
             if (MatchSelection.Instance.playersForTeam[i].type == 0)

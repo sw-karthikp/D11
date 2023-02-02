@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Firebase.Auth;
 
 public class LoginHandler : UIHandler
 {
@@ -33,6 +34,11 @@ public class LoginHandler : UIHandler
     private void OnEnable()
     {
         loadingAnim.SetActive(false);
+        loadingtxt.SetActive(true);
+        _emailId.text = string.Empty;
+        _passWord.text = string.Empty;
+
+
     }
     public override void ShowMe()
     {

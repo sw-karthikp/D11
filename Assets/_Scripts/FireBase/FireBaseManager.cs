@@ -27,52 +27,54 @@ public class FireBaseManager : MonoBehaviour
         Instance = this;
         db = FirebaseFirestore.DefaultInstance;
         isFirstTime = true;
-    }
-
-
-    private void Start()
-    {    
-        StartCoroutine(CheckAndFixDependancies());
-   
-    }
-
-
-
-    private IEnumerator CheckAndFixDependancies()
-    {
-        var CheckAndFixDependanciesTask = FirebaseApp.CheckAndFixDependenciesAsync();
-
-        yield return new WaitUntil(predicate: () => CheckAndFixDependanciesTask.IsCompleted);
-        var dependancyStatus = CheckAndFixDependanciesTask.Result;
-
-        if (dependancyStatus == DependencyStatus.Available)
-        {
-
-            InitializeFirebase();
-        }
-        else
-        {
-            Debug.LogError($"Could not resolve all FireBase dependencies: {dependancyStatus}");
-        }
-
-    }
-
-    public void InitializeFirebase()
-    {
-
         auth = FirebaseAuth.DefaultInstance;
-
-
-        //if (!ClonesManager.IsClone())
-        //{
-        //    StartCoroutine(CheckAutoLogin());
-        //}
-
-
-
-        auth.StateChanged += AuthStateChanged;
-        AuthStateChanged(this, null);
+      
     }
+
+
+    //private void Start()
+    //{    
+    //    StartCoroutine(CheckAndFixDependancies());
+   
+    //}
+
+
+
+    //private IEnumerator CheckAndFixDependancies()
+    //{
+    //    var CheckAndFixDependanciesTask = FirebaseApp.CheckAndFixDependenciesAsync();
+
+    //    yield return new WaitUntil(predicate: () => CheckAndFixDependanciesTask.IsCompleted);
+    //    var dependancyStatus = CheckAndFixDependanciesTask.Result;
+
+    //    if (dependancyStatus == DependencyStatus.Available)
+    //    {
+
+    //        InitializeFirebase();
+    //    }
+    //    else
+    //    {
+    //        Debug.LogError($"Could not resolve all FireBase dependencies: {dependancyStatus}");
+    //    }
+
+    //}
+
+    //public void InitializeFirebase()
+    //{
+
+    //    auth = FirebaseAuth.DefaultInstance;
+
+
+    //    //if (!ClonesManager.IsClone())
+    //    //{
+    //    //    StartCoroutine(CheckAutoLogin());
+    //    //}
+
+
+
+    //    auth.StateChanged += AuthStateChanged;
+    //    AuthStateChanged(this, null);
+    //}
 
 
     private IEnumerator CheckAutoLogin()
@@ -267,6 +269,7 @@ public class FireBaseManager : MonoBehaviour
         }
         else
         {
+            user = auth.CurrentUser;
             UserProfile profile = new UserProfile
             {
                 DisplayName = username,
