@@ -91,15 +91,9 @@ public class MatchSelection : UIHandler
         TeamA.text = GameController.Instance.CurrentTeamA;
         TeamB.text = GameController.Instance.CurrentTeamB;
         timeDuration.text = GameController.Instance.CurrentMatchTimeDuration;
-      //  togGroup.allowSwitchOff = true;
         tog[0].isOn = true;
-        //tog[1].isOn = false;
-        //tog[2].isOn = false;
-        //tog[3].isOn = false;
-       // togGroup.allowSwitchOff = false;
         parent[0].gameObject.SetActive(true);
-      
-        teamA.sprite = GameController.Instance.countryPic.Find(x=>x.Key == TeamA.text).pic;//   GameController.Instance.countrySpriteImage[TeamA.text];
+        teamA.sprite = GameController.Instance.countryPic.Find(x=>x.Key == TeamA.text).pic;
         teamB.sprite = GameController.Instance.countryPic.Find(x => x.Key == TeamB.text).pic; ;
 
     }

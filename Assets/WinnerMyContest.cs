@@ -17,7 +17,7 @@ public class WinnerMyContest : MonoBehaviour
     private void OnEnable()
     {
 
-        prizeList.Clear();
+      
         foreach (var item in GameController.Instance.matchpool)
         {
             if (item.Value.MatchID == GameController.Instance.CurrentMatchID)
@@ -58,6 +58,7 @@ public class WinnerMyContest : MonoBehaviour
         {
             Destroy(item.gameObject);
         }
+        
     }
 
 

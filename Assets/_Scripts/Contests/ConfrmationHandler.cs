@@ -64,25 +64,30 @@ public class ConfrmationHandler : UIHandler
 
     public void OnJoinClicked()
     {
+        UIController.Instance.loading.SetActive(true);
         if (GameController.Instance.myData.Wallet.addedAmount >= amountToPayValue)
         {
             GameController.Instance.SubtractAmount((int)amountToPayValue,(int)bonusAmountAddedValue,(() =>
             {
+
                 captainSelection.Instance.SaveData();
                 captainSelection.Instance.HideMe();
                 HideMe();
+                UIController.Instance.loading.SetActive(false);
             }),
             () =>
             {
                 StopCoroutine("DisableError");
                 StartCoroutine("DisableError");
                 errorMessage.text = "Error Try Again";
+                UIController.Instance.loading.SetActive(false);
             });
             
         }
         else
         {
             lowBalancePanal.ShowMe();
+            UIController.Instance.loading.SetActive(false);
         }
     }
 
