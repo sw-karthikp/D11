@@ -1,3 +1,4 @@
+using Firebase.Database;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -69,11 +70,41 @@ public class ConfrmationHandler : UIHandler
         {
             GameController.Instance.SubtractAmount((int)amountToPayValue,(int)bonusAmountAddedValue,(() =>
             {
+                if (ContestHandler.Instance.isContest)
+                {
+                    FirebaseDatabase mDatabase = FirebaseDatabase.DefaultInstance;
+                    string TeamId = "Team" + (GameController.Instance.selectedMatches.Count > 0 ? GameController.Instance.selectedMatches.ContainsKey(GameController.Instance.CurrentMatchID.ToString()) ? GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID.ToString()].SelectedTeam.Count : 1 : 1);
+                    SelectedPoolID selectedPool = new SelectedPoolID() { PoolID = GameController.Instance.CurrentPoolID, TeamID = TeamId };
+                    string selectedPoolKey = mDatabase.RootReference.Child("PlayerMatches").Child($"{GameController.Instance.myUserID}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedPools").Push().Key;
+                    mDatabase.RootReference.Child("PlayerMatches").Child($"{GameController.Instance.myUserID}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedPools").Child($"{selectedPoolKey}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedPool));
 
-                captainSelection.Instance.SaveData();
-                captainSelection.Instance.HideMe();
-                HideMe();
-                UIController.Instance.loading.SetActive(false);
+                    HideMe();
+                    UIController.Instance.loading.SetActive(false);
+                    ContestHandler.Instance.isContest = false;
+                } 
+                else if(MyTeam.Instance.isMySelectedTeam)
+                {
+
+                    FirebaseDatabase mDatabase = FirebaseDatabase.DefaultInstance;
+                    string TeamId = MyTeam.Instance.teamNameSelected;
+                    SelectedPoolID selectedPool = new SelectedPoolID() { PoolID = GameController.Instance.CurrentPoolID, TeamID = TeamId };
+                    string selectedPoolKey = mDatabase.RootReference.Child("PlayerMatches").Child($"{GameController.Instance.myUserID}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedPools").Push().Key;
+                    mDatabase.RootReference.Child("PlayerMatches").Child($"{GameController.Instance.myUserID}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedPools").Child($"{selectedPoolKey}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedPool));
+
+                    HideMe();
+                    UIController.Instance.loading.SetActive(false);
+                    MyTeam.Instance.isMySelectedTeam = false;
+                    MyTeam.Instance.gameObject.SetActive(false);
+                }
+                else
+                {
+                    captainSelection.Instance.SaveData();
+                    captainSelection.Instance.HideMe();
+                    HideMe();
+                    UIController.Instance.loading.SetActive(false);
+                }
+
+
             }),
             () =>
             {

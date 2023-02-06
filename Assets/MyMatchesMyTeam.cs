@@ -22,7 +22,8 @@ public class MyMatchesMyTeam : MonoBehaviour
     public TMP_Text TeamB;
     public TMP_Text TeamAName;
     public TMP_Text TeamBName;
-
+    public bool isMyTeam;
+    public Toggle isSelectedToggle;
     [Header("ID")]
     public string capID;
     public string viceCapID;
@@ -45,6 +46,9 @@ public class MyMatchesMyTeam : MonoBehaviour
 
     public void SetData(string _teamName,string _points,string _wk,string _bat,string _ar, string _bowl ,string _captain ,string _viceCaptain ,Dictionary<string,List<string>> _teams,string _capID,string _viceCapID ,string TeamACount ,string TeamBCount , string _TeamAName, string _TeamBName)
     {
+
+        isSelectedToggle.group = GetComponentInParent<ToggleGroup>();
+        isSelectedToggle.isOn = false;
         Teams.Clear();
         teamName.text = _teamName;
      
@@ -142,6 +146,7 @@ public class MyMatchesMyTeam : MonoBehaviour
         UIController.Instance.myTeamsPlayersHolder.ShowMe();
         MyTeamPlayersPanel.Instance.isMyMatch = false;
         MyTeamPlayersPanel.Instance.SetMySelectedPlayerList(Teams, capID, viceCapID,teamName.text);
+
     }
 
 

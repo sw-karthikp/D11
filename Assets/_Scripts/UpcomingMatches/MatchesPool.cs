@@ -24,15 +24,15 @@ public class MatchesPool : MonoBehaviour
             mprefabObj.transform.SetParent(parent);
             mprefabObj.gameObject.SetActive(true);
             mprefabObj.name = item.Type;
-            bool check = false;
-            try
-            {
-                SelectdPoolID intractable = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedPools.Values.First(x => x.PoolID == item.PoolID.ToString());
-            }
-            catch(Exception e)
-            {
-                check = true;
-            }
+            bool check = true;
+            //try
+            //{
+            //    SelectdPoolID intractable = GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedPools.Values.First(x => x.PoolID == item.PoolID.ToString());
+            //}
+            //catch(Exception e)
+            //{
+            //    check = true;
+            //}
             
             mprefabObj.GetComponent<MatchPoolType>().SetValueToPoolObject(item.Entry, item.PoolID, item.PrizeList, item.LeaderBoard, item.PrizePool, item.SlotsFilled, item.TotalSlots, item.Type, item, check);
         }

@@ -23,10 +23,13 @@ public class ContestHandler : UIHandler
     public TMP_Text contestCount;
     public TMP_Text teamCount;
     public TMP_Text contestText;
-
-
+    public ConfrmationHandler conformHandler;
+    public GameObject selectTeams;
+    public bool isContest;
+    public bool isCreateTeam;
     [Header("ToggleHolder")]
     public Toggle[] toggles;
+    public Button CreateTeam;
 
     [Header("ObjectsToEnable")]
     public GameObject[] objects;
@@ -35,9 +38,16 @@ public class ContestHandler : UIHandler
     private void Awake()
     {
         Instance = this;
+        CreateTeam.onClick.AddListener(() => { OnClickCreate(); });
         toggles[0].onValueChanged.AddListener(delegate { OnValueChange(0); OnenableToggleForContest(); });
         toggles[1].onValueChanged.AddListener(delegate { OnValueChange(1); });
         toggles[2].onValueChanged.AddListener(delegate { OnValueChange(2); });
+    }
+
+     public void OnClickCreate()
+    {
+        isCreateTeam = true;
+        UIController.Instance.SelectMatchTeam.ShowMe();
     }
 
     public void OnValueChange(int _index)
@@ -59,6 +69,7 @@ public class ContestHandler : UIHandler
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
         toggles[0].isOn = true;
+        isContest = false;
     }
 
     public override void OnBack()

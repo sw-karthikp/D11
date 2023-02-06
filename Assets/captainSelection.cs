@@ -28,6 +28,7 @@ public class captainSelection : UIHandler
     private void Awake()
     {
         Instance = this;
+
     }
     public override void ShowMe()
     {
@@ -39,7 +40,6 @@ public class captainSelection : UIHandler
             togsvcaptain[i].isOn = false;
         }
 
-    
 
     }
 
@@ -59,6 +59,7 @@ public class captainSelection : UIHandler
                 Destroy(child.gameObject);
             }
         }
+
     }
 
 
@@ -126,13 +127,77 @@ public class captainSelection : UIHandler
         BottomHandler.Instance.ResetScreen();
     }
 
+     public void saveTeam()
+    {
+        string json = JsonConvert.SerializeObject(MatchSelection.Instance.playersForTeam, Formatting.None, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+
+        Player teamAplayers = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.CurrentTeamA);
+        Player teamBplayers = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.CurrentTeamB);
+
+        SelectedTeamPlayers selectedTeamA = new SelectedTeamPlayers() { TeamName = GameController.Instance.CurrentTeamA };
+        SelectedTeamPlayers selectedTeamB = new SelectedTeamPlayers() { TeamName = GameController.Instance.CurrentTeamB };
+        FirebaseDatabase mDatabase = FirebaseDatabase.DefaultInstance;
+        string Captain = teamAplayers.Players.First().Value.ID;
+        string viceCaptain = teamAplayers.Players.Last().Value.ID;
+        string TeamId = "Team" + (GameController.Instance.selectedMatches.Count > 0 ? GameController.Instance.selectedMatches.ContainsKey(GameController.Instance.CurrentMatchID.ToString()) ? GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID.ToString()].SelectedTeam.Count + 1 : 1 : 1);
+        string poolId = GameController.Instance.CurrentPoolID;
+        selectedTeamA.players.Clear();
+        selectedTeamB.players.Clear();
+        foreach (var item in MatchSelection.Instance.playersForTeam)
+        {
+            if (item.isCaptain) Captain = item.PlayerID;
+            if (item.isViceCaptain) viceCaptain = item.PlayerID;
+
+
+
+            foreach (var item1 in teamAplayers.Players.Values)
+            {
+                if (item1.ID.Contains(item.PlayerID))
+                {
+
+                    selectedTeamA.players.Add(item.PlayerID);
+                    break;
+                }
+            }
+
+            foreach (var item2 in teamBplayers.Players.Values)
+            {
+                if (item2.ID.Contains(item.PlayerID))
+                {
+
+                    selectedTeamB.players.Add(item.PlayerID);
+                    break;
+                }
+            }
+            DebugHelper.Log(selectedTeamA.players.Count + "$$$$$$$$$" + selectedTeamB.players.Count);
+
+        }
+        SelectedPlayers selectedPlayers = new SelectedPlayers() { Captain = Captain, ViceCaptian = viceCaptain, TeamA = selectedTeamA, TeamB = selectedTeamB };
+        SelectedTeam selectedTeam = new SelectedTeam() { Players = selectedPlayers };
+        SelectedPoolID selectedPool = new SelectedPoolID() { PoolID = poolId, TeamID = TeamId };
+        string playerId = GameController.Instance.myUserID;
+        DebugHelper.Log(playerId);
+        string selectedTeamKey = mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Push().Key;
+        mDatabase.RootReference.Child("PlayerMatches").Child($"{playerId}").Child($"{GameController.Instance.CurrentMatchID}").Child("SelectedTeam").Child($"{TeamId}").SetRawJsonValueAsync(JsonUtility.ToJson(selectedTeam));
+
+      
+
+        BottomHandler.Instance.ResetScreen();
+    }
+
 
     public void onClickSave()
     {
-        //SaveData();
-        //HideMe();
-
-        conformHandler.ShowMe();
+        if(ContestHandler.Instance.isCreateTeam)
+        {
+            saveTeam();
+            HideMe();
+        }
+        else
+        {
+            conformHandler.ShowMe();
+        }
+     
     }
 
 
@@ -291,6 +356,7 @@ public class captainSelection : UIHandler
         }
         LayoutRebuilder.ForceRebuildLayoutImmediate(parent[0].transform.parent.GetComponent<RectTransform>());
     }
+
 
 
     public void CheckForToggle1(Toggle toggle)
