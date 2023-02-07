@@ -11,7 +11,7 @@ using Firebase.Extensions;
 using System;
 using Firebase.Firestore;
 
-public class GameController : SerializedMonoBehaviour //MonoBehaviour 
+public class GameController : MonoBehaviour 
 {
     public static GameController Instance;
 

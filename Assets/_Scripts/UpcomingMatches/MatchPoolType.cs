@@ -133,11 +133,8 @@ public class MatchPoolType : MonoBehaviour
     {
 
 
-        if (GameController.Instance.selectedMatches.Count >= 1)
+        if (GameController.Instance.selectedMatches.Count >= 1 && GameController.Instance.selectedMatches.ContainsKey(GameController.Instance.CurrentMatchID))
         {
-
-            if (GameController.Instance.selectedMatches.ContainsKey(GameController.Instance.CurrentMatchID))
-            {
                 GameController.Instance.CurrentPoolTypeName = PoolTypeName;
                 GameController.Instance.CurrentPoolID = PoolId;
                 foreach (var key in GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedPools.Keys)
@@ -178,18 +175,17 @@ public class MatchPoolType : MonoBehaviour
                     }
 
                 }
-            }
-            else
-            {
-                GameController.Instance.CurrentPoolTypeName = PoolTypeName;
-                GameController.Instance.CurrentPoolID = PoolId;
-                ContestHandler.Instance.isCreateTeam = false;
-                ContestHandler.Instance.isContest = false;
-                UIController.Instance.SelectMatchTeam.ShowMe();
-                Debug.Log(" ###### CREATE NEW  ######");
-                
-                return;
-            }
+        }
+        else
+        {
+            GameController.Instance.CurrentPoolTypeName = PoolTypeName;
+            GameController.Instance.CurrentPoolID = PoolId;
+            ContestHandler.Instance.isCreateTeam = false;
+            ContestHandler.Instance.isContest = false;
+            UIController.Instance.SelectMatchTeam.ShowMe();
+            Debug.Log(" ###### CREATE NEW  ######");
+
+            return;
         }
 
 

@@ -20,7 +20,8 @@ public class PlayerDetails : MonoBehaviour
 
     private void OnEnable()
     {
-        tog.onValueChanged.AddListener(x => { OnvalueChange(); OnvalueChangeCountPlayerType(); OnvalueChangeTeam(); playerCount(); });
+        tog.onValueChanged.AddListener(x => { OnvalueChange(); OnvalueChangeCountPlayerType(); OnvalueChangeTeam(); playerCount();
+        });
     }
 
     public void SetPlayerData(string _playerID,string _playerName, string _countryName, string _fPoint, int _type ,Sprite pic)
@@ -35,7 +36,8 @@ public class PlayerDetails : MonoBehaviour
 
     public void playerCount()
     {
-        if(MatchSelection.Instance.playersForTeam.Count == 11)
+        MatchSelection.Instance.CheckForPlayerSelection();
+        if (MatchSelection.Instance.playersForTeam.Count == 11)
         {
             MatchSelection.Instance.next.interactable = true;
         }
@@ -65,6 +67,22 @@ public class PlayerDetails : MonoBehaviour
             {
                 MatchSelection.Instance.playersForTeam.Add(newMatch);
 
+                switch (newMatch.type)
+                {
+                    case 3:
+                        MatchSelection.Instance.Keeper.Add(newMatch);
+
+                        break;
+                    case 0:
+                        MatchSelection.Instance.Batter.Add(newMatch);
+                        break;
+                    case 2:
+                        MatchSelection.Instance.AllRound.Add(newMatch);
+                        break;
+                    case 1:
+                        MatchSelection.Instance.Bowler.Add(newMatch);
+                        break;
+                }
 
 
                 for (int i = 0; i < MatchSelection.Instance.playersForTeam.Count; i++)
@@ -95,14 +113,40 @@ public class PlayerDetails : MonoBehaviour
                 MatchSelection.Instance.playersForTeam.Remove(MatchSelection.Instance.playersForTeam.First(x => x.playerName == newMatch.playerName));
 
 
+                switch (newMatch.type)
+                {
+                    case 3:
+                        {
+                            MatchSelection.Instance.Keeper.Remove(MatchSelection.Instance.Keeper.First(x => x.playerName == newMatch.playerName));
+                            break;
+                        }
+
+                    case 0:
+                        {
+                            MatchSelection.Instance.Batter.Remove(MatchSelection.Instance.Batter.First(x => x.playerName == newMatch.playerName));
+                            break;
+                        }
+
+                    case 2:
+                        {
+                            MatchSelection.Instance.AllRound.Remove(MatchSelection.Instance.AllRound.First(x => x.playerName == newMatch.playerName));
+                            break;
+                        }
+
+                    case 1:
+                        {
+                            MatchSelection.Instance.Bowler.Remove(MatchSelection.Instance.Bowler.First(x => x.playerName == newMatch.playerName));
+                            break;
+                        }
+                }
+
+                MatchSelection.Instance.SetToggleActiveForParentOn();
                 Sprite_Swap.Instance.objects[MatchSelection.Instance.playersForTeam.Count].sprite = Sprite_Swap.Instance.Spritecolor[1];
                 MatchSelection.Instance.selectedplayerCount.text = MatchSelection.Instance.playersForTeam.Count.ToString();
                 TotalSelectedCredits = 0;
                 foreach (var item in MatchSelection.Instance.playersForTeam)
                 {
                     TotalSelectedCredits += float.Parse(item.points);
-                    Debug.Log(TotalSelectedCredits);
-
                 }
                 CreditsLeft = MatchSelection.Instance.TotalCredits - TotalSelectedCredits;
                 MatchSelection.Instance.CreditsLeft.text = CreditsLeft.ToString();

@@ -34,6 +34,11 @@ public class MatchSelection : UIHandler
     Sprite playerPic;
     public Image teamA;
     public Image teamB;
+    public List<PlayerSelectedForMatch> Keeper;
+    public List<PlayerSelectedForMatch> Batter;
+    public List<PlayerSelectedForMatch> AllRound;
+    public List<PlayerSelectedForMatch> Bowler;
+
     public override void HideMe()
     {
         UIController.Instance.RemoveFromOpenPages(this);
@@ -51,10 +56,10 @@ public class MatchSelection : UIHandler
     private void Awake()
     {
         Instance = this;
-        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0,3); SetToggleUnActive(0); TextAllocator(0); });
-        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1,0); SetToggleUnActive(1); TextAllocator(1); });
-        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2,2); SetToggleUnActive(2); TextAllocator(2); });
-        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3,1); SetToggleUnActive(3); TextAllocator(3); });
+        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0, 3); SetToggleUnActive(0); TextAllocator(0); });
+        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1, 0); SetToggleUnActive(1); TextAllocator(1); });
+        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2, 2); SetToggleUnActive(2); TextAllocator(2); });
+        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3, 1); SetToggleUnActive(3); TextAllocator(3); });
 
     }
 
@@ -63,7 +68,7 @@ public class MatchSelection : UIHandler
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
         playersForTeam.Clear();
-  
+
         selectedplayerCount.text = "0";
         CreditsLeft.text = "100";
         for (int i = 0; i < Sprite_Swap.Instance.objects.Length; i++)
@@ -71,10 +76,10 @@ public class MatchSelection : UIHandler
             Sprite_Swap.Instance.objects[i].sprite = Sprite_Swap.Instance.Spritecolor[1];
         }
         PlayerSelectionToggle(0, 3);
-      
+
         next.interactable = false;
     }
-  
+
     public override void OnBack()
     {
 
@@ -83,8 +88,8 @@ public class MatchSelection : UIHandler
     private void OnEnable()
     {
         wk.text = "0";
-        batter.text ="0";
-        allround.text ="0";
+        batter.text = "0";
+        allround.text = "0";
         bowler.text = "0";
         teamACount.text = "0";
         teamBCount.text = "0";
@@ -93,7 +98,7 @@ public class MatchSelection : UIHandler
         timeDuration.text = GameController.Instance.CurrentMatchTimeDuration;
         tog[0].isOn = true;
         parent[0].gameObject.SetActive(true);
-        teamA.sprite = GameController.Instance.countryPic.Find(x=>x.Key == TeamA.text).pic;
+        teamA.sprite = GameController.Instance.countryPic.Find(x => x.Key == TeamA.text).pic;
         teamB.sprite = GameController.Instance.countryPic.Find(x => x.Key == TeamB.text).pic; ;
 
     }
@@ -110,17 +115,174 @@ public class MatchSelection : UIHandler
                 }
             }
         }
-        else
-        {
-            for (int i = 0; i < parent[_index].childCount; i++)
+
+    }
+
+    public void SetToggleActiveForParentOn()
+    {
+   
+            for (int i = 0; i < parent[0].childCount; i++)
             {
-                if (parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().isOn == false)
+                if (parent[0].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
                 {
-                    parent[_index].GetChild(i).GetChild(0).GetComponent<Toggle>().interactable = true;
+                    parent[0].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
+                }
+            }
+        
+      
+            for (int i = 0; i < parent[1].childCount; i++)
+            {
+                if (parent[1].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                {
+                    parent[1].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
+                }
+            }
+
+        
+     
+            for (int i = 0; i < parent[2].childCount; i++)
+            {
+                if (parent[2].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                {
+                    parent[2].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
+                }
+            }
+        
+     
+            for (int i = 0; i < parent[3].childCount; i++)
+            {
+                if (parent[3].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                {
+                    parent[3].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
+                }
+            }
+        
+    }
+
+
+    public void CheckForPlayerSelection()
+    {
+        if (playersForTeam.Count > 8)
+        {
+            if (Keeper.Count < 1)
+            {
+                toggleInformationText.text = "You must select at least 1 Wicket-Keepers.";
+
+                for (int i = 0; i < parent[1].childCount; i++)
+                {
+                    if (parent[1].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[1].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+                for (int i = 0; i < parent[2].childCount; i++)
+                {
+                    if (parent[2].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[2].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+                for (int i = 0; i < parent[3].childCount; i++)
+                {
+                    if (parent[3].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[3].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+            }
+      
+
+
+
+            if (Batter.Count < 1)
+            {
+                toggleInformationText.text = "You must select at least 1 Batters.";
+
+       
+                for (int i = 0; i < parent[0].childCount; i++)
+                {
+                    if (parent[0].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[0].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+                for (int i = 0; i < parent[2].childCount; i++)
+                {
+                    if (parent[2].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[2].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+                for (int i = 0; i < parent[3].childCount; i++)
+                {
+                    if (parent[3].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[3].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+            }
+
+
+
+            if (AllRound.Count < 1)
+            {
+                toggleInformationText.text = "You must select at least 1 All-Rounders.";
+
+                for (int i = 0; i < parent[1].childCount; i++)
+                {
+                    if (parent[1].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[1].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+                for (int i = 0; i < parent[0].childCount; i++)
+                {
+                    if (parent[0].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[0].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+                for (int i = 0; i < parent[3].childCount; i++)
+                {
+                    if (parent[3].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[3].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+
+            }
+
+            if (Bowler.Count < 1)
+            {
+                toggleInformationText.text = "You must select at least 1 Bowlers.";
+
+         
+                for (int i = 0; i < parent[1].childCount; i++)
+                {
+                    if (parent[1].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[1].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+                for (int i = 0; i < parent[2].childCount; i++)
+                {
+                    if (parent[2].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[2].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
+                }
+                for (int i = 0; i < parent[0].childCount; i++)
+                {
+                    if (parent[0].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+                    {
+                        parent[0].GetChild(i).GetComponentInChildren<Toggle>().interactable = false;
+                    }
                 }
             }
         }
+
     }
+
 
     public void TextAllocator(int _index)
     {

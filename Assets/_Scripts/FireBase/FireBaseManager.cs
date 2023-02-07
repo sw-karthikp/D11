@@ -31,52 +31,6 @@ public class FireBaseManager : MonoBehaviour
         StartCoroutine(CheckAutoLogin());
     }
 
-
-    //private void Start()
-    //{    
-    //    StartCoroutine(CheckAndFixDependancies());
-   
-    //}
-
-
-
-    //private IEnumerator CheckAndFixDependancies()
-    //{
-    //    var CheckAndFixDependanciesTask = FirebaseApp.CheckAndFixDependenciesAsync();
-
-    //    yield return new WaitUntil(predicate: () => CheckAndFixDependanciesTask.IsCompleted);
-    //    var dependancyStatus = CheckAndFixDependanciesTask.Result;
-
-    //    if (dependancyStatus == DependencyStatus.Available)
-    //    {
-
-    //        InitializeFirebase();
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError($"Could not resolve all FireBase dependencies: {dependancyStatus}");
-    //    }
-
-    //}
-
-    //public void InitializeFirebase()
-    //{
-
-    //    auth = FirebaseAuth.DefaultInstance;
-
-
-    //    //if (!ClonesManager.IsClone())
-    //    //{
-    //    //    StartCoroutine(CheckAutoLogin());
-    //    //}
-
-
-
-    //    auth.StateChanged += AuthStateChanged;
-    //    AuthStateChanged(this, null);
-    //}
-
-
     private IEnumerator CheckAutoLogin()
     {
         user = auth.CurrentUser;
@@ -86,7 +40,6 @@ public class FireBaseManager : MonoBehaviour
         {
             var reloadUserTask = user.ReloadAsync();
             yield return new WaitUntil(predicate: () => reloadUserTask.IsCompleted);
-            //UIController.Instance.LoadingScreen.ShowMe();
             AutoLogin();
 
         }
@@ -115,36 +68,11 @@ public class FireBaseManager : MonoBehaviour
     bool  signedIn =false;
     public void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
-        //signedIn = PlayerPrefs.GetInt("signedIn",1) == 0 ? false :true ;
         if (auth.CurrentUser != user)
         {
- 
-  
             user = auth.CurrentUser;
-
-            //if (signedIn)
-            //{
-            //    DebugHelper.Log($"Signed In : {user.UserId}");
-            //    GameController.Instance.myUserID = user.UserId;
-            //    PlayerPrefs.SetString("userId", user.UserId);
-            //    UIController.Instance.MainMenuScreen.ShowMe();
-            //    UIController.Instance.Loginscreen.HideMe();
-            //    UIController.Instance.RegisterScreen.HideMe();
-            //    UIController.Instance.loading.SetActive(true);
-            //}
-            //else
-            //{
-            //    DebugHelper.Log("Signed Out");
-            //    UIController.Instance.MainMenuScreen.HideMe();
-            //    UIController.Instance.Loginscreen.HideMe();
-            //    UIController.Instance.RegisterScreen.HideMe();
-
-            //}
         }
-
-
     }
-
 
     #region LoginLogic
     public IEnumerator LoginLogic(string email, string password,TMP_Text errormsg,GameObject loadingtxt,GameObject loadinganim)
@@ -195,35 +123,19 @@ public class FireBaseManager : MonoBehaviour
         {
             user = auth.CurrentUser;
 
-            //if (user.IsEmailVerified)
-            //{
-            //    UIController.Instance.loading.SetActive(true);
-            //    UIController.Instance.MainMenuScreen.ShowMe();
-            //    UIController.Instance.Loginscreen.HideMe();
-            //    UIController.Instance.RegisterScreen.HideMe();
-            //    GameController.Instance.myUserID = user.UserId;
-            //    GameController.Instance.myData.Name = user.DisplayName;
-
-            //}
-            //else
-
-
-            GameController.Instance.myUserID = user.UserId;
+    
+                GameController.Instance.myUserID = user.UserId;
                 GameController.Instance.myData.Name = user.DisplayName;
                 UIController.Instance.loading.SetActive(true);
                 PlayerPrefs.SetInt("signedIn", 1);
                 UIController.Instance.MainMenuScreen.ShowMe();
                 UIController.Instance.Loginscreen.HideMe();
                 UIController.Instance.RegisterScreen.HideMe();
-            
-            
-
-            GameController.Instance.GetUserDetails();
+                GameController.Instance.GetUserDetails();
         }
     }
 
     #endregion
-
 
     #region RegisterLogic
     public IEnumerator RegisterLogic(string username, string email, string password, string mobile,TMP_Text errormsg, GameObject loadingtxt, GameObject loadinganim)
