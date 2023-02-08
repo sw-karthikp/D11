@@ -204,7 +204,7 @@ public class TeamHolderData : MonoBehaviour
                 Image[1].sprite = item1.pic;
             }
         }
-        UIController.Instance.loading.SetActive(false);
+
 
         foreach (var item1 in GameController.Instance.color)
         {

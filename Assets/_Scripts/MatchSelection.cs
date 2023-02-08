@@ -7,6 +7,7 @@ using TMPro;
 using Firebase.Firestore;
 using System.Security.Cryptography;
 using System.Reflection;
+using Unity.VisualScripting;
 
 public class MatchSelection : UIHandler
 {
@@ -51,15 +52,19 @@ public class MatchSelection : UIHandler
             }
         }
         playersForTeam.Clear();
+        Keeper.Clear();
+        Batter.Clear();
+        AllRound.Clear();
+        Bowler.Clear();
     }
 
     private void Awake()
     {
         Instance = this;
-        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0, 3); SetToggleUnActive(0); TextAllocator(0); });
-        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1, 0); SetToggleUnActive(1); TextAllocator(1); });
-        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2, 2); SetToggleUnActive(2); TextAllocator(2); });
-        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3, 1); SetToggleUnActive(3); TextAllocator(3); });
+        tog[0].onValueChanged.AddListener(delegate { PlayerSelectionToggle(0, 3); SetToggleUnActive(0); TextAllocator(0); SetToggleActiveWhenNoneSelected(); });
+        tog[1].onValueChanged.AddListener(delegate { PlayerSelectionToggle(1, 0); SetToggleUnActive(1); TextAllocator(1); SetToggleActiveWhenNoneSelected(); });
+        tog[2].onValueChanged.AddListener(delegate { PlayerSelectionToggle(2, 2); SetToggleUnActive(2); TextAllocator(2); SetToggleActiveWhenNoneSelected(); });
+        tog[3].onValueChanged.AddListener(delegate { PlayerSelectionToggle(3, 1); SetToggleUnActive(3); TextAllocator(3); SetToggleActiveWhenNoneSelected(); });
 
     }
 
@@ -68,6 +73,10 @@ public class MatchSelection : UIHandler
         UIController.Instance.AddToOpenPages(this);
         this.gameObject.SetActive(true);
         playersForTeam.Clear();
+        Keeper.Clear();
+        Batter.Clear();
+        AllRound.Clear();
+        Bowler.Clear();
 
         selectedplayerCount.text = "0";
         CreditsLeft.text = "100";
@@ -118,9 +127,11 @@ public class MatchSelection : UIHandler
 
     }
 
-    public void SetToggleActiveForParentOn()
+
+    public void SetToggleActiveWhenNoneSelected()
     {
-   
+        if (Keeper.Count < 1)
+        {
             for (int i = 0; i < parent[0].childCount; i++)
             {
                 if (parent[0].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
@@ -128,8 +139,10 @@ public class MatchSelection : UIHandler
                     parent[0].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
                 }
             }
-        
-      
+        }
+        if (Batter.Count < 1)
+        {
+
             for (int i = 0; i < parent[1].childCount; i++)
             {
                 if (parent[1].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
@@ -137,9 +150,10 @@ public class MatchSelection : UIHandler
                     parent[1].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
                 }
             }
+        }
+        if (AllRound.Count < 1)
+        {
 
-        
-     
             for (int i = 0; i < parent[2].childCount; i++)
             {
                 if (parent[2].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
@@ -147,8 +161,11 @@ public class MatchSelection : UIHandler
                     parent[2].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
                 }
             }
-        
-     
+        }
+
+
+        if (Bowler.Count < 1)
+        {
             for (int i = 0; i < parent[3].childCount; i++)
             {
                 if (parent[3].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
@@ -156,7 +173,49 @@ public class MatchSelection : UIHandler
                     parent[3].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
                 }
             }
-        
+        }
+
+    }
+
+    public void SetToggleActiveForParentOn()
+    {
+
+        for (int i = 0; i < parent[0].childCount; i++)
+        {
+            if (parent[0].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+            {
+                parent[0].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
+            }
+        }
+
+
+        for (int i = 0; i < parent[1].childCount; i++)
+        {
+            if (parent[1].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+            {
+                parent[1].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
+            }
+        }
+
+
+
+        for (int i = 0; i < parent[2].childCount; i++)
+        {
+            if (parent[2].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+            {
+                parent[2].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
+            }
+        }
+
+
+        for (int i = 0; i < parent[3].childCount; i++)
+        {
+            if (parent[3].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
+            {
+                parent[3].GetChild(i).GetComponentInChildren<Toggle>().interactable = true;
+            }
+        }
+
     }
 
 
@@ -190,7 +249,7 @@ public class MatchSelection : UIHandler
                     }
                 }
             }
-      
+
 
 
 
@@ -198,7 +257,7 @@ public class MatchSelection : UIHandler
             {
                 toggleInformationText.text = "You must select at least 1 Batters.";
 
-       
+
                 for (int i = 0; i < parent[0].childCount; i++)
                 {
                     if (parent[0].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
@@ -256,7 +315,7 @@ public class MatchSelection : UIHandler
             {
                 toggleInformationText.text = "You must select at least 1 Bowlers.";
 
-         
+
                 for (int i = 0; i < parent[1].childCount; i++)
                 {
                     if (parent[1].GetChild(i).GetComponentInChildren<Toggle>().isOn == false)
@@ -303,8 +362,8 @@ public class MatchSelection : UIHandler
         }
     }
 
- 
-    public void PlayerSelectionToggle(int _index , int _indexType)
+
+    public void PlayerSelectionToggle(int _index, int _indexType)
     {
         if (tog[_index].isOn)
         {
@@ -348,16 +407,16 @@ public class MatchSelection : UIHandler
 
                             foreach (var item2 in GameController.Instance.playerPic)
                             {
-                               
-                                
-                                    if (item1.Value.ID == item2.Key)
-                                    {
-                                        playerPic = item2.pic;
-                                    }
-                                
+
+
+                                if (item1.Value.ID == item2.Key)
+                                {
+                                    playerPic = item2.pic;
+                                }
+
                             }
 
-                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.ID,item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
+                            mprefabObj.GetComponent<PlayerDetails>().SetPlayerData(item1.Value.ID, item1.Value.Name, item.TeamName, item1.Value.FPoint.ToString(), item1.Value.Type, playerPic);
 
                         }
                     }
@@ -415,7 +474,7 @@ public class MatchSelection : UIHandler
         else
         {
             parent[_index].gameObject.SetActive(false);
-         
+
         }
     }
 }

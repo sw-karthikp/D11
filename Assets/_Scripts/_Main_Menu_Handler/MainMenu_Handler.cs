@@ -76,6 +76,11 @@ public class MainMenu_Handler : UIHandler
 
     }
 
+    private void OnEnable()
+    {
+        PlayerPrefs.SetInt("FreshInstall", 1);
+
+    }
     public override void ShowMe()
     {
 
@@ -162,6 +167,7 @@ public class MainMenu_Handler : UIHandler
             Slider.DOMove(point[_index].transform.position, 0.1f).SetEase(_ease);
             SetUpcomingMatchDetails(_index);
             StartCoroutine(MySelectedMatches(_index));
+            UIController.Instance.loading.SetActive(false);
         }
         else
         {

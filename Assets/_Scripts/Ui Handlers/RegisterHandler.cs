@@ -21,6 +21,7 @@ public class RegisterHandler : UIHandler
     public Sprite[] pics;
     public Image register;
     public TMP_Text registerTxt;
+    public int val;
 
 
     private void Awake()

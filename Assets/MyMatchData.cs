@@ -225,7 +225,7 @@ public class MyMatchData : MonoBehaviour
             }
 
         }
-        UIController.Instance.loading.SetActive(false);
+
 
     }
 

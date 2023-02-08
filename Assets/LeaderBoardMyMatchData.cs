@@ -38,14 +38,27 @@ public class LeaderBoardMyMatchData : MonoBehaviour
 
         foreach (var item2 in value.LeaderBoard)
         {
-            Dictionary<string, string> val1 = new Dictionary<string, string>(){
+
+            if (!string.IsNullOrWhiteSpace(item2.Value["Value"]))
+            {
+                Dictionary<string, string> val1 = new Dictionary<string, string>(){
                     { "Name" , item2.Value["Name"] },
                     { "Value" , item2.Value["Value"]}
                 };
-            leaderData.Add(val1);            
+
+
+                leaderData.Add(val1);
+                continue;
+            }
+            else
+            {
+                return;
+            }
+            
         }
 
-        var list= leaderData.OrderByDescending(x => int.Parse(x["Value"]));
+
+        var list= leaderData.OrderByDescending(x => float.Parse(x["Value"]));
         Debug.Log(list.Count());
         Dictionary<int, Dictionary<string, string>> val = new();
         int ind = 0;

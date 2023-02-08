@@ -126,6 +126,7 @@ public class MatchPoolType : MonoBehaviour
 
         WinnerLeaderBoard.Instance.GetPrizeList(PoolId, prizeList, leader, prizePool.text, entryFee.text, val2, val1, entryButtonClick.interactable);
         GameController.Instance.CurrentPoolID = PoolId;
+        GameController.Instance.CurrentPoolTypeName = PoolTypeName;
     }
 
 

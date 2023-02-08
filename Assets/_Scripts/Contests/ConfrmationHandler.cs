@@ -82,7 +82,7 @@ public class ConfrmationHandler : UIHandler
                     UIController.Instance.loading.SetActive(false);
                     ContestHandler.Instance.isContest = false;
                 } 
-                else if(MyTeam.Instance.isMySelectedTeam)
+                else if(MyTeam.Instance != null && MyTeam.Instance.isMySelectedTeam)
                 {
 
                     FirebaseDatabase mDatabase = FirebaseDatabase.DefaultInstance;
@@ -108,17 +108,19 @@ public class ConfrmationHandler : UIHandler
             }),
             () =>
             {
+                UIController.Instance.loading.SetActive(false);
                 StopCoroutine("DisableError");
                 StartCoroutine("DisableError");
                 errorMessage.text = "Error Try Again";
-                UIController.Instance.loading.SetActive(false);
+
             });
             
         }
         else
         {
-            lowBalancePanal.ShowMe();
             UIController.Instance.loading.SetActive(false);
+            lowBalancePanal.ShowMe();
+          
         }
     }
 

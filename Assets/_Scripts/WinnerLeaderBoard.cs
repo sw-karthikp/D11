@@ -246,6 +246,65 @@ public class WinnerLeaderBoard : UIHandler
         }
     }
 
+    public void DisplayTeamMembers()
+    {
+
+
+        if (GameController.Instance.selectedMatches.Count >= 1 && GameController.Instance.selectedMatches.ContainsKey(GameController.Instance.CurrentMatchID))
+        {
+
+            foreach (var key in GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedPools.Keys)
+            {
+
+                if (GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedTeam.Keys.Count > 1)
+                {
+                    Debug.Log(" ######## JOIN GAME WITH MORE  TEAMS AVAILABLE ######");
+                    ContestHandler.Instance.isCreateTeam = false;
+                    ContestHandler.Instance.isContest = false;
+                    ContestHandler.Instance.selectTeams.SetActive(true);
+                    return;
+
+                }
+                else
+                {
+                    if (GameController.Instance.selectedMatches[GameController.Instance.CurrentMatchID].SelectedPools[key].PoolID == GameController.Instance.CurrentPoolID)
+                    {
+
+                        UIController.Instance.SelectMatchTeam.ShowMe();
+                        ContestHandler.Instance.isCreateTeam = false;
+                        ContestHandler.Instance.isContest = false;
+                        Debug.Log(" ###### CREATE NEW TEAM FOR SAME POOL IF  PLAYER JOINED AGAIN ######");
+                        return;
+
+                    }
+                    else
+                    {
+
+                        Debug.Log(" ######## JOIN GAME WITH EXSISTING TEAM AVAILABLE ######");
+                        ContestHandler.Instance.isCreateTeam = false;
+                        ContestHandler.Instance.isContest = true;
+                        ContestHandler.Instance.conformHandler.ShowMe();
+                        return;
+
+                    }
+
+                }
+
+            }
+        }
+        else
+        {
+
+            ContestHandler.Instance.isCreateTeam = false;
+            ContestHandler.Instance.isContest = false;
+            UIController.Instance.SelectMatchTeam.ShowMe();
+            Debug.Log(" ###### CREATE NEW  ######");
+
+            return;
+        }
+
+
+    }
 
 
 
