@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static AddNewPlayerHandler;
 
 public class _My_Matches : UIHandler
 {

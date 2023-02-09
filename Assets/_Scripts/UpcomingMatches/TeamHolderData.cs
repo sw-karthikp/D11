@@ -157,7 +157,7 @@ public class TeamHolderData : MonoBehaviour
         {
             string time = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).TimeOfDay.ToString();
             string timeVal = DateTime.Parse(time).ToString("h:mm tt");
-            string time1val = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).DayOfYear.ToString();
+            string time1val = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).Day.ToString();
             int month = DateTime.ParseExact(timeFormat, "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture).Month;
             string monthtext = DateTimeFormatInfo.CurrentInfo.GetAbbreviatedMonthName(month);
             string timeVa1l = time1val + " " + monthtext;

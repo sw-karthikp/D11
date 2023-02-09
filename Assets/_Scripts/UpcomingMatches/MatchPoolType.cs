@@ -6,8 +6,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
-using static AddNewPlayerHandler;
-using static GameController;
 
 
 public class MatchPoolType : MonoBehaviour
