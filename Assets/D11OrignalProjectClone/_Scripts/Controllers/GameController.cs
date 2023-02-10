@@ -57,13 +57,13 @@ public class GameController : MonoBehaviour
     public Dictionary<string,Dictionary<string,Dictionary<string,string>>> _joinedPlayers = new();
 
     [Header("MyMatchesForGlobalReferanceFromDb")]
-    public Dictionary<string, Dictionary<string, MatchStatus>> mymatchesGlobalRef = new Dictionary<string, Dictionary<string, MatchStatus>>();
+    public Dictionary<string, Dictionary<string, MatchStatus>> mymatchesGlobalRef = new();
 
 
 
     [Header("DictionaryDataGetFromRealDb")]
     public LiveMatchScoreCard scoreCard = new();
-    public Dictionary<string, Color> color = new Dictionary<string, Color>() { { "AUS", new Color(0.62f,0.85f,1f,1) }, { "IND", new Color(1f,0.89f,0.61f,1)},
+    public Dictionary<string, Color> color = new() { { "AUS", new Color(0.62f,0.85f,1f,1) }, { "IND", new Color(1f,0.89f,0.61f,1)},
         { "PAK", new Color(0.32f,0.65f,0.52f,1) },{ "ENG",new Color(0.92f,0.34f,0.40f,1f) }};
 
     [Header("Referance")]
@@ -122,10 +122,18 @@ public class GameController : MonoBehaviour
         }
 
         DebugHelper.Log(args.Snapshot.GetRawJsonValue());
-        foreach (var item in args.Snapshot.Children)
+        if(args.Snapshot.Value != null)
         {
-            team.Add(item.Key, JsonConvert.DeserializeObject<Team>(item.GetRawJsonValue()));
+            foreach (var item in args.Snapshot.Children)
+            {
+                if (!team.ContainsKey(item.Key))
+                {
+                    team.Add(item.Key, JsonConvert.DeserializeObject<Team>(item.GetRawJsonValue()));
+                }
+
+            }
         }
+        
 
     }
 
@@ -155,20 +163,29 @@ public class GameController : MonoBehaviour
             DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
-        DataSnapshot val = args.Snapshot;
-        foreach (var item in val.Children)
+        if(args.Snapshot.Value != null)
         {
-            Dictionary<string, MatchStatus> matchnew = new();
-            foreach (var item1 in item.Children)
+            DataSnapshot val = args.Snapshot;
+            foreach (var item in val.Children)
             {
-                matchnew.Add(item1.Key, JsonConvert.DeserializeObject<MatchStatus>(item1.GetRawJsonValue()));
+                if(!match.ContainsKey(item.Key))
+                {
+                    Dictionary<string, MatchStatus> matchnew = new();
+                    foreach (var item1 in item.Children)
+                    {
+                        if (!matchnew.ContainsKey(item1.Key))
+                            matchnew.Add(item1.Key, JsonConvert.DeserializeObject<MatchStatus>(item1.GetRawJsonValue()));
+                    }
+                    match.Add(item.Key, matchnew);
+                }
+   
             }
-            match.Add(item.Key, matchnew);
+            MainMenu_Handler.Instance.OnValueChange(0);
+            MainMenu_Handler.Instance.OnValueChange(1);
+            MainMenu_Handler.Instance.OnValueChange(2);
+            MainMenu_Handler.Instance.OnValueChange(3);
         }
-        MainMenu_Handler.Instance.OnValueChange(0);
-        MainMenu_Handler.Instance.OnValueChange(1);
-        MainMenu_Handler.Instance.OnValueChange(2);
-        MainMenu_Handler.Instance.OnValueChange(3);
+    
     }
 
     #endregion
@@ -198,14 +215,20 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        DataSnapshot val = args.Snapshot;
-        foreach (var item in val.Children)
+        if(args.Snapshot.Value != null)
         {
-         
-            matchpool.Add(item.Key, JsonConvert.DeserializeObject<MatchPools>(item.GetRawJsonValue()));
-
+            DataSnapshot val = args.Snapshot;
+            foreach (var item in val.Children)
+            {
+                if(!matchpool.ContainsKey(item.Key))
+                {
+                    matchpool.Add(item.Key, JsonConvert.DeserializeObject<MatchPools>(item.GetRawJsonValue()));
+                }
+               
+            }
+            OnMatchPoolChanged?.Invoke();
         }
-        OnMatchPoolChanged?.Invoke();
+    
     }
 
     #endregion
@@ -234,12 +257,15 @@ public class GameController : MonoBehaviour
             return;
         }
 
+        if(args.Snapshot.Value != null)
+        {
+            string val = args.Snapshot.GetRawJsonValue();
+            players = JsonConvert.DeserializeObject<List<Player>>(val);
+            //FetchData();
+            //FetchDataPlayerPic();
+            SubscribeJoinedPlayerDetails();
+        }
 
-        string val = args.Snapshot.GetRawJsonValue();
-        players = JsonConvert.DeserializeObject<List<Player>>(val);
-        //FetchData();
-        //FetchDataPlayerPic();
-        SubscribeJoinedPlayerDetails();
     }
 
     #endregion
@@ -283,11 +309,15 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        DataSnapshot val = args.Snapshot;
-        DebugHelper.Log(args.Snapshot.GetRawJsonValue());
-        selectedMatches = JsonConvert.DeserializeObject<Dictionary<string, MatchID>>(val.GetRawJsonValue());
-        mymatches.UpdateData();
-        MyMatchData();
+        if(args.Snapshot.Value != null)
+        {
+            DataSnapshot val = args.Snapshot;
+            DebugHelper.Log(args.Snapshot.GetRawJsonValue());
+            selectedMatches = JsonConvert.DeserializeObject<Dictionary<string, MatchID>>(val.GetRawJsonValue());
+            mymatches.UpdateData();
+            MyMatchData();
+        }
+    
     }
 
     #endregion
@@ -318,15 +348,15 @@ public class GameController : MonoBehaviour
             DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
-        DataSnapshot val = args.Snapshot;
-        if (val.GetRawJsonValue() != null)
+       
+        if (args.Snapshot.Value != null)
         {
+            DataSnapshot val = args.Snapshot;
             scoreCard = JsonConvert.DeserializeObject<LiveMatchScoreCard>(val.GetRawJsonValue());
             //ScoreCardPanel.Instance.InstantDataInnings1();
             //ScoreCardPanel.Instance.InstantDataInnings2();
-           
-                _My_Matches.Instance.Total1();
-                _My_Matches.Instance.Total2();
+            _My_Matches.Instance.Total1();
+            _My_Matches.Instance.Total2();
             
         }
     }
@@ -465,9 +495,12 @@ public class GameController : MonoBehaviour
             DebugHelper.LogError(args.DatabaseError.Message + "*************");
             return;
         }
-
-        DebugHelper.Log(args.Snapshot.GetRawJsonValue());
-        _joinedPlayers = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(args.Snapshot.GetRawJsonValue());
+        if(args.Snapshot.Value !=null)
+        {
+            DebugHelper.Log(args.Snapshot.GetRawJsonValue());
+            _joinedPlayers = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Dictionary<string, string>>>>(args.Snapshot.GetRawJsonValue());
+        }
+     
      
 
     }

@@ -7,6 +7,8 @@ using DG.Tweening;
 
 using System.Linq;
 using Unity.VisualScripting;
+using System;
+using Firebase.Firestore;
 
 public class ScoreCardPanel : MonoBehaviour
 {
@@ -62,9 +64,15 @@ public class ScoreCardPanel : MonoBehaviour
         ScoreATeam.text = "-";
         OverBText.text = "(overs)";
         ScoreBTeam.text = "-";
-        //InstantDataInnings1();
-        //InstantDataInnings2();
+        InstantDataInnings1();
+        InstantDataInnings2();
     }
+
+    private void OnDisable()
+    {
+   
+    }
+
 
     public void GetData()
     {
@@ -120,51 +128,70 @@ public class ScoreCardPanel : MonoBehaviour
 
     public void InstantDataInnings1()
     {
-
-        foreach (Transform child in parentABatter)
+        if (GameController.Instance.scoreCard != null)
         {
-            child.gameObject.SetActive(false);
-        }
-        foreach (Transform child in parentABowler)
-        {
-            child.gameObject.SetActive(false);
-        }
-
-        foreach (var item1 in GameController.Instance.scoreCard.MatchDetails.First(x => x.Key == "Innings1").Value.Batting.Score)
-        {
-            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PlayerScoreBatter");
-            mprefabObj.transform.SetParent(parentABatter);
-            mprefabObj.gameObject.SetActive(true);
-            var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamA).Players.Values.First(x => x.ID == item1.Key);
-            DebugHelper.Log(detail.Name + "BBBBBBBBB");
-            mprefabObj.GetComponent<BatterContainer>().SetData(detail.Name, item1.Value.Status, item1.Value.Score, item1.Value.Balls, item1.Value.Four, item1.Value.Six, "");
-           
-        }
-
-        foreach (var item2 in GameController.Instance.scoreCard.MatchDetails.First(x => x.Key == "Innings1").Value.Bowling)
-        {
-            PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PlayerScoreBowler");
-            mprefabObj.transform.SetParent(parentABowler);
-            mprefabObj.gameObject.SetActive(true);
-            var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamB).Players.Values.First(x => x.ID == item2.Key);
-            DebugHelper.Log(detail.Name + "CCCCCCCCCC");
-            mprefabObj.GetComponent<BowlerContainer>().SetData(detail.Name, item2.Value.Over, item2.Value.Mainden, item2.Value.Runs, item2.Value.Wicket, item2.Value.Extra);
-        }
-
-        foreach (var item in GameController.Instance.scoreCard.MatchDetails)
-        {
-            if(item.Key == "Innings1")
+            foreach (Transform child in parentABatter)
             {
-                OverAText.text = $"({item.Value.InningsOvers} Overs)";
-                ScoreATeam.text = item.Value.InningsRuns.ToString();
+                child.gameObject.SetActive(false);
+            }
+            foreach (Transform child in parentABowler)
+            {
+                child.gameObject.SetActive(false);
+            }
+            if (GameController.Instance.scoreCard.MatchDetails.ContainsKey("Innings1"))
+            {
+                foreach (var item1 in GameController.Instance.scoreCard.MatchDetails.First(x => x.Key == "Innings1").Value.Batting.Score)
+                {
+                    PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PlayerScoreBatter");
+                    mprefabObj.transform.SetParent(parentABatter);
+                    mprefabObj.gameObject.SetActive(true);
 
-}
-         
+                    try
+                    {
+                        var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamA).Players.Values.First(x => x.ID == item1.Key);
+                        mprefabObj.GetComponent<BatterContainer>().SetData(detail.Name, item1.Value.Status, item1.Value.Score, item1.Value.Balls, item1.Value.Four, item1.Value.Six, "");
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log(e);
+                    }
+                  
+                    
+
+                }
+                foreach (var item2 in GameController.Instance.scoreCard.MatchDetails.First(x => x.Key == "Innings1").Value.Bowling)
+                {
+                    PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PlayerScoreBowler");
+                    mprefabObj.transform.SetParent(parentABowler);
+                    mprefabObj.gameObject.SetActive(true);
+
+                    try
+                    {
+                        var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamB).Players.Values.First(x => x.ID == item2.Key);
+                        mprefabObj.GetComponent<BowlerContainer>().SetData(detail.Name, item2.Value.Over, item2.Value.Mainden, item2.Value.Runs, item2.Value.Wicket, item2.Value.Extra);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log(e);
+                    }
+
+                }
+
+                foreach (var item in GameController.Instance.scoreCard.MatchDetails)
+                {
+                    if (item.Key == "Innings1")
+                    {
+                        OverAText.text = $"({item.Value.InningsOvers} Overs)";
+                        ScoreATeam.text = item.Value.InningsRuns.ToString();
+
+                    }
+
+                }
+            }
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(parentABatter.transform as RectTransform);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
         }
-     
-        
-        LayoutRebuilder.ForceRebuildLayoutImmediate(parentABatter.transform as RectTransform);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
 
 
     }
@@ -188,9 +215,16 @@ public class ScoreCardPanel : MonoBehaviour
                 PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PlayerScoreBatter");
                 mprefabObj.transform.SetParent(parentBBatter);
                 mprefabObj.gameObject.SetActive(true);
-                var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamB).Players.Values.First(x => x.ID == item1.Key);
-                DebugHelper.Log(detail.Name + "AAAAA");
-                mprefabObj.GetComponent<BatterContainer>().SetData(detail.Name, item1.Value.Status, item1.Value.Score, item1.Value.Balls, item1.Value.Four, item1.Value.Six, "");
+                try
+                {
+                    var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamB).Players.Values.First(x => x.ID == item1.Key);
+                    mprefabObj.GetComponent<BatterContainer>().SetData(detail.Name, item1.Value.Status, item1.Value.Score, item1.Value.Balls, item1.Value.Four, item1.Value.Six, "");
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                }
+            
             }
 
             foreach (var item2 in GameController.Instance.scoreCard.MatchDetails.First(x => x.Key == "Innings2").Value.Bowling)
@@ -198,9 +232,16 @@ public class ScoreCardPanel : MonoBehaviour
                 PoolItems mprefabObj = PoolManager.Instance.GetPoolObject("PlayerScoreBowler");
                 mprefabObj.transform.SetParent(parentBBowler);
                 mprefabObj.gameObject.SetActive(true);
-                var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamA).Players.Values.First(x => x.ID == item2.Key);
-                DebugHelper.Log(detail.Name + "DDDDDDDDDD");
-                mprefabObj.GetComponent<BowlerContainer>().SetData(detail.Name, item2.Value.Over, item2.Value.Mainden, item2.Value.Runs, item2.Value.Wicket, item2.Value.Extra);
+                try
+                {
+                    var detail = GameController.Instance.players.Find(x => x.TeamName == GameController.Instance.scoreCard.TeamA).Players.Values.First(x => x.ID == item2.Key);
+                    mprefabObj.GetComponent<BowlerContainer>().SetData(detail.Name, item2.Value.Over, item2.Value.Mainden, item2.Value.Runs, item2.Value.Wicket, item2.Value.Extra);
+                }
+                catch (Exception e)
+                {
+                    Debug.Log(e);
+                }
+
             }
         }
 

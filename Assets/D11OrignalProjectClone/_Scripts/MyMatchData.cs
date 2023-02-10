@@ -70,7 +70,7 @@ public class MyMatchData : MonoBehaviour
                         }
                         else if (item.Key == "Complete")
                         {
-                            time.text = "0s";
+                            time.text = "COMPLETED";
 
                         }
                         else
@@ -118,7 +118,7 @@ public class MyMatchData : MonoBehaviour
                         }
                         else if (item.Key == "Complete")
                         {
-                            time.text = "0s";
+                            time.text = "COMPLETED";
                             isCount = true;
                         }
                         else
