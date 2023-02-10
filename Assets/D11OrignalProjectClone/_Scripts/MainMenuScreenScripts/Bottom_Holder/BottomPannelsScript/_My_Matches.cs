@@ -59,14 +59,14 @@ public class _My_Matches : UIHandler
 
     private void OnEnable()
     {
-        GameController.Instance.OnScoreChanged += Total1;
-        GameController.Instance.OnScoreChanged += Total2;
+        //GameController.Instance.OnScoreChanged += Total1;
+        //GameController.Instance.OnScoreChanged += Total2;
     }
 
     private void OnDisable()
     {
-        GameController.Instance.OnScoreChanged -= Total1;
-        GameController.Instance.OnScoreChanged -= Total2;
+        //GameController.Instance.OnScoreChanged -= Total1;
+        //GameController.Instance.OnScoreChanged -= Total2;
     }
 
     IEnumerator delay()
