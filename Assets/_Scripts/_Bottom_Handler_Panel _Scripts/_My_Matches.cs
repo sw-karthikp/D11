@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static AddNewPlayerHandler;
@@ -59,8 +60,14 @@ public class _My_Matches : UIHandler
 
     private void OnEnable()
     {
-        Total1();
-        Total2();
+        GameController.Instance.OnScoreChanged += Total1;
+        GameController.Instance.OnScoreChanged += Total2;
+    }
+
+    private void OnDisable()
+    {
+        GameController.Instance.OnScoreChanged -= Total1;
+        GameController.Instance.OnScoreChanged -= Total2;
     }
 
     IEnumerator delay()

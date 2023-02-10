@@ -35,7 +35,7 @@ public class GameController : MonoBehaviour
     FirebaseFirestore firestoredb;
     public MatchPools currentMatchpool;
     public Pools currentPools;
-    public Action OnMatchPoolChanged,OnUserDataUpdated;
+    public Action OnMatchPoolChanged,OnUserDataUpdated,OnScoreChanged;
 
 
 
@@ -324,9 +324,7 @@ public class GameController : MonoBehaviour
             scoreCard = JsonConvert.DeserializeObject<LiveMatchScoreCard>(val.GetRawJsonValue());
             //ScoreCardPanel.Instance.InstantDataInnings1();
             //ScoreCardPanel.Instance.InstantDataInnings2();
-           
-                _My_Matches.Instance.Total1();
-                _My_Matches.Instance.Total2();
+             OnScoreChanged?.Invoke();
             
         }
     }
@@ -361,9 +359,11 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            Texture2D tex = ((DownloadHandlerTexture)request.downloadHandler).texture;
-            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
-            countrySpriteImage.Add(_teamName, sprite);
+            byte[] bytes = request.downloadHandler.data;
+            //Texture2D tex = ((DownloadHandlerTexture)request.downloadHandler).texture;
+            //Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(tex.width / 2, tex.height / 2));
+            //countrySpriteImage.Add(_teamName, sprite);
+            ImageManager.Instance.SaveImage(_teamName, bytes);
         }
     }
 

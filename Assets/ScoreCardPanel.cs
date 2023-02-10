@@ -51,6 +51,7 @@ public class ScoreCardPanel : MonoBehaviour
     }
     private void OnEnable()
     {
+
         GetData();
         teamAExpandBatters.SetActive(false);
         teamAExpandBowlers.SetActive(false);
@@ -62,8 +63,12 @@ public class ScoreCardPanel : MonoBehaviour
         ScoreATeam.text = "-";
         OverBText.text = "(overs)";
         ScoreBTeam.text = "-";
-        //InstantDataInnings1();
-        //InstantDataInnings2();
+
+    }
+
+    private void OnDisable()
+    {
+
     }
 
     public void GetData()
@@ -80,10 +85,13 @@ public class ScoreCardPanel : MonoBehaviour
             teamAExpandBowlers.SetActive(true);
             arrowA.transform.DORotate(new Vector3(0, 0, 90), 0.1f);
             isOnA = true;
-            InstantDataInnings1();
+            GameController.Instance.OnScoreChanged += InstantDataInnings1;
+       
+
         }
         else
         {
+            GameController.Instance.OnScoreChanged -= InstantDataInnings1;
             teamAExpandBatters.SetActive(false);
             teamAExpandBowlers.SetActive(false);
             arrowA.transform.DORotate(new Vector3(0, 0, -90), 0.1f);
@@ -101,7 +109,8 @@ public class ScoreCardPanel : MonoBehaviour
             teamBExpandBowlers.SetActive(true);
             arrowB.transform.DORotate(new Vector3(0, 0, 90), 0.1f);
             isOnB = true;
-            InstantDataInnings2();
+            GameController.Instance.OnScoreChanged += InstantDataInnings2;
+          //  InstantDataInnings2();
         }
         else
         {
@@ -109,6 +118,7 @@ public class ScoreCardPanel : MonoBehaviour
             teamBExpandBowlers.SetActive(false);
             arrowB.transform.DORotate(new Vector3(0, 0, -90), 0.1f);
             isOnB = false;
+            GameController.Instance.OnScoreChanged -= InstantDataInnings2;
         }
 
         Canvas.ForceUpdateCanvases();
